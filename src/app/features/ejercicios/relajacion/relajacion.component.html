@@ -1,0 +1,30 @@
+<a routerLink="/inicio" class="volver">← Volver</a>
+<h1>Relajación muscular</h1>
+<p>Tensa y luego relaja cada grupo muscular, siguiendo la indicación.</p>
+
+<section class="card zona" *ngIf="!completado(); else final">
+  <ng-container *ngIf="!enCurso()">
+    <p class="intro">7 grupos musculares · tensión de 5s y relajación de 10s cada uno.</p>
+    <button class="btn btn-primary" type="button" (click)="iniciar()">Comenzar</button>
+  </ng-container>
+
+  <ng-container *ngIf="enCurso()">
+    <div class="barra-progreso"><div class="relleno" [style.width.%]="progreso"></div></div>
+
+    <div class="instruccion" [class.tension]="paso.fase === 'tension'">
+      <span class="grupo">{{ paso.grupoMuscular }}</span>
+      <span class="accion">{{ paso.fase === 'tension' ? 'Tensa' : 'Relaja' }}</span>
+      <span class="segundos">{{ segundosPaso() }}</span>
+    </div>
+
+    <button class="btn btn-ghost" type="button" (click)="detener()">Detener</button>
+  </ng-container>
+</section>
+
+<ng-template #final>
+  <section class="card zona mensaje-final">
+    <h2>Secuencia completada</h2>
+    <p>Recorriste los 7 grupos musculares.</p>
+    <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>
+  </section>
+</ng-template>

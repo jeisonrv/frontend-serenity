@@ -1,0 +1,23 @@
+<a routerLink="/inicio" class="volver">← Volver</a>
+<h1>Tu jardín</h1>
+<p>Cada práctica hace crecer una planta nueva.</p>
+
+<section class="card" *ngIf="!cargando(); else cargandoTpl">
+  <div class="parcela" *ngIf="plantas().length; else vacio">
+    <div class="planta" *ngFor="let p of plantas()" [class]="etapaCrecimiento(1)">
+      <span class="icono-planta">⚘</span>
+      <span class="tipo">{{ p.tipoPlanta }}</span>
+    </div>
+  </div>
+</section>
+
+<ng-template #vacio>
+  <div class="vacio">
+    <p>Tu jardín todavía está sin sembrar.</p>
+    <a routerLink="/ejercicios/respiracion" class="btn btn-primary">Hacer tu primer ejercicio</a>
+  </div>
+</ng-template>
+
+<ng-template #cargandoTpl>
+  <p class="cargando">Cargando tu jardín…</p>
+</ng-template>

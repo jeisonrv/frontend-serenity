@@ -1,0 +1,36 @@
+<a routerLink="/inicio" class="volver">← Volver</a>
+<h1>Diario emocional</h1>
+<p>Escribe con libertad; nadie más lo lee salvo tú.</p>
+
+<section class="card">
+  <div class="prompts">
+    <button
+      *ngFor="let p of prompts"
+      class="chip"
+      type="button"
+      [class.seleccionado]="promptSeleccionado() === p"
+      (click)="elegirPrompt(p)"
+    >
+      {{ p }}
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="guardar()">
+    <div class="field">
+      <textarea
+        rows="8"
+        formControlName="contenido"
+        [placeholder]="promptSeleccionado() === 'Libre' ? 'Escribe lo que quieras…' : promptSeleccionado()"
+      ></textarea>
+      <span class="error" *ngIf="form.get('contenido')?.touched && form.get('contenido')?.invalid">
+        Escribe al menos unas palabras.
+      </span>
+    </div>
+
+    <p class="confirmacion" *ngIf="guardado()">Entrada guardada.</p>
+
+    <button class="btn btn-primary" type="submit" [disabled]="guardando()">
+      {{ guardando() ? 'Guardando…' : 'Guardar entrada' }}
+    </button>
+  </form>
+</section>

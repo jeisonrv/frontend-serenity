@@ -1,0 +1,26 @@
+<a routerLink="/inicio" class="volver">← Volver</a>
+<h1>Respiración guiada</h1>
+<p>Cinco ciclos de inhala–sostén–exhala–reposa. Sigue el círculo a tu ritmo.</p>
+
+<section class="card zona" [class.completado]="completado()">
+  <ng-container *ngIf="!completado()">
+    <div class="anillo" [class]="fase()">
+      <span class="fase">{{ etiquetaFase }}</span>
+      <span class="segundos">{{ segundosFase() }}</span>
+    </div>
+    <p class="ciclo" *ngIf="enCurso()">Ciclo {{ ciclo() }} de {{ cicloObjetivo }}</p>
+
+    <button *ngIf="!enCurso()" class="btn btn-primary" type="button" (click)="iniciar()">
+      Comenzar
+    </button>
+    <button *ngIf="enCurso()" class="btn btn-ghost" type="button" (click)="detener()">
+      Detener
+    </button>
+  </ng-container>
+
+  <div *ngIf="completado()" class="mensaje-final">
+    <h2>Sesión completada</h2>
+    <p>Sumaste experiencia por {{ segundosTotales() }} segundos de práctica.</p>
+    <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>
+  </div>
+</section>

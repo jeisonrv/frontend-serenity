@@ -1,0 +1,49 @@
+<header class="cabecera">
+  <div>
+    <h1>Hola, {{ auth.usuario()?.nombreUsuario }}</h1>
+    <p>¿Cómo te sientes hoy?</p>
+  </div>
+</header>
+
+<section class="card animo" *ngIf="!animoRegistrado(); else gracias">
+  <div class="opciones">
+    <button
+      *ngFor="let opcion of opcionesAnimo"
+      class="opcion"
+      type="button"
+      (click)="registrarAnimo(opcion.valor)"
+      [attr.aria-label]="opcion.etiqueta"
+    >
+      <span class="emoji">{{ opcion.icono }}</span>
+      <span class="etiqueta">{{ opcion.etiqueta }}</span>
+    </button>
+  </div>
+</section>
+<ng-template #gracias>
+  <section class="card animo-confirmado">
+    <p>Gracias por registrar cómo te sientes hoy.</p>
+  </section>
+</ng-template>
+
+<section class="resumen" *ngIf="auth.usuario() as usuario">
+  <div class="card stat">
+    <span class="valor">{{ usuario.nivel }}</span>
+    <span class="etiqueta-stat">Nivel</span>
+  </div>
+  <div class="card stat">
+    <span class="valor">{{ usuario.experiencia }}</span>
+    <span class="etiqueta-stat">Experiencia</span>
+  </div>
+  <div class="card stat">
+    <span class="valor">{{ usuario.racha }}</span>
+    <span class="etiqueta-stat">Racha (días)</span>
+  </div>
+</section>
+
+<h2>Ejercicios</h2>
+<section class="grid-ejercicios">
+  <a class="card acceso" *ngFor="let acceso of accesos" [routerLink]="acceso.ruta">
+    <h3>{{ acceso.titulo }}</h3>
+    <p>{{ acceso.desc }}</p>
+  </a>
+</section>

@@ -1,0 +1,53 @@
+<a routerLink="/inicio" class="volver">← Volver</a>
+<h1>Hablar con alguien</h1>
+<p>Conversación anónima y en tiempo real con un oyente disponible. No sustituye atención psicológica profesional.</p>
+
+<section class="card inicial" *ngIf="estado() === 'inicial'">
+  <p>Cuando estés listo, te conectaremos con un oyente disponible.</p>
+  <button class="btn btn-primary" type="button" (click)="solicitarChat()">Solicitar conversación</button>
+</section>
+
+<section class="card inicial" *ngIf="estado() === 'buscando'">
+  <p>Buscando un oyente disponible…</p>
+</section>
+
+<section class="card chat" *ngIf="estado() === 'activo'">
+  <div class="cabecera-chat">
+    <span>Oyente conectado</span>
+    <div class="acciones">
+      <button class="btn-icono" type="button" (click)="mostrarReporte.set(true)">Reportar</button>
+      <button class="btn-icono" type="button" (click)="finalizarConversacion()">Finalizar</button>
+    </div>
+  </div>
+
+  <div class="mensajes">
+    <div
+      class="mensaje"
+      *ngFor="let m of chatService.mensajes()"
+      [class.propio]="m.remitente === 'usuario'"
+    >
+      {{ m.contenido }}
+    </div>
+  </div>
+
+  <form class="entrada" (ngSubmit)="enviar()">
+    <input type="text" [ngModel]="borrador()" (ngModelChange)="borrador.set($event)" name="mensaje" placeholder="Escribe un mensaje…" />
+    <button class="btn btn-primary" type="submit">Enviar</button>
+  </form>
+
+  <div class="modal-reporte" *ngIf="mostrarReporte()">
+    <div class="card contenido-modal">
+      <h3>Reportar conversación</h3>
+      <textarea rows="3" [ngModel]="motivoReporte()" (ngModelChange)="motivoReporte.set($event)" name="motivo" placeholder="Describe brevemente el motivo"></textarea>
+      <div class="botones-modal">
+        <button class="btn btn-ghost" type="button" (click)="mostrarReporte.set(false)">Cancelar</button>
+        <button class="btn btn-primary" type="button" (click)="enviarReporte()">Enviar reporte</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="card inicial" *ngIf="estado() === 'finalizado'">
+  <p>La conversación finalizó. Gracias por hablar hoy.</p>
+  <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>
+</section>

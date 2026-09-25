@@ -1,0 +1,28 @@
+<a routerLink="/inicio" class="volver">← Volver</a>
+<h1>Estadísticas</h1>
+<p>Tu historial de actividad dentro de Serenity.</p>
+
+<section class="resumen" *ngIf="resumen() as r">
+  <div class="card stat"><span class="valor">{{ r.totalSesiones }}</span><span class="etiqueta">Sesiones</span></div>
+  <div class="card stat"><span class="valor">{{ r.minutosTotales }}</span><span class="etiqueta">Minutos</span></div>
+  <div class="card stat"><span class="valor">{{ r.racha }}</span><span class="etiqueta">Racha actual</span></div>
+</section>
+
+<h2>Historial</h2>
+<section class="card" *ngIf="!cargando(); else cargandoTpl">
+  <table class="tabla" *ngIf="historial().length; else vacio">
+    <thead>
+      <tr><th>Ejercicio</th><th>Duración</th><th>Fecha</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let s of historial()">
+        <td>{{ s.tipoEjercicio }}</td>
+        <td>{{ s.duracion }}s</td>
+        <td>{{ s.fechaCompletada | date: 'dd/MM/yyyy HH:mm' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<ng-template #vacio><p class="cargando">Aún no tienes sesiones registradas.</p></ng-template>
+<ng-template #cargandoTpl><p class="cargando">Cargando…</p></ng-template>

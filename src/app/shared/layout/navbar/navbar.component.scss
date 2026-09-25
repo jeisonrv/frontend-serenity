@@ -1,0 +1,87 @@
+.barra {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 220px;
+  height: 100vh;
+  background: var(--color-primary-dark);
+  color: #EEF3EC;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem 0.9rem;
+}
+
+.marca {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0 0.5rem 1.5rem;
+}
+.marca-icono { font-size: 1.2rem; color: var(--color-accent); }
+.marca-texto { font-family: var(--font-display); font-size: 1.25rem; }
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.lista a {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 0.6rem;
+  border-radius: 8px;
+  color: #D7E3D9;
+  text-decoration: none;
+  font-size: 0.92rem;
+  transition: background 0.15s ease;
+}
+.lista a:hover { background: rgba(255,255,255,0.06); }
+.lista a.activo {
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-weight: 500;
+}
+.icono { width: 1.1rem; text-align: center; color: var(--color-accent); }
+
+.pie {
+  border-top: 1px solid rgba(255,255,255,0.12);
+  padding-top: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.usuario { display: flex; flex-direction: column; font-size: 0.85rem; }
+.nombre { font-weight: 500; }
+.nivel { color: #9FB6A6; font-size: 0.78rem; }
+
+.btn-salir {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #EEF3EC;
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+.btn-salir:hover { border-color: var(--color-accent); }
+
+@media (max-width: 760px) {
+  .barra {
+    top: auto;
+    bottom: 0;
+    width: 100%;
+    height: 64px;
+    flex-direction: row;
+    align-items: center;
+    padding: 0 0.5rem;
+  }
+  .marca, .pie { display: none; }
+  .lista { flex-direction: row; overflow-x: auto; gap: 0.3rem; width: 100%; }
+  .lista a { flex-direction: column; font-size: 0.65rem; gap: 0.15rem; white-space: nowrap; }
+}

@@ -1,0 +1,40 @@
+.cabecera { margin-bottom: 1.5rem; }
+.cabecera p { color: var(--color-ink-soft); margin: 0; }
+
+.animo { margin-bottom: 1.75rem; }
+.opciones { display: flex; justify-content: space-between; gap: 0.5rem; flex-wrap: wrap; }
+.opcion {
+  flex: 1;
+  min-width: 80px;
+  background: transparent;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-soft);
+  padding: 0.9rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.opcion:hover { border-color: var(--color-primary-light); background: var(--color-bg); }
+.emoji { font-size: 1.6rem; }
+.etiqueta { font-size: 0.75rem; color: var(--color-ink-soft); }
+
+.animo-confirmado { color: var(--color-primary-dark); margin-bottom: 1.75rem; }
+
+.resumen { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem; }
+.stat { display: flex; flex-direction: column; align-items: center; padding: 1.1rem; }
+.valor { font-family: var(--font-display); font-size: 1.8rem; color: var(--color-primary); }
+.etiqueta-stat { font-size: 0.8rem; color: var(--color-ink-soft); margin-top: 0.2rem; }
+
+.grid-ejercicios { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; }
+.acceso { text-decoration: none; color: inherit; transition: transform 0.12s ease; display: block; }
+.acceso:hover { transform: translateY(-2px); }
+.acceso h3 { margin-bottom: 0.3rem; }
+.acceso p { color: var(--color-ink-soft); font-size: 0.88rem; margin: 0; }
+
+@media (max-width: 560px) {
+  .resumen { grid-template-columns: repeat(3, 1fr); }
+  .opciones { justify-content: center; }
+}

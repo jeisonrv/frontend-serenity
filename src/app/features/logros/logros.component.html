@@ -1,0 +1,17 @@
+<a routerLink="/inicio" class="volver">← Volver</a>
+<h1>Logros</h1>
+<p>Reconocimientos por tu constancia.</p>
+
+<section class="grid-logros" *ngIf="!cargando(); else cargandoTpl">
+  <div class="card logro" *ngFor="let l of logros()" [class.bloqueado]="!l.desbloqueado">
+    <span class="icono">{{ l.desbloqueado ? '⬡' : '⬡' }}</span>
+    <div>
+      <h3>{{ l.nombre }}</h3>
+      <p>{{ l.descripcion }}</p>
+    </div>
+  </div>
+</section>
+
+<ng-template #cargandoTpl>
+  <p class="cargando">Cargando logros…</p>
+</ng-template>

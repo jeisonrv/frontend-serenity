@@ -1,0 +1,30 @@
+<div class="pantalla-auth">
+  <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
+    <h1>Serenity</h1>
+    <p class="subtitulo">Un espacio privado para tu bienestar emocional.</p>
+
+    <div class="field">
+      <label for="correo">Correo</label>
+      <input id="correo" type="email" formControlName="correo" autocomplete="email" />
+      <span class="error" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
+        Ingresa un correo válido.
+      </span>
+    </div>
+
+    <div class="field">
+      <label for="contrasena">Contraseña</label>
+      <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" />
+      <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
+        Mínimo 8 caracteres.
+      </span>
+    </div>
+
+    <p class="error" *ngIf="error()">{{ error() }}</p>
+
+    <button class="btn btn-primary" type="submit" [disabled]="cargando()">
+      {{ cargando() ? 'Ingresando…' : 'Ingresar' }}
+    </button>
+
+    <p class="alterno">¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
+  </form>
+</div>

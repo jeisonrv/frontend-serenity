@@ -1,0 +1,23 @@
+<nav class="barra">
+  <div class="marca">
+    <span class="marca-icono">⚘</span>
+    <span class="marca-texto">Serenity</span>
+  </div>
+
+  <ul class="lista">
+    <li *ngFor="let enlace of enlaces">
+      <a [routerLink]="enlace.ruta" routerLinkActive="activo">
+        <span class="icono" aria-hidden="true">{{ enlace.icono }}</span>
+        {{ enlace.etiqueta }}
+      </a>
+    </li>
+  </ul>
+
+  <div class="pie" *ngIf="auth.usuario() as usuario">
+    <div class="usuario">
+      <span class="nombre">{{ usuario.nombreUsuario }}</span>
+      <span class="nivel">Nivel {{ usuario.nivel }} · racha {{ usuario.racha }}d</span>
+    </div>
+    <button class="btn-salir" (click)="salir()" type="button">Cerrar sesión</button>
+  </div>
+</nav>

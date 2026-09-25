@@ -1,0 +1,34 @@
+<a routerLink="/inicio" class="volver">← Volver</a>
+<h1>Meditación</h1>
+<p>Elige una duración y siéntate en un lugar tranquilo.</p>
+
+<section class="card zona" *ngIf="!completado(); else final">
+  <div class="temporizador">{{ minutosMostrados }}</div>
+
+  <div class="duraciones" *ngIf="!enCurso()">
+    <button
+      *ngFor="let d of duracionesDisponibles"
+      class="chip"
+      type="button"
+      [class.seleccionado]="duracionMin() === d"
+      (click)="duracionMin.set(d)"
+    >
+      {{ d }} min
+    </button>
+  </div>
+
+  <button *ngIf="!enCurso()" class="btn btn-primary" type="button" (click)="iniciar()">
+    Comenzar
+  </button>
+  <button *ngIf="enCurso()" class="btn btn-ghost" type="button" (click)="detener()">
+    Detener
+  </button>
+</section>
+
+<ng-template #final>
+  <section class="card zona mensaje-final">
+    <h2>Sesión completada</h2>
+    <p>Meditaste {{ duracionMin() }} minutos.</p>
+    <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>
+  </section>
+</ng-template>
