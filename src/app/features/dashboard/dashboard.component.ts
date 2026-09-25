@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
@@ -11,7 +11,7 @@ import { AnimoService } from '../../core/services/animo.service';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit {
   readonly opcionesAnimo = [
     { valor: 1, icono: '😞', etiqueta: 'Muy mal' },
     { valor: 2, icono: '🙁', etiqueta: 'Mal' },
@@ -20,7 +20,9 @@ export class DashboardComponent {
     { valor: 5, icono: '😄', etiqueta: 'Muy bien' }
   ] as const;
 
-  readonly animoRegistrado = signal(false);
+  readonly animoSeleccionado = signal<1 | 2 | 3 | 4 | 5 | null>(null);
+  readonly mensajeAnimo = signal('');
+  readonly errorAnimo = signal('');
 
   readonly accesos = [
     { ruta: '/ejercicios/respiracion', titulo: 'Respiración', desc: 'Técnica guiada por fases.' },
@@ -31,7 +33,20 @@ export class DashboardComponent {
 
   constructor(public auth: AuthService, private animoService: AnimoService) {}
 
+  ngOnInit(): void {
+    this.animoService.obtenerAnimoHoy().subscribe({
+      next: (animo) => this.animoSeleccionado.set(animo?.valor ?? null),
+      error: () => this.errorAnimo.set('No pudimos cargar tu ánimo de hoy. Inténtalo de nuevo más tarde.')
+    });
+  }
+
   registrarAnimo(valor: 1 | 2 | 3 | 4 | 5): void {
-    this.animoService.registrarAnimo(valor).subscribe(() => this.animoRegistrado.set(true));
+    this.animoSeleccionado.set(valor);
+    this.mensajeAnimo.set('');
+    this.errorAnimo.set('');
+    this.animoService.registrarAnimo(valor).subscribe({
+      next: () => this.mensajeAnimo.set('Ánimo guardado.'),
+      error: () => this.errorAnimo.set('No pudimos guardar tu ánimo. Inténtalo de nuevo.')
+    });
   }
 }

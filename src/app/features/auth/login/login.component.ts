@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -37,12 +38,13 @@ export class LoginComponent {
     this.error.set(null);
 
     this.auth.login({
-      correo: this.form.value.correo!,
-      contrasena: this.form.value.contrasena!
+      email: this.form.value.correo!,
+      password: this.form.value.contrasena!
     }).subscribe({
       next: () => this.router.navigate(['/inicio']),
-      error: () => {
-        this.error.set('Correo o contraseña incorrectos.');
+      error: (err: HttpErrorResponse) => {
+        console.error(err);
+        this.error.set(err.error?.mensaje ?? err.error?.message ?? 'Ocurrió un error al iniciar sesión.');
         this.cargando.set(false);
       }
     });

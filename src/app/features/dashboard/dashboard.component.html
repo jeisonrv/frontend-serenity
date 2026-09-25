@@ -5,19 +5,23 @@
   </div>
 </header>
 
-<section class="card animo" *ngIf="!animoRegistrado(); else gracias">
+<section class="card animo">
   <div class="opciones">
     <button
       *ngFor="let opcion of opcionesAnimo"
       class="opcion"
       type="button"
       (click)="registrarAnimo(opcion.valor)"
+      [class.seleccionado]="animoSeleccionado() === opcion.valor"
+      [attr.aria-pressed]="animoSeleccionado() === opcion.valor"
       [attr.aria-label]="opcion.etiqueta"
     >
       <span class="emoji">{{ opcion.icono }}</span>
       <span class="etiqueta">{{ opcion.etiqueta }}</span>
     </button>
   </div>
+  <p class="confirmacion-animo" *ngIf="mensajeAnimo()">{{ mensajeAnimo() }}</p>
+  <p class="error-animo" *ngIf="errorAnimo()">{{ errorAnimo() }}</p>
 </section>
 <ng-template #gracias>
   <section class="card animo-confirmado">

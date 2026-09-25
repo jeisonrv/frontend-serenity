@@ -2,7 +2,12 @@
 <h1>Diario emocional</h1>
 <p>Escribe con libertad; nadie más lo lee salvo tú.</p>
 
-<section class="card">
+<nav class="pestanas-diario" aria-label="Secciones del diario">
+  <button type="button" class="chip" [class.seleccionado]="pestana() === 'escribir'" (click)="seleccionarPestana('escribir')">Escribir</button>
+  <button type="button" class="chip" [class.seleccionado]="pestana() === 'entradas'" (click)="seleccionarPestana('entradas')">Mis entradas</button>
+</nav>
+
+<section class="card" *ngIf="pestana() === 'escribir'">
   <div class="prompts">
     <button
       *ngFor="let p of prompts"
@@ -33,4 +38,66 @@
       {{ guardando() ? 'Guardando…' : 'Guardar entrada' }}
     </button>
   </form>
+</section>
+
+<section *ngIf="pestana() === 'entradas'">
+  <p class="estado-diario" *ngIf="cargandoEntradas()">Cargando tus entradas…</p>
+  <div class="estado-diario error-diario" *ngIf="errorEntradas()" role="alert">
+    {{ errorEntradas() }}
+    <button class="chip" type="button" (click)="cargarEntradas()">Reintentar</button>
+  </div>
+  <p class="estado-diario card" *ngIf="!cargandoEntradas() && !errorEntradas() && entradas().length === 0">
+    Aún no has escrito nada. ¡Tu primera entrada te espera!
+  </p>
+
+  <div class="lista-entradas" *ngIf="!cargandoEntradas() && entradas().length">
+    <button class="card tarjeta-entrada" type="button" *ngFor="let entrada of entradas()" (click)="abrirEntrada(entrada)">
+      <span class="fecha-entrada">{{ formatearFecha(entrada.fechaRegistro) }}</span>
+      <strong *ngIf="entrada.titulo">{{ entrada.titulo }}</strong>
+      <span class="extracto-entrada">{{ entrada.contenido }}</span>
+    </button>
+  </div>
+
+  <section class="card detalle-entrada" *ngIf="cargandoDetalle()">Cargando entrada…</section>
+  <section class="card detalle-entrada" *ngIf="errorDetalle()" role="alert">{{ errorDetalle() }}</section>
+  <section class="card detalle-entrada" *ngIf="entradaSeleccionada() as entrada">
+    <div class="cabecera-detalle">
+      <div>
+        <p class="fecha-entrada">{{ formatearFecha(entrada.fechaRegistro) }}</p>
+        <h2 *ngIf="entrada.titulo">{{ entrada.titulo }}</h2>
+      </div>
+      <button class="chip" type="button" (click)="cerrarDetalle()">Cerrar</button>
+    </div>
+
+    <ng-container *ngIf="!editando(); else formularioEdicion">
+      <p class="contenido-completo">{{ entrada.contenido }}</p>
+      <div class="acciones-entrada">
+        <button class="btn btn-primary" type="button" (click)="editando.set(true)">Editar</button>
+        <button class="chip" type="button" (click)="confirmarEliminacion.set(true)">Eliminar</button>
+      </div>
+      <div class="confirmar-borrado" *ngIf="confirmarEliminacion()">
+        <p>¿Quieres eliminar esta entrada? Esta acción no se puede deshacer.</p>
+        <button class="chip" type="button" (click)="confirmarEliminacion.set(false)">Conservar entrada</button>
+        <button class="btn btn-primary" type="button" [disabled]="eliminando()" (click)="eliminarEntrada()">
+          {{ eliminando() ? 'Eliminando…' : 'Sí, eliminar' }}
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-template #formularioEdicion>
+      <form [formGroup]="form" (ngSubmit)="guardarEdicion()">
+        <div class="prompts">
+          <button *ngFor="let p of prompts" class="chip" type="button"
+            [class.seleccionado]="promptSeleccionado() === p" (click)="elegirPrompt(p)">{{ p }}</button>
+        </div>
+        <textarea rows="8" formControlName="contenido"></textarea>
+        <div class="acciones-entrada">
+          <button class="chip" type="button" (click)="editando.set(false)">Cancelar</button>
+          <button class="btn btn-primary" type="submit" [disabled]="guardandoEdicion()">
+            {{ guardandoEdicion() ? 'Guardando…' : 'Guardar cambios' }}
+          </button>
+        </div>
+      </form>
+    </ng-template>
+  </section>
 </section>

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -39,13 +40,14 @@ export class RegisterComponent {
     this.error.set(null);
 
     this.auth.registrar({
-      nombreUsuario: this.form.value.nombreUsuario!,
-      correo: this.form.value.correo!,
-      contrasena: this.form.value.contrasena!
+      username: this.form.value.nombreUsuario!,
+      email: this.form.value.correo!,
+      password: this.form.value.contrasena!
     }).subscribe({
-      next: () => this.router.navigate(['/inicio']),
-      error: () => {
-        this.error.set('No fue posible crear la cuenta. Verifica los datos.');
+      next: () => this.router.navigate(['/login']),
+      error: (err: HttpErrorResponse) => {
+        console.error(err);
+        this.error.set(err.error?.mensaje ?? err.error?.message ?? 'Ocurrió un error al crear la cuenta.');
         this.cargando.set(false);
       }
     });

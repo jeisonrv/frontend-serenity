@@ -15,3 +15,25 @@ h1 { margin-top: 0.6rem; }
 textarea { resize: vertical; font-family: var(--font-body); }
 
 .confirmacion { color: var(--color-primary); font-size: 0.9rem; }
+
+.pestanas-diario { display: flex; gap: 0.5rem; margin: 1.25rem 0; }
+.estado-diario { margin: 1rem 0; color: var(--color-ink-soft); }
+.error-diario { display: flex; align-items: center; gap: 0.75rem; }
+.lista-entradas { display: grid; gap: 0.8rem; margin-bottom: 1.25rem; }
+.tarjeta-entrada {
+  width: 100%; color: inherit; text-align: left; cursor: pointer;
+  display: flex; flex-direction: column; gap: 0.45rem;
+  border: 1px solid var(--color-line); font: inherit;
+}
+.tarjeta-entrada:hover { border-color: var(--color-primary-light); }
+.fecha-entrada { margin: 0; color: var(--color-ink-soft); font-size: 0.85rem; }
+.extracto-entrada {
+  color: var(--color-ink-soft); display: -webkit-box; -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical; overflow: hidden; white-space: pre-line;
+}
+.detalle-entrada { margin-top: 1.25rem; }
+.cabecera-detalle, .acciones-entrada { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; }
+.contenido-completo { white-space: pre-wrap; line-height: 1.6; }
+.acciones-entrada { justify-content: flex-start; margin-top: 1rem; }
+.confirmar-borrado { margin-top: 1rem; padding: 1rem; border-radius: var(--radius-soft); background: var(--color-bg); }
+.confirmar-borrado p { margin-top: 0; }

@@ -4,3 +4,5 @@ export interface EstadoAnimo {
   valor: 1 | 2 | 3 | 4 | 5;
   fechaRegistro: string;
 }
+
+export type ValorAnimo = EstadoAnimo['valor'];

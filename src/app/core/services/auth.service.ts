@@ -2,7 +2,7 @@ import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AuthResponse, LoginRequest, RegistroRequest, Usuario } from '../models/usuario.model';
+import { AuthResponse, LoginRequest, RegistroRequest, Usuario, UsuarioResponse } from '../models/usuario.model';
 
 const TOKEN_KEY = 'serenity_token';
 const USER_KEY = 'serenity_usuario';
@@ -21,10 +21,8 @@ export class AuthService {
     );
   }
 
-  registrar(datos: RegistroRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/registro`, datos).pipe(
-      tap((res) => this.guardarSesion(res))
-    );
+  registrar(datos: RegistroRequest): Observable<UsuarioResponse> {
+    return this.http.post<UsuarioResponse>(`${environment.apiUrl}/auth/registro`, datos);
   }
 
   cerrarSesion(): void {
