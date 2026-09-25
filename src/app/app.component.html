@@ -1,0 +1,20 @@
+<h1>Usuarios</h1>
+
+@if (error) {
+  <p style="color: red">{{ error }}</p>
+}
+
+<form (ngSubmit)="guardar()">
+  <input [(ngModel)]="nuevo.nombre" name="nombre" placeholder="Nombre" required />
+  <input [(ngModel)]="nuevo.email" name="email" placeholder="Email" required />
+  <button type="submit">Agregar</button>
+</form>
+
+<ul>
+  @for (u of usuarios; track u.id) {
+    <li>
+      {{ u.nombre }} ({{ u.email }})
+      <button (click)="eliminar(u.id!)">Eliminar</button>
+    </li>
+  }
+</ul>
