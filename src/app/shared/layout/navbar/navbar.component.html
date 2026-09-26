@@ -15,8 +15,8 @@
 
   <div class="pie" *ngIf="auth.usuario() as usuario">
     <div class="usuario">
-      <span class="nombre">{{ usuario.nombreUsuario }}</span>
-      <span class="nivel">Nivel {{ usuario.nivel }} · racha {{ usuario.racha }}d</span>
+      <span class="nombre">{{ usuario.username }}</span>
+      <span class="nivel">Nivel {{ usuario.nivel }} · {{ usuario.monedas ?? 0 }} monedas</span>
     </div>
     <button class="btn-salir" (click)="salir()" type="button">Cerrar sesión</button>
   </div>

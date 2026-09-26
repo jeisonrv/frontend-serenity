@@ -1,6 +1,8 @@
 <header class="cabecera">
   <div>
-    <h1>Hola, {{ auth.usuario()?.nombreUsuario }}</h1>
+    <h1>Hola, {{ auth.usuario()?.username }}</h1>
+    <button type="button" (click)="salir()">Cerrar sesión</button>
+    <p *ngIf="auth.usuario() as usuario">Nivel {{ usuario.nivel }} · {{ usuario.xp }} XP · {{ usuario.monedas ?? 0 }} monedas</p>
     <p>¿Cómo te sientes hoy?</p>
   </div>
 </header>
@@ -35,12 +37,12 @@
     <span class="etiqueta-stat">Nivel</span>
   </div>
   <div class="card stat">
-    <span class="valor">{{ usuario.experiencia }}</span>
-    <span class="etiqueta-stat">Experiencia</span>
+    <span class="valor">{{ usuario.xp }}</span>
+    <span class="etiqueta-stat">XP</span>
   </div>
   <div class="card stat">
-    <span class="valor">{{ usuario.racha }}</span>
-    <span class="etiqueta-stat">Racha (días)</span>
+    <span class="valor">{{ usuario.monedas ?? 0 }}</span>
+    <span class="etiqueta-stat">Monedas</span>
   </div>
 </section>
 

@@ -10,18 +10,29 @@ export interface Usuario {
   fechaRegistro: string;
 }
 
+export interface UsuarioResponse {
+  id: number;
+  username: string;
+  email: string;
+  nivel: number;
+  xp: number;
+  monedas: number;
+}
+
 export interface RegistroRequest {
-  nombreUsuario: string;
-  correo: string;
-  contrasena: string;
+  username: string;
+  email: string;
+  password: string;
 }
 
 export interface LoginRequest {
-  correo: string;
-  contrasena: string;
+  email: string;
+  password: string;
 }
 
-export interface AuthResponse {
+export interface LoginResponse {
   token: string;
-  usuario: Usuario;
+  usuario: UsuarioResponse;
 }
+
+export type AuthResponse = LoginResponse;

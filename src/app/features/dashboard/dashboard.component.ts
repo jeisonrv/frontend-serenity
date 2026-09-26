@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { AnimoService } from '../../core/services/animo.service';
 
@@ -31,7 +31,12 @@ export class DashboardComponent implements OnInit {
     { ruta: '/ejercicios/diario', titulo: 'Diario emocional', desc: 'Escribe libre o guiado.' }
   ];
 
-  constructor(public auth: AuthService, private animoService: AnimoService) {}
+  constructor(public auth: AuthService, private animoService: AnimoService, private router: Router) {}
+
+  salir(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
 
   ngOnInit(): void {
     this.animoService.obtenerAnimoHoy().subscribe({
