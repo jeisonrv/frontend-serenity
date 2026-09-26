@@ -1,1 +1,4 @@
-<router-outlet></router-outlet>
+<app-navbar *ngIf="auth.usuario()"></app-navbar>
+<main class="contenido" [class.con-sesion]="auth.usuario()">
+  <router-outlet></router-outlet>
+</main>

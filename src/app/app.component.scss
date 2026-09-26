@@ -1,0 +1,16 @@
+.contenido {
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.contenido.con-sesion {
+  margin-left: 270px;
+  padding: 2rem 3rem;
+}
+
+@media (max-width: 760px) {
+  .contenido.con-sesion {
+    margin-left: 0;
+    padding: 1.25rem 1rem 5.5rem;
+  }
+}
