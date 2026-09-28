@@ -1,7 +1,6 @@
 <header class="cabecera">
   <div>
     <h1>Hola, {{ auth.usuario()?.username }}</h1>
-    <button type="button" (click)="salir()">Cerrar sesión</button>
     <p *ngIf="auth.usuario() as usuario">Nivel {{ usuario.nivel }} · {{ usuario.xp }} XP · {{ usuario.monedas ?? 0 }} monedas</p>
     <p>¿Cómo te sientes hoy?</p>
   </div>

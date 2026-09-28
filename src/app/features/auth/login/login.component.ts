@@ -44,7 +44,13 @@ export class LoginComponent {
       next: () => this.router.navigate(['/inicio']),
       error: (err: HttpErrorResponse) => {
         console.error(err);
-        this.error.set(err.error?.mensaje ?? err.error?.message ?? 'Ocurrió un error al iniciar sesión.');
+        const mensajeServidor = err.error?.mensaje ?? err.error?.message;
+        const credencialesIncorrectas = err.status === 401 || err.status === 403;
+        this.error.set(
+          mensajeServidor || (credencialesIncorrectas
+            ? 'El correo o la contrase\u00f1a son incorrectos. Verifica tus datos e int\u00e9ntalo de nuevo.'
+            : 'No se pudo iniciar sesi\u00f3n. Int\u00e9ntalo de nuevo m\u00e1s tarde.')
+        );
         this.cargando.set(false);
       }
     });

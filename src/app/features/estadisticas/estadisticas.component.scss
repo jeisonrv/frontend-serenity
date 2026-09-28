@@ -11,3 +11,5 @@ h1 { margin-top: 0.6rem; }
 .tabla th { color: var(--color-ink-soft); font-weight: 500; }
 
 .cargando { color: var(--color-ink-soft); }
+
+h2:not(:first-of-type) { margin-top: 2rem; }

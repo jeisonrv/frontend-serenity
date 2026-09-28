@@ -26,3 +26,22 @@
 
 <ng-template #vacio><p class="cargando">Aún no tienes sesiones registradas.</p></ng-template>
 <ng-template #cargandoTpl><p class="cargando">Cargando…</p></ng-template>
+
+<h2>Registro de emociones</h2>
+<section class="card" *ngIf="!cargandoAnimo(); else cargandoAnimoTpl">
+  <table class="tabla" *ngIf="historialAnimo().length; else emocionesVacias">
+    <thead>
+      <tr><th>Emoci&#243;n</th><th>Valor</th><th>Fecha</th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let registro of historialAnimo()">
+        <td>{{ etiquetaAnimo(registro.valor) }}</td>
+        <td>{{ registro.valor }} de 5</td>
+        <td>{{ registro.fechaRegistro | date: 'dd/MM/yyyy HH:mm' }}</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<ng-template #emocionesVacias><p class="cargando">A&#250;n no tienes emociones registradas.</p></ng-template>
+<ng-template #cargandoAnimoTpl><p class="cargando">Cargando registro de emociones...</p></ng-template>

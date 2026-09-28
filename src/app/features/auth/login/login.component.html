@@ -19,7 +19,7 @@
       </span>
     </div>
 
-    <p class="error" *ngIf="error()">{{ error() }}</p>
+    <p class="error" role="alert" *ngIf="error()">{{ error() }}</p>
 
     <button class="btn btn-primary" type="submit" [disabled]="cargando()">
       {{ cargando() ? 'Ingresando…' : 'Ingresar' }}
