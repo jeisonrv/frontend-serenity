@@ -23,6 +23,8 @@
 
 <ng-template #final>
   <section class="card zona mensaje-final">
+    <p *ngIf="mensajeRegistro()" role="status">{{ mensajeRegistro() }}</p>
+    <p *ngIf="errorRegistro()" role="alert">{{ errorRegistro() }}</p>
     <h2>Secuencia completada</h2>
     <p>Recorriste los 7 grupos musculares.</p>
     <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>

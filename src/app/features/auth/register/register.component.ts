@@ -47,7 +47,7 @@ export class RegisterComponent {
       next: () => this.router.navigate(['/login']),
       error: (err: HttpErrorResponse) => {
         console.error(err);
-        this.error.set(err.error?.mensaje ?? err.error?.message ?? 'Ocurrió un error al crear la cuenta.');
+        this.error.set(err.error?.error ?? err.error?.mensaje ?? err.error?.message ?? 'Ocurrió un error al crear la cuenta.');
         this.cargando.set(false);
       }
     });

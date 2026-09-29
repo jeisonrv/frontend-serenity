@@ -27,6 +27,8 @@
 
 <ng-template #final>
   <section class="card zona mensaje-final">
+    <p *ngIf="mensajeRegistro()" role="status">{{ mensajeRegistro() }}</p>
+    <p *ngIf="errorRegistro()" role="alert">{{ errorRegistro() }}</p>
     <h2>Sesión completada</h2>
     <p>Meditaste {{ duracionMin() }} minutos.</p>
     <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>

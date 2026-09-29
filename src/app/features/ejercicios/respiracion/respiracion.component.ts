@@ -30,6 +30,8 @@ export class RespiracionComponent implements OnDestroy {
   readonly enCurso = signal(false);
   readonly completado = signal(false);
   readonly segundosTotales = signal(0);
+  readonly mensajeRegistro = signal('');
+  readonly errorRegistro = signal('');
 
   private intervalo?: ReturnType<typeof setInterval>;
 
@@ -87,7 +89,10 @@ export class RespiracionComponent implements OnDestroy {
 
     this.ejerciciosService
       .registrarSesion({ tipoEjercicio: 'respiracion', duracion: this.segundosTotales() })
-      .subscribe();
+      .subscribe({
+        next: () => this.mensajeRegistro.set('Sesión guardada.'),
+        error: () => this.errorRegistro.set('No pudimos guardar la sesión.')
+      });
   }
 
   ngOnDestroy(): void {

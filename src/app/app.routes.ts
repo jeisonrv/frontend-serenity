@@ -19,11 +19,6 @@ export const routes: Routes = [
     loadComponent: () => import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent)
   },
   {
-    path: 'usuarios',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/usuarios/usuarios.component').then((m) => m.UsuariosComponent)
-  },
-  {
     path: 'ejercicios/respiracion',
     canActivate: [authGuard],
     loadComponent: () =>

@@ -17,6 +17,8 @@ export class MeditacionComponent implements OnDestroy {
   readonly segundosRestantes = signal(0);
   readonly enCurso = signal(false);
   readonly completado = signal(false);
+  readonly mensajeRegistro = signal('');
+  readonly errorRegistro = signal('');
 
   private intervalo?: ReturnType<typeof setInterval>;
 
@@ -52,7 +54,10 @@ export class MeditacionComponent implements OnDestroy {
 
     this.ejerciciosService
       .registrarSesion({ tipoEjercicio: 'meditacion', duracion: this.duracionMin() * 60 })
-      .subscribe();
+      .subscribe({
+        next: () => this.mensajeRegistro.set('Sesión guardada.'),
+        error: () => this.errorRegistro.set('No pudimos guardar la sesión.')
+      });
   }
 
   ngOnDestroy(): void {

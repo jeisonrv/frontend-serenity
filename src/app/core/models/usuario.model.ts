@@ -16,7 +16,6 @@ export interface UsuarioResponse {
   email: string;
   nivel: number;
   xp: number;
-  monedas: number;
 }
 
 export interface RegistroRequest {

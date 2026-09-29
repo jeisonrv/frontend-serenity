@@ -44,7 +44,7 @@ export class LoginComponent {
       next: () => this.router.navigate(['/inicio']),
       error: (err: HttpErrorResponse) => {
         console.error(err);
-        const mensajeServidor = err.error?.mensaje ?? err.error?.message;
+        const mensajeServidor = err.error?.error ?? err.error?.mensaje ?? err.error?.message;
         const credencialesIncorrectas = err.status === 401 || err.status === 403;
         this.error.set(
           mensajeServidor || (credencialesIncorrectas
