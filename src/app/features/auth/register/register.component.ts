@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { mensajeError } from '../../../core/utils/mensaje-error';
 
 @Component({
   selector: 'app-register',
@@ -47,7 +48,7 @@ export class RegisterComponent {
       next: () => this.router.navigate(['/login']),
       error: (err: HttpErrorResponse) => {
         console.error(err);
-        this.error.set(err.error?.error ?? err.error?.mensaje ?? err.error?.message ?? 'Ocurrió un error al crear la cuenta.');
+        this.error.set(mensajeError(err, 'Ocurri\u00f3 un error al crear la cuenta.'));
         this.cargando.set(false);
       }
     });

@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { mensajeError } from '../../../core/utils/mensaje-error';
 
 @Component({
   selector: 'app-login',
@@ -44,13 +45,10 @@ export class LoginComponent {
       next: () => this.router.navigate(['/inicio']),
       error: (err: HttpErrorResponse) => {
         console.error(err);
-        const mensajeServidor = err.error?.error ?? err.error?.mensaje ?? err.error?.message;
         const credencialesIncorrectas = err.status === 401 || err.status === 403;
-        this.error.set(
-          mensajeServidor || (credencialesIncorrectas
+        this.error.set(mensajeError(err, credencialesIncorrectas
             ? 'El correo o la contrase\u00f1a son incorrectos. Verifica tus datos e int\u00e9ntalo de nuevo.'
-            : 'No se pudo iniciar sesi\u00f3n. Int\u00e9ntalo de nuevo m\u00e1s tarde.')
-        );
+            : 'No se pudo iniciar sesi\u00f3n. Int\u00e9ntalo de nuevo m\u00e1s tarde.'));
         this.cargando.set(false);
       }
     });

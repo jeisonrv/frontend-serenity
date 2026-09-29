@@ -6,6 +6,7 @@ import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DiarioService } from '../../../core/services/diario.service';
 import { EntradaDiario } from '../../../core/models/entrada-diario.model';
+import { mensajeError } from '../../../core/utils/mensaje-error';
 
 // RF7: diario emocional — entradas guiadas (con prompt) o libres
 const PROMPTS = [
@@ -72,7 +73,7 @@ export class DiarioComponent implements OnInit {
       },
       error: (error: HttpErrorResponse) => {
         console.error(error);
-        this.errorEntradas.set(this.mensajeError(error, 'No pudimos cargar tus entradas. Inténtalo de nuevo.'));
+        this.errorEntradas.set(mensajeError(error, 'No pudimos cargar tus entradas. Inténtalo de nuevo.'));
       }
     });
   }
@@ -91,7 +92,7 @@ export class DiarioComponent implements OnInit {
         this.cargandoDetalle.set(false);
       },
       error: (error: HttpErrorResponse) => {
-        this.errorDetalle.set(this.mensajeError(error, 'No pudimos abrir esta entrada. Inténtalo de nuevo.'));
+        this.errorDetalle.set(mensajeError(error, 'No pudimos abrir esta entrada. Inténtalo de nuevo.'));
         this.cargandoDetalle.set(false);
       }
     });
@@ -121,7 +122,7 @@ export class DiarioComponent implements OnInit {
         this.cargarEntradas();
       },
       error: (error: HttpErrorResponse) => {
-        this.errorDetalle.set(this.mensajeError(error, 'No pudimos guardar los cambios. Inténtalo de nuevo.'));
+        this.errorDetalle.set(mensajeError(error, 'No pudimos guardar los cambios. Inténtalo de nuevo.'));
         this.guardandoEdicion.set(false);
       }
     });
@@ -138,7 +139,7 @@ export class DiarioComponent implements OnInit {
         this.cargarEntradas();
       },
       error: (error: HttpErrorResponse) => {
-        this.errorDetalle.set(this.mensajeError(error, 'No pudimos eliminar la entrada. Inténtalo de nuevo.'));
+        this.errorDetalle.set(mensajeError(error, 'No pudimos eliminar la entrada. Inténtalo de nuevo.'));
         this.eliminando.set(false);
       }
     });
@@ -146,10 +147,6 @@ export class DiarioComponent implements OnInit {
 
   elegirPrompt(p: string): void {
     this.promptSeleccionado.set(p);
-  }
-
-  private mensajeError(error: HttpErrorResponse, respaldo: string): string {
-    return error.error?.error ?? error.error?.mensaje ?? error.error?.message ?? respaldo;
   }
 
   formatearFecha(fecha?: string): string {
@@ -178,7 +175,7 @@ export class DiarioComponent implements OnInit {
         },
         error: (error: HttpErrorResponse) => {
           this.guardando.set(false);
-          this.errorEntradas.set(this.mensajeError(error, 'No pudimos guardar la entrada. Inténtalo de nuevo.'));
+          this.errorEntradas.set(mensajeError(error, 'No pudimos guardar la entrada. Inténtalo de nuevo.'));
           this.pestana.set('entradas');
         }
       });
