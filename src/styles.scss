@@ -1,119 +1,67 @@
-/* ============================================================
-   Serenity — sistema de diseño
-   Paleta "jardín en calma": verdes musgo, papel cálido y miel
-   como acento de crecimiento. Pensada para reducir la carga
-   visual (usuarios llegan estresados/ansiosos).
-   ============================================================ */
-
+/* Serenity — sistema visual azul pastel */
 :root {
-  --color-bg: #F3F4EE;
-  --color-surface: #FBFAF5;
-  --color-ink: #1F2A24;
-  --color-ink-soft: #4B5A50;
-  --color-line: #DBDCCF;
-
-  --color-primary: #3F6B52;
-  --color-primary-light: #7FA88F;
-  --color-primary-dark: #2C4C3B;
-
-  --color-accent: #D9A441;
-  --color-accent-soft: #F1DFB0;
-
-  --color-danger: #B15C4B;
-
+  --color-bg: #F4F8FD;
+  --color-surface: #FFFFFF;
+  --color-ink: #263B53;
+  --color-ink-soft: #687D96;
+  --color-line: #D8E5F3;
+  --color-primary: #547FAF;
+  --color-primary-light: #DCEBFA;
+  --color-primary-dark: #365A83;
+  --color-accent: #A9D5CB;
+  --color-accent-soft: #E4F4EF;
+  --color-danger: #B54747;
   --font-display: 'Fraunces', Georgia, serif;
-  --font-body: 'IBM Plex Sans', -apple-system, Segoe UI, sans-serif;
-
-  --radius-organic: 18px 6px 18px 6px;
-  --radius-soft: 10px;
-  --shadow-soft: 0 1px 2px rgba(31, 42, 36, 0.06), 0 4px 14px rgba(31, 42, 36, 0.05);
+  --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --radius-organic: 22px;
+  --radius-soft: 12px;
+  --shadow-soft: 0 8px 28px rgba(54, 90, 131, 0.09);
 }
-
 * { box-sizing: border-box; }
-
 html, body {
-  height: 100%;
-  margin: 0;
-  background: var(--color-bg);
-  color: var(--color-ink);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.55;
+  min-height: 100%; margin: 0; background: var(--color-bg); color: var(--color-ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
 }
-
+body { -webkit-font-smoothing: antialiased; }
 h1, h2, h3, h4 {
-  font-family: var(--font-display);
-  color: var(--color-primary-dark);
-  font-weight: 500;
-  line-height: 1.2;
-  margin: 0 0 0.5em;
+  font-family: var(--font-display); color: var(--color-primary-dark); font-weight: 500;
+  line-height: 1.2; margin: 0 0 .55em;
 }
-
-h1 { font-size: 2.1rem; }
-h2 { font-size: 1.5rem; }
-h3 { font-size: 1.15rem; }
-
-p { max-width: 62ch; }
-
-a { color: var(--color-primary); }
-
+h1 { font-size: clamp(1.8rem, 3vw, 2.35rem); }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.2rem; }
+p { max-width: 66ch; }
+a { color: var(--color-primary-dark); }
 button, input, textarea, select { font-family: inherit; }
-
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #8FBCE8; outline-offset: 3px; }
 .card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-organic);
-  box-shadow: var(--shadow-soft);
-  padding: 1.5rem;
+  background: var(--color-surface); border: 1px solid var(--color-line);
+  border-radius: var(--radius-organic); box-shadow: var(--shadow-soft); padding: 1.5rem;
 }
-
 .btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  border: none;
-  border-radius: var(--radius-soft);
-  padding: 0.65rem 1.25rem;
-  font-size: 0.95rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: transform 0.12s ease, background 0.15s ease;
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  border: 1px solid transparent; border-radius: var(--radius-soft); padding: .75rem 1.25rem;
+  font-size: .95rem; font-weight: 600; cursor: pointer; text-decoration: none;
+  transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
 }
-.btn:active { transform: scale(0.97); }
-
-.btn-primary {
-  background: var(--color-primary);
-  color: #fff;
-}
-.btn-primary:hover { background: var(--color-primary-dark); }
-
-.btn-ghost {
-  background: transparent;
-  color: var(--color-primary-dark);
-  border: 1px solid var(--color-line);
-}
-.btn-ghost:hover { border-color: var(--color-primary-light); }
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  margin-bottom: 1.1rem;
-}
-.field label { font-size: 0.85rem; color: var(--color-ink-soft); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: .65; cursor: not-allowed; }
+.btn-primary { background: var(--color-primary); color: #fff; }
+.btn-primary:hover:not(:disabled) { background: var(--color-primary-dark); box-shadow: 0 5px 14px rgba(54,90,131,.18); }
+.btn-ghost { background: #fff; color: var(--color-primary-dark); border-color: var(--color-line); }
+.btn-ghost:hover { background: var(--color-primary-light); }
+.field { display: flex; flex-direction: column; gap: .4rem; margin-bottom: 1.1rem; }
+.field label { color: var(--color-ink); font-size: .9rem; font-weight: 600; }
 .field input, .field textarea, .field select {
-  padding: 0.65rem 0.8rem;
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-soft);
-  background: #fff;
-  font-size: 0.95rem;
-  color: var(--color-ink);
+  width: 100%; padding: .8rem .9rem; border: 1px solid #CBD9E9; border-radius: var(--radius-soft);
+  background: #FBFDFF; font-size: .96rem; color: var(--color-ink);
+  transition: border-color .15s ease, box-shadow .15s ease;
 }
 .field input:focus, .field textarea:focus, .field select:focus {
-  outline: 2px solid var(--color-primary-light);
-  outline-offset: 1px;
+  outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 4px rgba(84,127,175,.13);
 }
-.field .error {
-  color: var(--color-danger);
-  font-size: 0.8rem;
+.field .error, .error { color: var(--color-danger); font-size: .82rem; }
+::selection { background: var(--color-primary-light); color: var(--color-ink); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
