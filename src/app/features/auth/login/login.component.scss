@@ -36,3 +36,16 @@
 .error-general { margin: -.2rem 0 .75rem; }
 .nota-crisis { color: var(--color-ink-soft); text-align: center; font-size: .76rem; margin: 1.15rem auto 0; }
 @media (max-width: 480px) { .pantalla-auth { padding: 1.5rem 1rem; } .formulario { border-radius: 20px; } }
+
+
+.aceptacion-legal {
+  display: flex; align-items: flex-start; gap: .65rem; margin: .35rem 0 .25rem;
+  color: var(--color-ink-soft); font-size: .82rem; line-height: 1.5; cursor: pointer;
+}
+.aceptacion-legal input {
+  appearance: auto; width: 17px; height: 17px; flex: 0 0 auto; margin: .15rem 0 0;
+  accent-color: var(--color-primary);
+}
+.aceptacion-legal a { color: var(--color-primary-dark); font-weight: 700; text-underline-offset: 3px; }
+.error-terminos { display: block; margin: .15rem 0 .75rem 1.6rem; }
+.nota-crisis a { color: var(--color-primary-dark); font-weight: 700; text-underline-offset: 3px; }
