@@ -5,6 +5,14 @@ export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'inicio' },
 
   {
+    path: 'ayuda',
+    loadComponent: () => import('./features/ayuda/ayuda.component').then((m) => m.AyudaComponent)
+  },
+  {
+    path: 'terminos',
+    loadComponent: () => import('./features/terminos/terminos.component').then((m) => m.TerminosComponent)
+  },
+  {
     path: 'login',
     loadComponent: () => import('./features/auth/login/login.component').then((m) => m.LoginComponent)
   },
