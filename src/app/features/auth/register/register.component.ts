@@ -26,7 +26,8 @@ export class RegisterComponent {
     this.form = this.fb.group({
       nombreUsuario: ['', [Validators.required, Validators.minLength(3)]],
       correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]]
+      contrasena: ['', [Validators.required, Validators.minLength(8)]],
+      aceptaTerminos: [false, Validators.requiredTrue]
     });
   }
 
