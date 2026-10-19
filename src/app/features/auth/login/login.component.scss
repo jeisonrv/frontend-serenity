@@ -12,9 +12,7 @@
 .auth-panel { position: relative; z-index: 1; width: min(100%, 460px); }
 .marca-auth { display: flex; flex-direction: column; align-items: center; margin-bottom: 1.35rem; }
 .marca-simbolo {
-  width: 54px; height: 54px; display: grid; place-items: center; border-radius: 19px 19px 19px 6px;
-  background: linear-gradient(145deg, #DCEBFA, #C8E0F6); color: var(--color-primary-dark);
-  font-size: 1.5rem; box-shadow: 0 7px 18px rgba(54,90,131,.12); margin-bottom: .55rem;
+  display: block; width: 64px; height: 64px; object-fit: contain; margin-bottom: .45rem;
 }
 .marca-nombre { font-family: var(--font-display); color: var(--color-primary-dark); font-size: 1.8rem; line-height: 1.1; }
 .marca-frase { margin-top: .3rem; color: var(--color-ink-soft); font-size: .9rem; }
