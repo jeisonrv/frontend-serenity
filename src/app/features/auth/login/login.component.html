@@ -1,30 +1,44 @@
 <div class="pantalla-auth">
-  <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
-    <h1>Serenity</h1>
-    <p class="subtitulo">Un espacio privado para tu bienestar emocional.</p>
-
-    <div class="field">
-      <label for="correo">Correo</label>
-      <input id="correo" type="email" formControlName="correo" autocomplete="email" />
-      <span class="error" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
-        Ingresa un correo válido.
-      </span>
+  <div class="auth-panel">
+    <div class="marca-auth" aria-label="Serenity, aplicación de bienestar">
+      <div class="marca-simbolo" aria-hidden="true"><span>✦</span></div>
+      <span class="marca-nombre">Serenity</span>
+      <span class="marca-frase">Un espacio para volver a ti</span>
     </div>
 
-    <div class="field">
-      <label for="contrasena">Contraseña</label>
-      <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" />
-      <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
-        Mínimo 8 caracteres.
-      </span>
-    </div>
+    <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
+      <div class="encabezado-formulario">
+        <p class="eyebrow">TU BIENESTAR, PASO A PASO</p>
+        <h1>Qué bueno tenerte aquí</h1>
+        <p class="subtitulo">Inicia sesión y regálate un momento para ti.</p>
+      </div>
 
-    <p class="error" *ngIf="error()">{{ error() }}</p>
+      <div class="field">
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" type="email" formControlName="correo" autocomplete="email" placeholder="tu@correo.com" />
+        <span class="error" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
+          Ingresa un correo válido.
+        </span>
+      </div>
 
-    <button class="btn btn-primary" type="submit" [disabled]="cargando()">
-      {{ cargando() ? 'Ingresando…' : 'Ingresar' }}
-    </button>
+      <div class="field">
+        <label for="contrasena">Contraseña</label>
+        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" placeholder="Mínimo 8 caracteres" />
+        <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
+          La contraseña debe tener al menos 8 caracteres.
+        </span>
+      </div>
 
-    <p class="alterno">¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
-  </form>
+      <p class="error error-general" role="alert" *ngIf="error()">{{ error() }}</p>
+
+      <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando()">
+        <span>{{ cargando() ? 'Ingresando…' : 'Ingresar a Serenity' }}</span>
+        <span aria-hidden="true" *ngIf="!cargando()">→</span>
+      </button>
+
+      <p class="alterno">¿Primera vez aquí? <a routerLink="/registro">Crea tu cuenta</a></p>
+      <p class="nota-privacidad"><span aria-hidden="true">♡</span> Un espacio de autocuidado; tú marcas tu ritmo.</p>
+    </form>
+    <p class="nota-crisis">Serenity no reemplaza la atención profesional ni los servicios de emergencia.</p>
+  </div>
 </div>
