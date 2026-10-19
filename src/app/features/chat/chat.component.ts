@@ -41,7 +41,7 @@ export class ChatComponent implements OnDestroy {
   enviar(): void {
     const conv = this.conversacion();
     const texto = this.borrador().trim();
-    if (!conv || !texto) return;
+    if (!conv || !texto || !this.chatRealtime.conectado()) return;
 
     this.chatRealtime.enviarMensaje(conv.idConversacion, texto);
     this.borrador.set('');
