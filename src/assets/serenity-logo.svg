@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title">
+  <title id="title">Símbolo de Serenity</title>
+  <defs>
+    <linearGradient id="cielo" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#E5F1FD"/>
+      <stop offset="1" stop-color="#BFDDF5"/>
+    </linearGradient>
+  </defs>
+  <rect x="5" y="5" width="118" height="118" rx="35" fill="url(#cielo)"/>
+  <circle cx="65" cy="39" r="15" fill="#FFFFFF" opacity=".96"/>
+  <path d="M21 76 C37 66 49 67 64 77 C78 87 91 86 107 75 L107 91 C91 102 77 103 62 93 C47 83 35 84 21 94 Z" fill="#6D9BC7"/>
+  <path d="M21 91 C37 82 49 83 64 93 C78 103 91 102 107 91 L107 106 L21 106 Z" fill="#82C5B4"/>
+  <path d="M64 78 C65 65 68 58 78 50" fill="none" stroke="#365A83" stroke-width="4" stroke-linecap="round"/>
+  <path d="M69 61 C55 61 49 53 50 43 C62 43 71 49 69 61 Z" fill="#4F91A1"/>
+  <path d="M71 55 C72 43 82 38 93 41 C91 53 83 59 71 55 Z" fill="#5E9D8F"/>
+</svg>

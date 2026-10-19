@@ -1,0 +1,23 @@
+.pagina-informativa { width: min(100%, 900px); margin: 0 auto; padding: .5rem 0 2rem; }
+.cabecera-informativa { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .75rem 0 2rem; }
+.marca-informativa { display: inline-flex; align-items: center; gap: .6rem; color: var(--color-primary-dark); text-decoration: none; font: 500 1.35rem var(--font-display); }
+.simbolo-marca { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 13px 13px 13px 4px; color: var(--color-primary-dark); background: var(--color-primary-light); }
+.volver { color: var(--color-primary-dark); font-weight: 600; font-size: .9rem; text-underline-offset: 4px; }
+.introduccion { padding: 1rem 0 1.4rem; }
+.eyebrow { color: var(--color-primary); font-size: .73rem; font-weight: 700; letter-spacing: .13em; margin: 0 0 .65rem; }
+.introduccion h1 { font-size: clamp(2rem, 5vw, 3rem); margin-bottom: .8rem; }
+.introduccion > p:not(.eyebrow) { color: var(--color-ink-soft); }
+.aviso-borrador { padding: 1rem 1.1rem; border-radius: 12px; border: 1px solid #E4D6A6; background: #FFF9E9; color: #69572B !important; }
+.contenido-legal { background: #fff; border: 1px solid var(--color-line); border-radius: 20px; padding: clamp(1.2rem, 4vw, 2rem); box-shadow: var(--shadow-soft); }
+.contenido-legal section + section { border-top: 1px solid #EAF0F7; margin-top: 1.45rem; padding-top: 1.45rem; }
+.contenido-legal h2 { font-family: var(--font-body); font-size: 1.1rem; font-weight: 700; margin-bottom: .55rem; }
+.contenido-legal p { color: var(--color-ink-soft); margin: 0 0 .7rem; }
+.contenido-legal p:last-child { margin-bottom: 0; }
+.contenido-legal .seccion-crisis { border: 1px solid #F1D9D7; border-radius: 15px; background: #FFF8F7; padding: 1.1rem; margin-top: 1.45rem; }
+.seccion-crisis h2 { color: #8D2D2D; }
+.enlace-destacado { display: inline-block; margin-top: .35rem; font-weight: 700; text-underline-offset: 3px; color: var(--color-primary-dark); }
+.pie-informativo { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .9rem; padding: 1.5rem 0 .5rem; font-size: .88rem; font-weight: 600; }
+@media (max-width: 520px) {
+  .cabecera-informativa { padding-bottom: 1.25rem; }
+  .contenido-legal { border-radius: 15px; }
+}

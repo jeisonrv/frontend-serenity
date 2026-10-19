@@ -20,7 +20,9 @@ export class NavbarComponent {
     { ruta: '/jardin', etiqueta: 'Jardín', icono: '⚘' },
     { ruta: '/logros', etiqueta: 'Logros', icono: '⬡' },
     { ruta: '/estadisticas', etiqueta: 'Estadísticas', icono: '▤' },
-    { ruta: '/chat', etiqueta: 'Hablar con alguien', icono: '◐' }
+    { ruta: '/chat', etiqueta: 'Hablar con alguien', icono: '◐' },
+    { ruta: '/ayuda', etiqueta: 'Líneas de ayuda', icono: '♡' },
+    { ruta: '/terminos', etiqueta: 'Términos', icono: 'ⓘ' }
   ];
 
   constructor(public auth: AuthService, private router: Router) {}

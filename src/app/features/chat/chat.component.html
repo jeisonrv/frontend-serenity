@@ -1,4 +1,4 @@
-<a routerLink="/inicio" class="volver">← Volver</a>
+ <a routerLink="/inicio" class="volver">← Volver</a>
 <h1>Hablar con alguien</h1>
 <p>Conversación anónima y en tiempo real con un oyente disponible. No sustituye atención psicológica profesional.</p>
 
@@ -20,19 +20,19 @@
     </div>
   </div>
 
-  <div class="mensajes">
-    <div
-      class="mensaje"
-      *ngFor="let m of chatService.mensajes()"
-      [class.propio]="m.remitente === 'usuario'"
-    >
+  <p class="estado-conexion" role="status">
+    {{ chatRealtime.conectado() ? 'Conectado' : 'Conectando con la conversación…' }}
+  </p>
+
+  <div class="mensajes" aria-live="polite" aria-label="Mensajes de la conversación">
+    <div class="mensaje" *ngFor="let m of chatRealtime.mensajes()" [class.propio]="m.remitente === 'usuario'">
       {{ m.contenido }}
     </div>
   </div>
 
   <form class="entrada" (ngSubmit)="enviar()">
     <input type="text" [ngModel]="borrador()" (ngModelChange)="borrador.set($event)" name="mensaje" placeholder="Escribe un mensaje…" />
-    <button class="btn btn-primary" type="submit">Enviar</button>
+    <button class="btn btn-primary" type="submit" [disabled]="!chatRealtime.conectado()">Enviar</button>
   </form>
 
   <div class="modal-reporte" *ngIf="mostrarReporte()">
