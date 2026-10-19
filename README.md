@@ -43,3 +43,13 @@ el contrato de la API esté cerrado.
 
 No se implementó aún: paginación del historial, edición de perfil, ni pantalla de
 "olvidé mi contraseña" — no están en el alcance definido (sección 2.4 del documento).
+
+
+## Actualizaciones de interfaz y arquitectura
+
+- La paleta global de la interfaz se define en `src/styles.scss` y utiliza tonos azul pastel.
+- Las rutas públicas `/ayuda` y `/terminos` contienen recursos de atención y condiciones de uso preliminares.
+- La página de ayuda enlaza a los recursos oficiales de salud mental publicados por el Ministerio de Salud y Protección Social.
+- Consulta [`docs/SOLID.md`](docs/SOLID.md) para conocer los principios SOLID ya aplicados, las mejoras parciales y los siguientes pasos de arquitectura.
+
+Antes de producción, revisa la configuración de `src/environments/environment.prod.ts`, registra en el backend la aceptación de los términos si se requiere como evidencia y revisa jurídicamente los términos y la política de tratamiento de datos personales.
