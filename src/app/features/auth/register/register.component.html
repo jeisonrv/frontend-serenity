@@ -1,38 +1,59 @@
 <div class="pantalla-auth">
-  <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
-    <h1>Crea tu cuenta</h1>
-    <p class="subtitulo">Gratuito, confidencial y sin diagnóstico clínico.</p>
-
-    <div class="field">
-      <label for="nombreUsuario">Nombre de usuario</label>
-      <input id="nombreUsuario" type="text" formControlName="nombreUsuario" autocomplete="username" />
-      <span class="error" *ngIf="form.get('nombreUsuario')?.touched && form.get('nombreUsuario')?.invalid">
-        Mínimo 3 caracteres.
-      </span>
+  <div class="auth-panel">
+    <div class="marca-auth" aria-label="Serenity, aplicación de bienestar">
+      <div class="marca-simbolo" aria-hidden="true"><span>✦</span></div>
+      <span class="marca-nombre">Serenity</span>
+      <span class="marca-frase">Un espacio para empezar a cuidarte</span>
     </div>
 
-    <div class="field">
-      <label for="correo">Correo</label>
-      <input id="correo" type="email" formControlName="correo" autocomplete="email" />
-      <span class="error" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
-        Ingresa un correo válido.
+    <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
+      <div class="encabezado-formulario">
+        <p class="eyebrow">TU BIENESTAR, A TU RITMO</p>
+        <h1>Crea tu cuenta</h1>
+        <p class="subtitulo">Un espacio digital para practicar el autocuidado emocional.</p>
+      </div>
+
+      <div class="field">
+        <label for="nombreUsuario">Nombre de usuario</label>
+        <input id="nombreUsuario" type="text" formControlName="nombreUsuario" autocomplete="username" placeholder="Cómo te llamamos" />
+        <span class="error" *ngIf="form.get('nombreUsuario')?.touched && form.get('nombreUsuario')?.invalid">
+          El nombre de usuario debe tener al menos 3 caracteres.
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" type="email" formControlName="correo" autocomplete="email" placeholder="tu@correo.com" />
+        <span class="error" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
+          Ingresa un correo válido.
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="contrasena">Contraseña</label>
+        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="new-password" placeholder="Mínimo 8 caracteres" />
+        <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
+          La contraseña debe tener al menos 8 caracteres.
+        </span>
+      </div>
+
+      <label class="aceptacion-legal">
+        <input type="checkbox" formControlName="aceptaTerminos" />
+        <span>He leído y acepto los <a routerLink="/terminos" target="_blank" rel="noopener noreferrer">términos y condiciones</a>.</span>
+      </label>
+      <span class="error error-terminos" *ngIf="form.get('aceptaTerminos')?.touched && form.get('aceptaTerminos')?.invalid">
+        Debes aceptar los términos para continuar.
       </span>
-    </div>
 
-    <div class="field">
-      <label for="contrasena">Contraseña</label>
-      <input id="contrasena" type="password" formControlName="contrasena" autocomplete="new-password" />
-      <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
-        Mínimo 8 caracteres.
-      </span>
-    </div>
+      <p class="error error-general" role="alert" *ngIf="error()">{{ error() }}</p>
 
-    <p class="error" *ngIf="error()">{{ error() }}</p>
+      <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando()">
+        <span>{{ cargando() ? 'Creando cuenta…' : 'Crear mi cuenta' }}</span>
+        <span aria-hidden="true" *ngIf="!cargando()">→</span>
+      </button>
 
-    <button class="btn btn-primary" type="submit" [disabled]="cargando()">
-      {{ cargando() ? 'Creando cuenta…' : 'Crear cuenta' }}
-    </button>
-
-    <p class="alterno">¿Ya tienes cuenta? <a routerLink="/login">Ingresa</a></p>
-  </form>
+      <p class="alterno">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+    </form>
+    <p class="nota-crisis">¿Necesitas apoyo ahora? <a routerLink="/ayuda">Consulta las líneas de ayuda</a>.</p>
+  </div>
 </div>
