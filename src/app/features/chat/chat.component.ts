@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ChatService } from '../../core/services/chat.service';
+import { ChatRealtimeService } from '../../core/services/chat-realtime.service';
 import { Conversacion } from '../../core/models/conversacion.model';
 
 // RF12: solicitud de chat de apoyo · RF13: mensajería en tiempo real (anónima)
@@ -20,14 +21,17 @@ export class ChatComponent implements OnDestroy {
   readonly mostrarReporte = signal(false);
   readonly motivoReporte = signal('');
 
-  constructor(public chatService: ChatService) {}
+  constructor(
+    public chatService: ChatService,
+    public chatRealtime: ChatRealtimeService
+  ) {}
 
   solicitarChat(): void {
     this.estado.set('buscando');
     this.chatService.solicitarConversacion().subscribe({
       next: (conv) => {
         this.conversacion.set(conv);
-        this.chatService.conectar(conv.idConversacion);
+        this.chatRealtime.conectar(conv.idConversacion);
         this.estado.set('activo');
       },
       error: () => this.estado.set('inicial')
@@ -39,7 +43,7 @@ export class ChatComponent implements OnDestroy {
     const texto = this.borrador().trim();
     if (!conv || !texto) return;
 
-    this.chatService.enviarMensaje(conv.idConversacion, texto);
+    this.chatRealtime.enviarMensaje(conv.idConversacion, texto);
     this.borrador.set('');
   }
 
@@ -47,7 +51,7 @@ export class ChatComponent implements OnDestroy {
     const conv = this.conversacion();
     if (!conv) return;
     this.chatService.finalizar(conv.idConversacion).subscribe(() => {
-      this.chatService.desconectar();
+      this.chatRealtime.desconectar();
       this.estado.set('finalizado');
     });
   }
@@ -64,6 +68,6 @@ export class ChatComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.chatService.desconectar();
+    this.chatRealtime.desconectar();
   }
 }
