@@ -34,7 +34,7 @@ h1 { margin-top: 0.6rem; }
   max-width: 75%;
   font-size: 0.9rem;
 }
-.mensaje.propio { align-self: flex-end; background: var(--color-primary-light); color: #fff; }
+.mensaje.propio { align-self: flex-end; background: var(--color-primary-light); color: var(--color-primary-dark); }
 
 .entrada { display: flex; gap: 0.6rem; padding: 0.9rem 1.1rem; border-top: 1px solid var(--color-line); }
 .entrada input {
@@ -47,7 +47,7 @@ h1 { margin-top: 0.6rem; }
 .modal-reporte {
   position: fixed;
   inset: 0;
-  background: rgba(31,42,36,0.4);
+  background: rgba(38,59,83,0.46);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -56,3 +56,5 @@ h1 { margin-top: 0.6rem; }
 .contenido-modal { width: 100%; max-width: 340px; }
 .contenido-modal textarea { width: 100%; margin-top: 0.6rem; border: 1px solid var(--color-line); border-radius: var(--radius-soft); padding: 0.6rem; }
 .botones-modal { display: flex; justify-content: flex-end; gap: 0.6rem; margin-top: 0.9rem; }
+
+.estado-conexion { margin: .55rem 1.1rem 0; color: var(--color-ink-soft); font-size: .78rem; }
