@@ -1,31 +1,40 @@
- <a routerLink="/inicio" class="volver">← Volver</a>
-<h1>Hablar con alguien</h1>
-<p>Conversación anónima y en tiempo real con un oyente disponible. No sustituye atención psicológica profesional.</p>
+<a [routerLink]="esOyente() ? '/oyente' : '/inicio'" class="volver">← Volver</a>
+<h1>{{ esOyente() ? 'Conversación asignada' : 'Hablar con alguien' }}</h1>
+<p *ngIf="!esOyente()">Conversación anónima y en tiempo real con un oyente disponible. No sustituye atención psicológica profesional.</p>
 
-<section class="card inicial" *ngIf="estado() === 'inicial'">
+<p class="confirmacion" role="status" *ngIf="confirmacion()">{{ confirmacion() }}</p>
+<p class="error" role="alert" *ngIf="error()">{{ error() }}</p>
+
+<section class="card inicial" *ngIf="estado() === 'inicial' && !esOyente()">
   <p>Cuando estés listo, te conectaremos con un oyente disponible.</p>
   <button class="btn btn-primary" type="button" (click)="solicitarChat()">Solicitar conversación</button>
 </section>
 
-<section class="card inicial" *ngIf="estado() === 'buscando'">
-  <p>Buscando un oyente disponible…</p>
+<section class="card inicial" *ngIf="estado() === 'buscando' || estado() === 'cargando'">
+  <p>{{ esOyente() ? 'Cargando la conversación…' : 'Buscando un oyente disponible…' }}</p>
+</section>
+
+<section class="card inicial" *ngIf="estado() === 'error'">
+  <button *ngIf="esOyente() && idAsignado()" class="btn btn-primary" type="button" (click)="cargarConversacionAsignada()">Volver a intentar</button>
+  <a [routerLink]="esOyente() ? '/oyente' : '/inicio'" class="btn btn-ghost">Volver</a>
 </section>
 
 <section class="card chat" *ngIf="estado() === 'activo'">
   <div class="cabecera-chat">
-    <span>Oyente conectado</span>
+    <span>{{ esOyente() ? 'Conversación asignada' : 'Oyente conectado' }}</span>
     <div class="acciones">
       <button class="btn-icono" type="button" (click)="mostrarReporte.set(true)">Reportar</button>
-      <button class="btn-icono" type="button" (click)="finalizarConversacion()">Finalizar</button>
+      <button class="btn-icono" type="button" [disabled]="procesando()" (click)="finalizarConversacion()">Finalizar</button>
     </div>
   </div>
 
   <p class="estado-conexion" role="status">
     {{ chatRealtime.conectado() ? 'Conectado' : 'Conectando con la conversación…' }}
   </p>
+  <p class="error" role="alert" *ngIf="chatRealtime.error()">{{ chatRealtime.error() }}</p>
 
   <div class="mensajes" aria-live="polite" aria-label="Mensajes de la conversación">
-    <div class="mensaje" *ngFor="let m of chatRealtime.mensajes()" [class.propio]="m.remitente === 'usuario'">
+    <div class="mensaje" *ngFor="let m of chatRealtime.mensajes()" [class.propio]="m.remitente === (esOyente() ? 'oyente' : 'usuario')">
       {{ m.contenido }}
     </div>
   </div>
@@ -38,10 +47,10 @@
   <div class="modal-reporte" *ngIf="mostrarReporte()">
     <div class="card contenido-modal">
       <h3>Reportar conversación</h3>
-      <textarea rows="3" [ngModel]="motivoReporte()" (ngModelChange)="motivoReporte.set($event)" name="motivo" placeholder="Describe brevemente el motivo"></textarea>
+      <textarea rows="3" [ngModel]="motivoReporte()" (ngModelChange)="motivoReporte.set($event)" name="motivo" required maxlength="1000" placeholder="Describe brevemente el motivo"></textarea>
       <div class="botones-modal">
         <button class="btn btn-ghost" type="button" (click)="mostrarReporte.set(false)">Cancelar</button>
-        <button class="btn btn-primary" type="button" (click)="enviarReporte()">Enviar reporte</button>
+        <button class="btn btn-primary" type="button" [disabled]="!motivoReporte().trim() || procesando()" (click)="enviarReporte()">Enviar reporte</button>
       </div>
     </div>
   </div>
@@ -49,5 +58,5 @@
 
 <section class="card inicial" *ngIf="estado() === 'finalizado'">
   <p>La conversación finalizó. Gracias por hablar hoy.</p>
-  <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>
+  <a [routerLink]="esOyente() ? '/oyente' : '/inicio'" class="btn btn-primary">{{ esOyente() ? 'Volver al panel' : 'Volver al inicio' }}</a>
 </section>

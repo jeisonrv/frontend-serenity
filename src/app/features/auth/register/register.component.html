@@ -17,7 +17,7 @@
         <label for="nombreUsuario">Nombre de usuario</label>
         <input id="nombreUsuario" type="text" formControlName="nombreUsuario" autocomplete="username" placeholder="Cómo te llamamos" />
         <span class="error" *ngIf="form.get('nombreUsuario')?.touched && form.get('nombreUsuario')?.invalid">
-          El nombre de usuario debe tener al menos 3 caracteres.
+          El nombre de usuario debe tener entre 3 y 50 caracteres.
         </span>
       </div>
 
@@ -31,9 +31,9 @@
 
       <div class="field">
         <label for="contrasena">Contraseña</label>
-        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="new-password" placeholder="Mínimo 8 caracteres" />
+        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="new-password" placeholder="Mínimo 6 caracteres" />
         <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
-          La contraseña debe tener al menos 8 caracteres.
+          La contraseña debe tener al menos 6 caracteres.
         </span>
       </div>
 
@@ -47,10 +47,17 @@
 
       <p class="error error-general" role="alert" *ngIf="error()">{{ error() }}</p>
 
-      <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando()">
+      <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando() || googleCargando()">
         <span>{{ cargando() ? 'Creando cuenta…' : 'Crear mi cuenta' }}</span>
         <span aria-hidden="true" *ngIf="!cargando()">→</span>
       </button>
+
+      <div class="separador-google"><span>o regístrate con</span></div>
+      <app-google-identity-button
+        [disabled]="cargando() || googleCargando()"
+        text="continue_with"
+        (credential)="iniciarConGoogle($event)"
+        (loadError)="error.set($event)" />
 
       <p class="alterno">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
     </form>

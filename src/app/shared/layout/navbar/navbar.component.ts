@@ -11,7 +11,7 @@ import { AuthService } from '../../../core/services/auth.service';
   styleUrl: './navbar.component.scss'
 })
 export class NavbarComponent {
-  readonly enlaces = [
+  private readonly enlacesUsuario = [
     { ruta: '/inicio', etiqueta: 'Inicio', icono: '⌂' },
     { ruta: '/ejercicios/respiracion', etiqueta: 'Respiración', icono: '≈' },
     { ruta: '/ejercicios/meditacion', etiqueta: 'Meditación', icono: '○' },
@@ -25,7 +25,35 @@ export class NavbarComponent {
     { ruta: '/terminos', etiqueta: 'Términos', icono: 'ⓘ' }
   ];
 
+  private readonly enlacesOyente = [
+    { ruta: '/oyente', etiqueta: 'Panel de oyente', icono: '☏' },
+    { ruta: '/ayuda', etiqueta: 'Líneas de ayuda', icono: '♡' },
+    { ruta: '/terminos', etiqueta: 'Términos', icono: 'ⓘ' }
+  ];
+
+  private readonly enlacesModerador = [
+    { ruta: '/moderacion', etiqueta: 'Moderación', icono: '⚑' },
+    { ruta: '/ayuda', etiqueta: 'Líneas de ayuda', icono: '♡' },
+    { ruta: '/terminos', etiqueta: 'Términos', icono: 'ⓘ' }
+  ];
+  private readonly enlacesSinRol = [
+    { ruta: '/ayuda', etiqueta: 'Líneas de ayuda', icono: '♡' },
+    { ruta: '/terminos', etiqueta: 'Términos', icono: 'ⓘ' }
+  ];
+  private readonly enlaceCuenta = { ruta: '/cuenta', etiqueta: 'Mi cuenta', icono: '◉' };
+
   constructor(public auth: AuthService, private router: Router) {}
+
+  get enlaces(): { ruta: string; etiqueta: string; icono: string }[] {
+    let enlacesRol: { ruta: string; etiqueta: string; icono: string }[];
+    switch (this.auth.usuario()?.rol) {
+      case 'USUARIO': enlacesRol = this.enlacesUsuario; break;
+      case 'OYENTE': enlacesRol = this.enlacesOyente; break;
+      case 'MODERADOR': enlacesRol = this.enlacesModerador; break;
+      default: return this.enlacesSinRol;
+    }
+    return [...enlacesRol, this.enlaceCuenta];
+  }
 
   salir(): void {
     this.auth.cerrarSesion();

@@ -4,7 +4,9 @@ export interface EntradaDiario {
   contenido: string;
   titulo?: string;
   tipoPrompt: string;
-  fechaRegistro: string;
+  fechaCreacion?: string;
+  fechaActualizacion?: string;
+  fechaRegistro?: string;
 }
 
 export interface EntradaDiarioRequest {

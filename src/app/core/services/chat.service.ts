@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Conversacion, ReporteRequest } from '../models/conversacion.model';
+import { Conversacion, MensajeChat, ReporteRequest } from '../models/conversacion.model';
 
 /**
  * Capa HTTP para las operaciones de conversación.
@@ -14,6 +14,10 @@ export class ChatService {
 
   solicitarConversacion(): Observable<Conversacion> {
     return this.http.post<Conversacion>(`${environment.apiUrl}/chat/solicitar`, {});
+  }
+
+  listarMensajes(idConversacion: number): Observable<MensajeChat[]> {
+    return this.http.get<MensajeChat[]>(`${environment.apiUrl}/chat/${idConversacion}/mensajes`);
   }
 
   finalizar(idConversacion: number): Observable<void> {

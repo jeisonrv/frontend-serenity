@@ -21,6 +21,16 @@ export class AuthService {
     );
   }
 
+  iniciarConGoogle(credential: string): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth/google`, { credential }).pipe(
+      tap((res) => this.guardarSesion(res))
+    );
+  }
+
+  vincularGoogle(credential: string): Observable<void> {
+    return this.http.post<void>(`${environment.apiUrl}/auth/google/vincular`, { credential });
+  }
+
   registrar(datos: RegistroRequest): Observable<UsuarioResponse> {
     return this.http.post<UsuarioResponse>(`${environment.apiUrl}/auth/registro`, datos);
   }

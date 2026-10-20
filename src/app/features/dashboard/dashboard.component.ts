@@ -1,8 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { AnimoService } from '../../core/services/animo.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { mensajeError } from '../../core/utils/mensaje-error';
 
 @Component({
   selector: 'app-dashboard',
@@ -31,17 +33,12 @@ export class DashboardComponent implements OnInit {
     { ruta: '/ejercicios/diario', titulo: 'Diario emocional', desc: 'Escribe libre o guiado.' }
   ];
 
-  constructor(public auth: AuthService, private animoService: AnimoService, private router: Router) {}
-
-  salir(): void {
-    this.auth.logout();
-    this.router.navigate(['/login']);
-  }
+  constructor(public auth: AuthService, private animoService: AnimoService) {}
 
   ngOnInit(): void {
     this.animoService.obtenerAnimoHoy().subscribe({
       next: (animo) => this.animoSeleccionado.set(animo?.valor ?? null),
-      error: () => this.errorAnimo.set('No pudimos cargar tu ánimo de hoy. Inténtalo de nuevo más tarde.')
+      error: (error: HttpErrorResponse) => this.errorAnimo.set(mensajeError(error, 'No pudimos cargar tu ánimo de hoy. Inténtalo de nuevo más tarde.'))
     });
   }
 
@@ -51,7 +48,7 @@ export class DashboardComponent implements OnInit {
     this.errorAnimo.set('');
     this.animoService.registrarAnimo(valor).subscribe({
       next: () => this.mensajeAnimo.set('Ánimo guardado.'),
-      error: () => this.errorAnimo.set('No pudimos guardar tu ánimo. Inténtalo de nuevo.')
+      error: (error: HttpErrorResponse) => this.errorAnimo.set(mensajeError(error, 'No pudimos guardar tu ánimo. Inténtalo de nuevo.'))
     });
   }
 }

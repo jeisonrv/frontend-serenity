@@ -23,18 +23,26 @@
 
       <div class="field">
         <label for="contrasena">Contraseña</label>
-        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" placeholder="Mínimo 8 caracteres" />
+        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" placeholder="Ingresa tu contraseña" />
         <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
-          La contraseña debe tener al menos 8 caracteres.
+          Ingresa tu contraseña.
         </span>
       </div>
 
+      <p class="mensaje-exito" role="status" *ngIf="confirmacion()">{{ confirmacion() }}</p>
       <p class="error error-general" role="alert" *ngIf="error()">{{ error() }}</p>
 
-      <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando()">
+      <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando() || googleCargando()">
         <span>{{ cargando() ? 'Ingresando…' : 'Ingresar a Serenity' }}</span>
         <span aria-hidden="true" *ngIf="!cargando()">→</span>
       </button>
+
+      <div class="separador-google"><span>o continúa con</span></div>
+      <app-google-identity-button
+        [disabled]="cargando() || googleCargando()"
+        text="continue_with"
+        (credential)="iniciarConGoogle($event)"
+        (loadError)="error.set($event)" />
 
       <p class="alterno">¿Primera vez aquí? <a routerLink="/registro">Crea tu cuenta</a></p>
       <p class="nota-privacidad"><span aria-hidden="true">♡</span> Un espacio de autocuidado; tú marcas tu ritmo.</p>

@@ -13,11 +13,14 @@ export class ChatRealtimeService {
   private client?: Client;
   readonly mensajes = signal<MensajeChat[]>([]);
   readonly conectado = signal(false);
+  readonly error = signal<string | null>(null);
 
   constructor(private auth: AuthService) {}
 
-  conectar(idConversacion: number): void {
+  conectar(idConversacion: number, mensajesIniciales: MensajeChat[] = []): void {
     this.desconectar();
+    this.mensajes.set(mensajesIniciales);
+    this.error.set(null);
 
     const client = new Client({
       brokerURL: environment.wsUrl,
@@ -33,6 +36,14 @@ export class ChatRealtimeService {
             console.error('No fue posible interpretar un mensaje recibido por WebSocket.');
           }
         });
+      },
+      onStompError: (frame) => {
+        const mensaje = frame.headers['message']?.trim() || frame.body?.trim();
+        this.error.set(mensaje || 'El servidor rechazó la conexión a la conversación.');
+      },
+      onWebSocketError: (event) => {
+        const mensaje = event instanceof ErrorEvent ? event.message.trim() : '';
+        this.error.set(mensaje || 'No se pudo establecer la conexión en tiempo real.');
       },
       onDisconnect: () => this.conectado.set(false),
       onWebSocketClose: () => this.conectado.set(false)
@@ -56,6 +67,7 @@ export class ChatRealtimeService {
     this.client = undefined;
     this.conectado.set(false);
     this.mensajes.set([]);
+    this.error.set(null);
 
     if (clienteActual) {
       void clienteActual.deactivate();
