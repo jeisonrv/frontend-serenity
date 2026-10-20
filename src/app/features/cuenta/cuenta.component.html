@@ -1,0 +1,18 @@
+<header class="encabezado-cuenta">
+  <p class="eyebrow">SERENITY · TU PERFIL</p>
+  <h1>Mi cuenta</h1>
+  <p>Administra el acceso a tu cuenta de Serenity.</p>
+</header>
+
+<section class="card vinculacion-google" aria-labelledby="titulo-google">
+  <h2 id="titulo-google">Vincular con Google</h2>
+  <p>Vincula una cuenta de Google para usarla junto con tu método de acceso actual.</p>
+  <p class="error" role="alert" *ngIf="error()">{{ error() }}</p>
+  <p class="exito" role="status" *ngIf="mensaje()">{{ mensaje() }}</p>
+  <app-google-identity-button
+    [disabled]="vinculando()"
+    text="continue_with"
+    (credential)="vincularConGoogle($event)"
+    (loadError)="error.set($event)" />
+  <p class="estado" *ngIf="vinculando()" role="status">Vinculando cuenta…</p>
+</section>

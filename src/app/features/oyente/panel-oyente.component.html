@@ -1,0 +1,76 @@
+<header class="encabezado-panel">
+  <div>
+    <p class="eyebrow">SERENITY · ACOMPAÑAMIENTO</p>
+    <h1>Panel de oyente</h1>
+    <p>Administra tu disponibilidad y acompaña conversaciones asignadas.</p>
+  </div>
+  <button class="btn btn-ghost" type="button" (click)="actualizar()" [disabled]="cargandoCola() || cargandoActivas()">
+    Actualizar
+  </button>
+</header>
+
+<p class="error" role="alert" *ngIf="error()">{{ error() }}</p>
+<p class="confirmacion" role="status" *ngIf="confirmacion()">{{ confirmacion() }}</p>
+
+<section class="card disponibilidad" aria-labelledby="titulo-disponibilidad">
+  <div>
+    <h2 id="titulo-disponibilidad">Disponibilidad</h2>
+    <p *ngIf="cargandoEstado()" role="status">Cargando estado…</p>
+    <ng-container *ngIf="!cargandoEstado() && estado() as actual">
+      <p class="estado" [class.activo]="actual.disponible">
+        {{ actual.disponible ? 'Disponible para recibir conversaciones' : 'No disponible' }}
+      </p>
+      <p class="fecha" *ngIf="actual.fechaActualizacion">
+        Última actualización: {{ actual.fechaActualizacion | date:'medium' }}
+      </p>
+    </ng-container>
+  </div>
+  <button class="btn" [class.btn-primary]="!estado()?.disponible" [class.btn-ghost]="estado()?.disponible"
+    type="button" (click)="cambiarDisponibilidad()" [disabled]="!estado() || guardandoDisponibilidad()">
+    {{ guardandoDisponibilidad() ? 'Guardando…' : (estado()?.disponible ? 'Desactivar disponibilidad' : 'Activar disponibilidad') }}
+  </button>
+</section>
+
+<section class="seccion" aria-labelledby="titulo-cola">
+  <div class="titulo-seccion">
+    <div>
+      <h2 id="titulo-cola">Conversaciones disponibles</h2>
+      <p>La cola muestra solo datos de la conversación, sin identidad de quien la solicitó.</p>
+    </div>
+    <span class="contador" *ngIf="!cargandoCola()">{{ cola().length }}</span>
+  </div>
+  <p *ngIf="cargandoCola()" role="status">Cargando cola…</p>
+  <div class="lista" *ngIf="!cargandoCola() && cola().length">
+    <article class="card fila" *ngFor="let charla of cola()">
+      <div>
+        <h3>Conversación #{{ charla.idConversacion }}</h3>
+        <p>Inició {{ charla.fechaInicio | date:'short' }} · En espera {{ charla.minutosEnEspera }} min</p>
+      </div>
+      <button class="btn btn-primary" type="button" (click)="aceptar(charla)"
+        [disabled]="aceptandoId() !== null || !estado()?.disponible">
+        {{ aceptandoId() === charla.idConversacion ? 'Aceptando…' : 'Aceptar conversación' }}
+      </button>
+    </article>
+  </div>
+  <p class="vacio" *ngIf="!cargandoCola() && !cola().length">No hay conversaciones esperando en este momento.</p>
+</section>
+
+<section class="seccion" aria-labelledby="titulo-activas">
+  <div class="titulo-seccion">
+    <div>
+      <h2 id="titulo-activas">Conversaciones asignadas</h2>
+      <p>Abre una conversación para consultar el historial y continuar por mensajería en tiempo real.</p>
+    </div>
+  </div>
+  <p *ngIf="cargandoActivas()" role="status">Cargando conversaciones asignadas…</p>
+  <div class="lista" *ngIf="!cargandoActivas() && activas().length">
+    <article class="card fila" *ngFor="let charla of activas()">
+      <div>
+        <h3>Conversación #{{ charla.idConversacion }}</h3>
+        <p>Inició {{ charla.fechaInicio | date:'short' }}</p>
+      </div>
+      <a class="btn btn-primary" [routerLink]="['/chat', charla.idConversacion]">Abrir conversación</a>
+    </article>
+  </div>
+  <p class="vacio" *ngIf="!cargandoActivas() && !activas().length">Aún no tienes conversaciones asignadas.</p>
+</section>

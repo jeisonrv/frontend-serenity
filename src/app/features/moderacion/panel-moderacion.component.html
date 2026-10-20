@@ -1,0 +1,139 @@
+<header class="encabezado-panel">
+  <div>
+    <p class="eyebrow">SERENITY · SEGURIDAD DE LA COMUNIDAD</p>
+    <h1>Panel de moderación</h1>
+    <p>Revisa reportes y administra restricciones de acceso.</p>
+  </div>
+  <button class="btn btn-ghost" type="button" (click)="cargarReportes(); cargarRestringidos()"
+    [disabled]="cargandoReportes() || cargandoRestringidos()">Actualizar</button>
+</header>
+
+<p class="error" role="alert" *ngIf="error()">{{ error() }}</p>
+<p class="confirmacion" role="status" *ngIf="confirmacion()">{{ confirmacion() }}</p>
+
+<section class="seccion" aria-labelledby="titulo-reportes">
+  <div class="titulo-seccion">
+    <div>
+      <h2 id="titulo-reportes">Reportes</h2>
+    </div>
+    <label class="filtro">Estado
+      <select [ngModel]="filtro()" (ngModelChange)="cambiarFiltro($event)" name="estadoReporte">
+        <option value="">Todos</option>
+        <option *ngFor="let estado of estados" [value]="estado">{{ estado }}</option>
+      </select>
+    </label>
+  </div>
+
+  <p *ngIf="cargandoReportes()" role="status">Cargando reportes…</p>
+  <div class="tabla-contenedor" *ngIf="!cargandoReportes() && reportes().length">
+    <table>
+      <thead><tr><th>ID</th><th>Conversación</th><th>Reportante</th><th>Reportado</th><th>Motivo</th><th>Estado</th><th>Fecha</th><th></th></tr></thead>
+      <tbody>
+        <tr *ngFor="let reporte of reportes()">
+          <td>{{ reporte.id }}</td>
+          <td>{{ reporte.idConversacion }}</td>
+          <td>{{ reporte.idReportante }}</td>
+          <td>{{ reporte.idReportado }}</td>
+          <td class="motivo">{{ reporte.motivo }}</td>
+          <td><span class="estado">{{ reporte.estado }}</span></td>
+          <td>{{ reporte.fechaReporte | date:'short' }}</td>
+          <td><button class="btn btn-ghost btn-pequeno" type="button" (click)="verDetalle(reporte)">Ver detalle</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="vacio" *ngIf="!cargandoReportes() && !reportes().length">No hay reportes para este filtro.</p>
+</section>
+
+<section class="seccion" *ngIf="cargandoDetalle() || detalle()" aria-labelledby="titulo-detalle">
+  <h2 id="titulo-detalle">Detalle del reporte</h2>
+  <p *ngIf="cargandoDetalle()" role="status">Cargando detalle…</p>
+  <ng-container *ngIf="!cargandoDetalle() && detalle() as actual">
+    <article class="card detalle">
+      <div class="resumen">
+        <p><strong>Reporte:</strong> #{{ actual.reporte.id }} · {{ actual.reporte.estado }}</p>
+        <p><strong>Conversación:</strong> #{{ actual.reporte.idConversacion }}</p>
+        <p><strong>Reportante:</strong> ID {{ actual.reporte.idReportante }}</p>
+        <p><strong>Reportado:</strong> ID {{ actual.reporte.idReportado }}</p>
+        <p><strong>Oyente:</strong> ID {{ actual.idOyente }} · <strong>Usuario:</strong> ID {{ actual.idUsuario }}</p>
+        <p><strong>Motivo:</strong> {{ actual.reporte.motivo }}</p>
+        <p><strong>Inicio:</strong> {{ actual.fechaInicio | date:'medium' }} · <strong>Fin:</strong> {{ actual.fechaFin ? (actual.fechaFin | date:'medium') : 'En curso' }}</p>
+        <p><strong>Reportes del usuario:</strong> {{ actual.reportesTotalesDelReportado }} totales, {{ actual.reportesProcedentesDelReportado }} procedentes</p>
+        <p *ngIf="actual.reporte.observacionModerador"><strong>Observación:</strong> {{ actual.reporte.observacionModerador }}</p>
+      </div>
+
+      <div class="acciones-detalle">
+        <button class="btn btn-ghost" type="button" (click)="prepararRestriccion(actual.reporte.idReportado)">
+          Restringir usuario reportado
+        </button>
+      </div>
+
+      <h3>Mensajes de la conversación</h3>
+      <p class="vacio" *ngIf="!actual.mensajes.length">No hay mensajes disponibles en este detalle.</p>
+      <ol class="mensajes" *ngIf="actual.mensajes.length">
+        <li *ngFor="let mensaje of actual.mensajes">
+          <span><strong>{{ mensaje.remitente }}</strong> · {{ mensaje.fechaEnvio | date:'short' }}</span>
+          <p>{{ mensaje.contenido }}</p>
+        </li>
+      </ol>
+
+      <form class="resolucion" *ngIf="actual.reporte.estado === 'PENDIENTE'" (ngSubmit)="resolver()">
+        <h3>Resolver reporte</h3>
+        <label class="field">Resultado
+          <select [(ngModel)]="decisionProcedente" name="decisionProcedente">
+            <option [ngValue]="true">Procedente</option>
+            <option [ngValue]="false">Improcedente</option>
+          </select>
+        </label>
+        <label class="field">Observación (obligatoria, máximo 1000 caracteres)
+          <textarea [(ngModel)]="observacion" name="observacion" rows="3" maxlength="1000" required></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit" [disabled]="resolviendoId() === actual.reporte.id">
+          {{ resolviendoId() === actual.reporte.id ? 'Resolviendo…' : 'Guardar resolución' }}
+        </button>
+      </form>
+    </article>
+  </ng-container>
+</section>
+
+<section class="seccion" *ngIf="usuarioRestriccionId() !== null" aria-labelledby="titulo-restriccion">
+  <form class="card formulario-restriccion" (ngSubmit)="restringir()">
+    <h2 id="titulo-restriccion">Restringir usuario #{{ usuarioRestriccionId() }}</h2>
+    <p>Si no indicas una fecha de finalización, la restricción será indefinida.</p>
+    <label class="field">Motivo (obligatorio, máximo 1000 caracteres)
+      <textarea [(ngModel)]="motivoRestriccion" name="motivoRestriccion" rows="3" maxlength="1000" required></textarea>
+    </label>
+    <label class="field">Hasta (opcional)
+      <input type="datetime-local" step="1" [(ngModel)]="hasta" name="hasta" />
+    </label>
+    <div class="botones">
+      <button class="btn btn-ghost" type="button" (click)="cancelarRestriccion()">Cancelar</button>
+      <button class="btn btn-primary" type="submit" [disabled]="restringiendo()">
+        {{ restringiendo() ? 'Guardando…' : 'Aplicar restricción' }}
+      </button>
+    </div>
+  </form>
+</section>
+
+<section class="seccion" aria-labelledby="titulo-restringidos">
+  <div class="titulo-seccion">
+    <div><h2 id="titulo-restringidos">Usuarios restringidos</h2></div>
+  </div>
+  <p *ngIf="cargandoRestringidos()" role="status">Cargando usuarios restringidos…</p>
+  <div class="lista-restringidos" *ngIf="!cargandoRestringidos() && restringidos().length">
+    <article class="card usuario-restringido" *ngFor="let usuario of restringidos()">
+      <div>
+        <h3>{{ usuario.username }} · #{{ usuario.id }}</h3>
+        <p>{{ usuario.email }}</p>
+        <p>Motivo: {{ usuario.motivo }}</p>
+        <p>Restringido: {{ usuario.fechaRestriccion ? (usuario.fechaRestriccion | date:'short') : 'Fecha no disponible' }}</p>
+        <p>Hasta: {{ usuario.restringidoHasta ? (usuario.restringidoHasta | date:'short') : 'Indefinida' }}</p>
+        <p *ngIf="usuario.restringidoPor !== null">Moderador ID {{ usuario.restringidoPor }}</p>
+      </div>
+      <button class="btn btn-ghost" type="button" (click)="levantarRestriccion(usuario)" [disabled]="levantandoId() === usuario.id">
+        {{ levantandoId() === usuario.id ? 'Actualizando…' : 'Levantar restricción' }}
+      </button>
+    </article>
+  </div>
+  <p class="vacio" *ngIf="!cargandoRestringidos() && !restringidos().length">No hay usuarios restringidos.</p>
+</section>

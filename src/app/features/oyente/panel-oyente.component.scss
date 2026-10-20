@@ -1,0 +1,25 @@
+.encabezado-panel, .titulo-seccion, .disponibilidad, .fila {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.encabezado-panel { margin-bottom: 1.5rem; }
+.eyebrow { margin: 0 0 .35rem; color: var(--color-primary); font-size: .75rem; font-weight: 700; letter-spacing: .08em; }
+.encabezado-panel p, .titulo-seccion p, .fila p, .fecha { margin: 0; color: var(--color-ink-soft); }
+.disponibilidad { margin-bottom: 2rem; }
+.disponibilidad h2, .titulo-seccion h2 { margin-bottom: .35rem; }
+.estado { font-weight: 600; color: var(--color-danger) !important; }
+.estado.activo { color: #34735E !important; }
+.fecha { font-size: .82rem; }
+.seccion { margin-top: 2rem; }
+.titulo-seccion { margin-bottom: .9rem; }
+.contador { min-width: 2rem; padding: .2rem .65rem; border-radius: 999px; background: var(--color-primary-light); color: var(--color-primary-dark); text-align: center; font-weight: 700; }
+.lista { display: grid; gap: .8rem; }
+.fila h3 { margin: 0 0 .25rem; }
+.fila p { font-size: .88rem; }
+.vacio { padding: 1rem 0; color: var(--color-ink-soft); }
+.error { margin: 1rem 0; }
+.confirmacion { margin: 1rem 0; color: #34735E; font-weight: 600; }
+@media (max-width: 640px) {
+  .encabezado-panel, .disponibilidad, .fila { align-items: stretch; flex-direction: column; }
+  .encabezado-panel { gap: .7rem; }
+  .disponibilidad button, .fila a, .fila button { width: 100%; }
+}
