@@ -1,8 +1,19 @@
-<a routerLink="/inicio" class="volver">← Volver</a>
-<h1>Tu jardín</h1>
-<p>Cada práctica hace crecer una planta nueva.</p>
+<a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
+<header class="page-hero page-hero-garden">
+  <div>
+    <p class="eyebrow">CRECE A TU PROPIO RITMO</p>
+    <h1>Tu jardín virtual</h1>
+    <p class="lead">Cada ejercicio es una semilla. Cuanto más te cuidas, más espacio das a tu jardín para crecer.</p>
+    <div class="hero-tags"><span>✿ Pequeños avances</span><span>♡ Autocuidado</span></div>
+  </div>
+  <img src="assets/serenity-garden.svg" alt="Una planta crece bajo un cielo azul pastel en un jardín tranquilo" />
+</header>
 
-<section class="card" *ngIf="!cargando(); else cargandoTpl">
+<section class="card garden-content" *ngIf="!cargando(); else cargandoTpl">
+  <div class="garden-content-heading">
+    <div><p class="eyebrow">LO QUE HAS CULTIVADO</p><h2>Las plantas de tu camino</h2></div>
+    <span class="count-plants">{{ plantas().length }} {{ plantas().length === 1 ? 'planta' : 'plantas' }}</span>
+  </div>
   <div class="parcela" *ngIf="plantas().length; else vacio">
     <div class="planta" *ngFor="let p of plantas()" [class]="etapaCrecimiento(1)">
       <span class="icono-planta">⚘</span>
@@ -12,12 +23,15 @@
 </section>
 
 <ng-template #vacio>
-  <div class="vacio">
-    <p>Tu jardín todavía está sin sembrar.</p>
-    <a routerLink="/ejercicios/respiracion" class="btn btn-primary">Hacer tu primer ejercicio</a>
+  <div class="card empty-garden">
+    <img src="assets/serenity-garden.svg" alt="" aria-hidden="true" loading="lazy" />
+    <div><h2>Todo gran jardín empieza con una semilla</h2>
+      <p>Haz tu primer ejercicio y comienza a cuidar de este espacio.</p>
+      <a routerLink="/ejercicios/respiracion" class="btn btn-primary">Sembrar mi primera semilla <span aria-hidden="true">→</span></a>
+    </div>
   </div>
 </ng-template>
 
 <ng-template #cargandoTpl>
-  <p class="cargando">Cargando tu jardín…</p>
+  <section class="card"><p class="cargando">Cargando tu jardín…</p></section>
 </ng-template>
