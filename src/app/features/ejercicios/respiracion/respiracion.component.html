@@ -1,6 +1,13 @@
-<a routerLink="/inicio" class="volver">← Volver</a>
-<h1>Respiración guiada</h1>
-<p>Cinco ciclos de inhala–sostén–exhala–reposa. Sigue el círculo a tu ritmo.</p>
+<a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
+<header class="page-hero">
+  <div>
+    <p class="eyebrow">RESPIRA Y REGRESA A TI</p>
+    <h1>Respiración consciente</h1>
+    <p class="lead">Cinco ciclos de inhala, sostén, exhala y reposa. No hay prisa; sigue el círculo a tu ritmo.</p>
+    <div class="hero-tags"><span>♡ Sin presión</span><span>◷ 5 ciclos</span></div>
+  </div>
+  <img src="assets/serenity-breathing.svg" alt="Ondas suaves que representan una respiración tranquila" />
+</header>
 
 <section class="card zona" [class.completado]="completado()">
   <ng-container *ngIf="!completado()">
@@ -10,17 +17,13 @@
     </div>
     <p class="ciclo" *ngIf="enCurso()">Ciclo {{ ciclo() }} de {{ cicloObjetivo }}</p>
 
-    <button *ngIf="!enCurso()" class="btn btn-primary" type="button" (click)="iniciar()">
-      Comenzar
-    </button>
-    <button *ngIf="enCurso()" class="btn btn-ghost" type="button" (click)="detener()">
-      Detener
-    </button>
+    <button *ngIf="!enCurso()" class="btn btn-primary" type="button" (click)="iniciar()">Comenzar</button>
+    <button *ngIf="enCurso()" class="btn btn-ghost" type="button" (click)="detener()">Pausar práctica</button>
   </ng-container>
 
   <div *ngIf="completado()" class="mensaje-final">
-    <h2>Sesión completada</h2>
+    <h2>Te has regalado un momento</h2>
     <p>Sumaste experiencia por {{ segundosTotales() }} segundos de práctica.</p>
-    <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>
+    <a routerLink="/inicio" class="btn btn-primary">Volver a mi espacio</a>
   </div>
 </section>
