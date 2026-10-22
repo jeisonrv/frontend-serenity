@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 520" role="img" aria-labelledby="title desc">
+<title id="title">Un momento de calma</title><desc id="desc">Ilustración de una persona descansando en un paisaje azul pastel con plantas y montañas.</desc>
+<defs>
+ <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#edf7ff"/><stop offset=".58" stop-color="#d8ebfc"/><stop offset="1" stop-color="#e4f4ef"/></linearGradient>
+ <linearGradient id="hill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#9ac7dd"/><stop offset="1" stop-color="#b8dfd2"/></linearGradient>
+ <linearGradient id="shirt" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6ca4d9"/><stop offset="1" stop-color="#3e73ad"/></linearGradient>
+ <linearGradient id="pants" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#365a83"/><stop offset="1" stop-color="#203e63"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="9" stdDeviation="8" flood-color="#456f98" flood-opacity=".13"/></filter>
+</defs>
+<rect x="1" y="1" width="758" height="518" rx="36" fill="url(#sky)"/>
+<circle cx="608" cy="104" r="46" fill="#fff8dc" opacity=".9"/>
+<g fill="#fff" opacity=".82"><ellipse cx="142" cy="107" rx="52" ry="19"/><ellipse cx="174" cy="95" rx="30" ry="26"/><ellipse cx="203" cy="108" rx="36" ry="17"/><ellipse cx="499" cy="63" rx="36" ry="14"/><ellipse cx="522" cy="55" rx="24" ry="20"/><ellipse cx="545" cy="65" rx="28" ry="13"/></g>
+<path d="M0 300 Q90 214 188 267 T371 249 T570 253 T760 220 V520 H0Z" fill="#c0dfec"/>
+<path d="M0 362 L126 252 210 332 337 228 455 352 564 270 760 358 V520 H0Z" fill="#9ac4dc" opacity=".72"/>
+<path d="M0 390 Q115 325 229 369 T460 359 T760 340 V520 H0Z" fill="url(#hill)"/>
+<path d="M0 433 Q112 388 231 424 T474 403 T760 418 V520 H0Z" fill="#b2ddcf"/>
+<g fill="none" stroke-linecap="round" stroke-width="4" stroke="#fff" opacity=".78"><path d="M93 172q14-17 27 0t27 0"/><path d="M590 172q14-17 27 0t27 0"/><path d="M317 106q12-14 24 0t24 0"/></g>
+<!-- sitting figure -->
+<g filter="url(#shadow)">
+ <ellipse cx="385" cy="438" rx="154" ry="22" fill="#6f9f9d" opacity=".18"/>
+ <!-- legs -->
+ <path d="M365 373 C328 404 288 405 274 426 C265 442 290 455 328 449 L408 430 C437 423 450 405 431 394 L403 376Z" fill="url(#pants)"/>
+ <path d="M399 380 C438 391 481 393 501 418 C511 432 494 447 460 445 L380 430 C350 423 346 405 365 392Z" fill="#416b98"/>
+ <path d="M277 426 C300 428 330 423 350 415 L365 431 C345 444 309 451 288 446Z" fill="#f0b49c"/>
+ <path d="M450 432 C471 428 489 423 502 416 C520 422 517 437 498 445 L459 447Z" fill="#f0b49c"/>
+ <!-- body -->
+ <path d="M331 264 C312 287 307 325 322 361 L347 404 C358 418 388 420 407 406 L452 363 C471 340 452 291 424 268Z" fill="url(#shirt)"/>
+ <path d="M347 283 Q374 310 408 281 L424 305 Q394 341 353 322Z" fill="#8dc0e8" opacity=".65"/>
+ <path d="M330 300 Q307 322 326 350 L354 370" fill="none" stroke="#83b6e3" stroke-width="13" stroke-linecap="round"/>
+ <!-- neck -->
+ <path d="M367 236 L364 270 Q381 288 405 264 L395 233Z" fill="#eab095"/>
+ <!-- head -->
+ <ellipse cx="383" cy="198" rx="61" ry="72" fill="#f2c3a6"/>
+ <!-- hair back and bangs -->
+ <path d="M322 202 C309 153 330 121 365 117 C411 105 451 136 445 188 L435 235 Q426 204 420 176 Q391 186 361 161 Q353 194 322 202Z" fill="#263951"/>
+ <path d="M327 171 C336 136 367 126 392 135 C414 140 427 157 430 175 Q404 163 387 159 Q357 181 327 171Z" fill="#314b6b"/>
+ <!-- ear, face details -->
+ <ellipse cx="432" cy="204" rx="9" ry="15" fill="#e9ad91"/>
+ <path d="M397 207q11 6 21 0" fill="none" stroke="#875c52" stroke-width="3" stroke-linecap="round"/>
+ <path d="M404 226q13 11 26 0" fill="none" stroke="#b8756a" stroke-width="3" stroke-linecap="round"/>
+ <path d="M407 191q8-5 16 0" fill="none" stroke="#493e42" stroke-width="3" stroke-linecap="round"/>
+ <!-- arm resting -->
+ <path d="M438 310 C466 328 466 356 444 379 L413 398" fill="none" stroke="#4e82b7" stroke-width="21" stroke-linecap="round"/>
+ <path d="M414 398 L398 402" fill="none" stroke="#f2c3a6" stroke-width="15" stroke-linecap="round"/>
+</g>
+<!-- leaves left -->
+<g stroke="#5d9e93" stroke-width="4" stroke-linecap="round" fill="none"><path d="M74 478 Q81 395 66 314"/><path d="M102 484 Q123 404 145 354"/><path d="M42 488 Q31 425 37 388"/></g>
+<g fill="#6daea0"><ellipse cx="57" cy="360" rx="22" ry="10" transform="rotate(35 57 360)"/><ellipse cx="83" cy="398" rx="23" ry="10" transform="rotate(-29 83 398)"/><ellipse cx="122" cy="377" rx="25" ry="11" transform="rotate(-42 122 377)"/><ellipse cx="104" cy="439" rx="26" ry="11" transform="rotate(-22 104 439)"/><ellipse cx="34" cy="432" rx="20" ry="9" transform="rotate(42 34 432)"/><ellipse cx="68" cy="463" rx="24" ry="10" transform="rotate(21 68 463)"/></g>
+<!-- leaves right -->
+<g stroke="#5d9e93" stroke-width="4" stroke-linecap="round" fill="none"><path d="M652 487 Q642 403 686 333"/><path d="M707 492 Q716 426 739 399"/></g>
+<g fill="#79b4a1"><ellipse cx="669" cy="394" rx="25" ry="11" transform="rotate(-42 669 394)"/><ellipse cx="659" cy="430" rx="25" ry="10" transform="rotate(18 659 430)"/><ellipse cx="708" cy="441" rx="25" ry="10" transform="rotate(-34 708 441)"/><ellipse cx="697" cy="470" rx="25" ry="10" transform="rotate(24 697 470)"/><ellipse cx="733" cy="410" rx="20" ry="9" transform="rotate(-50 733 410)"/></g>
+<g fill="#e9f8f0"><circle cx="244" cy="309" r="5"/><circle cx="538" cy="317" r="4"/><circle cx="563" cy="382" r="6"/><circle cx="214" cy="381" r="4"/></g>
+</svg>
