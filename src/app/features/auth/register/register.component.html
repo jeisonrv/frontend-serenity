@@ -1,14 +1,28 @@
 <div class="pantalla-auth">
-  <div class="auth-panel">
-    <div class="marca-auth" aria-label="Serenity, aplicación de bienestar">
-      <img class="marca-simbolo" src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
-      <span class="marca-nombre">Serenity</span>
-      <span class="marca-frase">Un espacio para empezar a cuidarte</span>
+  <aside class="auth-escena" aria-label="Empieza tu camino de bienestar">
+    <a class="marca-escena" routerLink="/registro" aria-label="Serenity, crear cuenta">
+      <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
+      <span>Serenity</span>
+    </a>
+    <div class="escena-copy">
+      <p class="eyebrow">TU BIENESTAR, A TU RITMO</p>
+      <h2>Un mejor tú<br />empieza aquí.</h2>
+      <p>Construye una rutina amable, reconoce cómo te sientes y celebra los pequeños avances.</p>
     </div>
+    <img class="escena-ilustracion" src="assets/serenity-garden.svg" alt="Una planta crece en un jardín tranquilo" />
+    <p class="frase-calmada">“También mereces el mismo cuidado que das a los demás.” <span aria-hidden="true">♡</span></p>
+    <div class="escena-detalle detalle-uno" aria-hidden="true">✦</div>
+    <div class="escena-detalle detalle-dos" aria-hidden="true">✧</div>
+  </aside>
 
+  <div class="auth-panel">
+    <div class="marca-auth-mobile">
+      <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
+      <span>Serenity</span>
+    </div>
     <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
       <div class="encabezado-formulario">
-        <p class="eyebrow">TU BIENESTAR, A TU RITMO</p>
+        <p class="eyebrow">UN PASO AMABLE CONTIGO</p>
         <h1>Crea tu cuenta</h1>
         <p class="subtitulo">Un espacio digital para practicar el autocuidado emocional.</p>
       </div>
