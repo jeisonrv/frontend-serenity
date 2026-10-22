@@ -1,23 +1,32 @@
-<nav class="barra">
-  <div class="marca">
+<nav class="barra" aria-label="Navegación principal">
+  <a class="marca" routerLink="/inicio" aria-label="Serenity, ir al inicio">
     <img class="marca-icono" src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
     <span class="marca-texto">Serenity</span>
-  </div>
+    <span class="marca-punto" aria-hidden="true"></span>
+  </a>
 
+  <p class="nav-seccion">TU ESPACIO</p>
   <ul class="lista">
     <li *ngFor="let enlace of enlaces">
-      <a [routerLink]="enlace.ruta" routerLinkActive="activo">
+      <a [routerLink]="enlace.ruta" routerLinkActive="activo" [attr.aria-current]="null">
         <span class="icono" aria-hidden="true">{{ enlace.icono }}</span>
-        {{ enlace.etiqueta }}
+        <span class="etiqueta-nav">{{ enlace.etiqueta }}</span>
+        <span class="indicador-activo" aria-hidden="true"></span>
       </a>
     </li>
   </ul>
 
   <div class="pie" *ngIf="auth.usuario() as usuario">
-    <div class="usuario">
-      <span class="nombre">{{ usuario.username }}</span>
-      <span class="nivel" *ngIf="usuario.rol === 'USUARIO'">Nivel {{ usuario.nivel }} · {{ usuario.monedas ?? 0 }} monedas</span>
+    <div class="tarjeta-usuario">
+      <span class="avatar-usuario" aria-hidden="true">{{ usuario.username.slice(0, 1).toUpperCase() }}</span>
+      <div class="usuario">
+        <span class="nombre">{{ usuario.username }}</span>
+        <span class="nivel" *ngIf="usuario.rol === 'USUARIO'">Nivel {{ usuario.nivel }} · {{ usuario.monedas ?? 0 }} monedas</span>
+        <span class="nivel" *ngIf="usuario.rol !== 'USUARIO'">{{ usuario.rol }}</span>
+      </div>
     </div>
-    <button class="btn-salir" (click)="salir()" type="button">Cerrar sesión</button>
+    <button class="btn-salir" (click)="salir()" type="button">
+      <span aria-hidden="true">↗</span> Cerrar sesión
+    </button>
   </div>
 </nav>
