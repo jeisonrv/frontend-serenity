@@ -1,13 +1,23 @@
-<a [routerLink]="esOyente() ? '/oyente' : '/inicio'" class="volver">← Volver</a>
-<h1>{{ esOyente() ? 'Conversación asignada' : 'Hablar con alguien' }}</h1>
-<p *ngIf="!esOyente()">Conversación anónima y en tiempo real con un oyente disponible. No sustituye atención psicológica profesional.</p>
+<a [routerLink]="esOyente() ? '/oyente' : '/inicio'" class="volver">← Volver a tu espacio</a>
+<header class="page-hero page-hero-chat">
+  <div>
+    <p class="eyebrow">NO TIENES QUE HACERLO TODO A SOLAS</p>
+    <h1>{{ esOyente() ? 'Conversación asignada' : 'Hablar con alguien' }}</h1>
+    <p class="lead" *ngIf="!esOyente()">Un espacio de escucha anónima con un oyente disponible. Comparte solo lo que te resulte cómodo; esta conversación no sustituye la atención profesional.</p>
+    <p class="lead" *ngIf="esOyente()">Un espacio para escuchar con respeto, empatía y cuidado.</p>
+    <div class="hero-tags"><span>♡ Escucha respetuosa</span><span>↔ Conversación en tiempo real</span></div>
+  </div>
+  <img src="assets/serenity-meditation.svg" alt="Una escena tranquila para acompañar una conversación de apoyo" />
+</header>
 
 <p class="confirmacion" role="status" *ngIf="confirmacion()">{{ confirmacion() }}</p>
 <p class="error" role="alert" *ngIf="error()">{{ error() }}</p>
 
 <section class="card inicial" *ngIf="estado() === 'inicial' && !esOyente()">
-  <p>Cuando estés listo, te conectaremos con un oyente disponible.</p>
-  <button class="btn btn-primary" type="button" (click)="solicitarChat()">Solicitar conversación</button>
+  <div class="chat-start-icon" aria-hidden="true">♡</div>
+  <h2>Cuando estés listo, aquí hay alguien para escucharte</h2>
+  <p>No necesitas tener las palabras perfectas. Puedes comenzar con lo que sientes ahora.</p>
+  <button class="btn btn-primary" type="button" (click)="solicitarChat()">Solicitar conversación <span aria-hidden="true">→</span></button>
 </section>
 
 <section class="card inicial" *ngIf="estado() === 'buscando' || estado() === 'cargando'">
@@ -28,15 +38,11 @@
     </div>
   </div>
 
-  <p class="estado-conexion" role="status">
-    {{ chatRealtime.conectado() ? 'Conectado' : 'Conectando con la conversación…' }}
-  </p>
+  <p class="estado-conexion" role="status">{{ chatRealtime.conectado() ? 'Conectado' : 'Conectando con la conversación…' }}</p>
   <p class="error" role="alert" *ngIf="chatRealtime.error()">{{ chatRealtime.error() }}</p>
 
   <div class="mensajes" aria-live="polite" aria-label="Mensajes de la conversación">
-    <div class="mensaje" *ngFor="let m of chatRealtime.mensajes()" [class.propio]="m.remitente === (esOyente() ? 'oyente' : 'usuario')">
-      {{ m.contenido }}
-    </div>
+    <div class="mensaje" *ngFor="let m of chatRealtime.mensajes()" [class.propio]="m.remitente === (esOyente() ? 'oyente' : 'usuario')">{{ m.contenido }}</div>
   </div>
 
   <form class="entrada" (ngSubmit)="enviar()">

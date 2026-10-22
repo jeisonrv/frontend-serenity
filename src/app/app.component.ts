@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from './core/services/auth.service';
+import { ThemeService } from './core/services/theme.service';
 import { NavbarComponent } from './shared/layout/navbar/navbar.component';
 
 @Component({
@@ -12,5 +13,5 @@ import { NavbarComponent } from './shared/layout/navbar/navbar.component';
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService, public theme: ThemeService) {}
 }

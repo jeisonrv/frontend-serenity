@@ -1,34 +1,33 @@
-<a routerLink="/inicio" class="volver">← Volver</a>
-<h1>Meditación</h1>
-<p>Elige una duración y siéntate en un lugar tranquilo.</p>
+<a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
+<header class="page-hero">
+  <div>
+    <p class="eyebrow">PRESENCIA PLENA</p>
+    <h1>Meditación guiada</h1>
+    <p class="lead">Busca una postura cómoda, elige cuánto tiempo dedicarte y deja que el resto espere un momento.</p>
+    <div class="hero-tags"><span>♡ A tu ritmo</span><span>◷ 5–15 min</span></div>
+  </div>
+  <img src="assets/serenity-meditation.svg" alt="Una persona meditando tranquilamente al aire libre" />
+</header>
 
 <section class="card zona" *ngIf="!completado(); else final">
+  <p class="panel-label">TU MOMENTO DE CALMA</p>
   <div class="temporizador">{{ minutosMostrados }}</div>
 
   <div class="duraciones" *ngIf="!enCurso()">
-    <button
-      *ngFor="let d of duracionesDisponibles"
-      class="chip"
-      type="button"
-      [class.seleccionado]="duracionMin() === d"
-      (click)="duracionMin.set(d)"
-    >
+    <button *ngFor="let d of duracionesDisponibles" class="chip" type="button"
+      [class.seleccionado]="duracionMin() === d" (click)="duracionMin.set(d)">
       {{ d }} min
     </button>
   </div>
 
-  <button *ngIf="!enCurso()" class="btn btn-primary" type="button" (click)="iniciar()">
-    Comenzar
-  </button>
-  <button *ngIf="enCurso()" class="btn btn-ghost" type="button" (click)="detener()">
-    Detener
-  </button>
+  <button *ngIf="!enCurso()" class="btn btn-primary" type="button" (click)="iniciar()">Comenzar meditación</button>
+  <button *ngIf="enCurso()" class="btn btn-ghost" type="button" (click)="detener()">Pausar práctica</button>
 </section>
 
 <ng-template #final>
   <section class="card zona mensaje-final">
-    <h2>Sesión completada</h2>
-    <p>Meditaste {{ duracionMin() }} minutos.</p>
-    <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>
+    <h2>Un momento para recordar</h2>
+    <p>Meditaste {{ duracionMin() }} minutos. Gracias por hacer espacio para ti.</p>
+    <a routerLink="/inicio" class="btn btn-primary">Volver a mi espacio</a>
   </section>
 </ng-template>

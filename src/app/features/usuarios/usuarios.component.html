@@ -1,20 +1,57 @@
-<h1>Usuarios</h1>
+<a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
+<header class="page-hero page-hero-users">
+  <div>
+    <p class="eyebrow">GESTIÓN DEL ESPACIO</p>
+    <h1>Personas de Serenity</h1>
+    <p class="lead">Administra los registros de usuarios en un espacio claro y organizado.</p>
+    <div class="hero-tags"><span>♙ Gestión de usuarios</span><span>♡ Cuidado y respeto</span></div>
+  </div>
+  <img src="assets/serenity-garden.svg" alt="Una planta creciendo, símbolo de desarrollo y cuidado" />
+</header>
 
 @if (error) {
-  <p style="color: red">{{ error }}</p>
+  <div class="users-error" role="alert"><span aria-hidden="true">!</span><p>{{ error }}</p></div>
 }
 
-<form (ngSubmit)="guardar()">
-  <input [(ngModel)]="nuevo.nombre" name="nombre" placeholder="Nombre" required />
-  <input [(ngModel)]="nuevo.email" name="email" placeholder="Email" required />
-  <button type="submit">Agregar</button>
-</form>
+<div class="usuarios-layout">
+  <form class="card usuario-form" (ngSubmit)="guardar()">
+    <div class="user-form-heading">
+      <span class="user-form-icon" aria-hidden="true">＋</span>
+      <div><h2>Agregar usuario</h2><p>Completa los datos para crear un registro.</p></div>
+    </div>
+    <div class="field">
+      <label for="nombre">Nombre completo</label>
+      <input id="nombre" [(ngModel)]="nuevo.nombre" name="nombre" placeholder="Ej. María Pérez" autocomplete="name" required />
+    </div>
+    <div class="field">
+      <label for="email">Correo electrónico</label>
+      <input id="email" type="email" [(ngModel)]="nuevo.email" name="email" placeholder="persona@correo.com" autocomplete="email" required />
+    </div>
+    <button class="btn btn-primary" type="submit">Guardar usuario <span aria-hidden="true">→</span></button>
+  </form>
 
-<ul>
-  @for (u of usuarios; track u.id) {
-    <li>
-      {{ u.nombre }} ({{ u.email }})
-      <button type="button" (click)="eliminar(u.id!)">Eliminar</button>
-    </li>
-  }
-</ul>
+  <section class="card usuarios-lista">
+    <header class="usuarios-lista-heading">
+      <div><p class="eyebrow">DIRECTORIO</p><h2>Usuarios registrados</h2></div>
+      <span class="count-users">{{ usuarios.length }}</span>
+    </header>
+
+    @if (usuarios.length > 0) {
+      <div class="user-items">
+        @for (u of usuarios; track u.id) {
+          <article class="user-row">
+            <span class="user-avatar" aria-hidden="true">{{ u.nombre.slice(0, 1).toUpperCase() }}</span>
+            <div class="user-info"><strong>{{ u.nombre }}</strong><span>{{ u.email }}</span></div>
+            <button type="button" class="btn-delete-user" (click)="eliminar(u.id!)" [attr.aria-label]="'Eliminar a ' + u.nombre">Eliminar</button>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-users">
+        <img src="assets/serenity-garden.svg" alt="" aria-hidden="true" loading="lazy" />
+        <h3>Aún no hay registros</h3>
+        <p>Cuando agregues usuarios aparecerán aquí.</p>
+      </div>
+    }
+  </section>
+</div>

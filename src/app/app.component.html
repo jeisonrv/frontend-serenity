@@ -1,4 +1,21 @@
 <app-navbar *ngIf="auth.usuario()"></app-navbar>
 <main class="contenido" [class.con-sesion]="auth.usuario()">
+  <div class="barra-global">
+    <div class="lema-global" *ngIf="auth.usuario()">
+      <span class="punto-latido" aria-hidden="true"></span>
+      Tu espacio de bienestar, a tu ritmo
+    </div>
+    <button
+      class="theme-toggle"
+      type="button"
+      (click)="theme.alternar()"
+      [attr.aria-pressed]="theme.oscuro()"
+      [attr.aria-label]="theme.oscuro() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+      [attr.title]="theme.oscuro() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+      <span class="theme-icon" aria-hidden="true">{{ theme.oscuro() ? '☀' : '☾' }}</span>
+      <span class="theme-label">{{ theme.oscuro() ? 'Modo oscuro' : 'Modo claro' }}</span>
+      <span class="theme-track" aria-hidden="true"><span [class.activo]="theme.oscuro()"></span></span>
+    </button>
+  </div>
   <router-outlet></router-outlet>
 </main>

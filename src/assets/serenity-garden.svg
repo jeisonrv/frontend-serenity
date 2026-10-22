@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" role="img" aria-labelledby="title desc">
+<title id="title">Jardín de bienestar</title><desc id="desc">Una pequeña planta en crecimiento rodeada de hojas bajo un cielo azul claro.</desc>
+<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#eef8ff"/><stop offset="1" stop-color="#d9eef0"/></linearGradient><linearGradient id="pot" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#e9aa88"/><stop offset="1" stop-color="#c97961"/></linearGradient><linearGradient id="leaf" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#a6d8bb"/><stop offset="1" stop-color="#479b83"/></linearGradient></defs>
+<rect width="600" height="360" rx="26" fill="url(#bg)"/>
+<circle cx="490" cy="72" r="34" fill="#fff6d6"/>
+<g fill="#fff" opacity=".92"><ellipse cx="92" cy="67" rx="43" ry="17"/><ellipse cx="114" cy="54" rx="26" ry="21"/><ellipse cx="140" cy="66" rx="34" ry="15"/></g>
+<path d="M0 232 Q114 183 226 224 T443 213 T600 225 V360 H0Z" fill="#bedfd6"/>
+<path d="M0 272 Q150 225 280 269 T600 260 V360 H0Z" fill="#a3d0be"/>
+<ellipse cx="306" cy="303" rx="112" ry="16" fill="#638f7f" opacity=".15"/>
+<!-- pot -->
+<path d="M246 245 H367 L350 318 Q308 338 263 318Z" fill="url(#pot)"/>
+<ellipse cx="306" cy="246" rx="61" ry="15" fill="#f4c09b"/>
+<ellipse cx="306" cy="246" rx="53" ry="10" fill="#8a6048"/>
+<!-- stems -->
+<g fill="none" stroke="#479b83" stroke-width="8" stroke-linecap="round"><path d="M307 250 Q301 204 306 153"/><path d="M305 212 Q267 192 247 165"/><path d="M306 195 Q341 178 356 145"/><path d="M306 231 Q349 222 383 199"/></g>
+<g fill="url(#leaf)" stroke="#5aa28d" stroke-width="2"><path d="M306 205 C258 214 227 178 238 147 C272 144 305 167 306 205Z"/><path d="M310 176 C317 135 358 111 386 130 C380 164 345 181 310 176Z"/><path d="M307 151 C279 132 276 97 301 79 C326 97 329 128 307 151Z"/><path d="M331 224 C360 186 400 183 418 204 C397 231 365 242 331 224Z"/><path d="M305 236 C265 239 242 220 244 197 C271 193 298 212 305 236Z"/></g>
+<g stroke="#c7e8d7" stroke-width="3" fill="none" stroke-linecap="round"><path d="M303 145 L303 112"/><path d="M300 199 L259 162"/><path d="M319 173 L366 137"/><path d="M345 221 L402 205"/></g>
+<!-- watering can -->
+<g transform="translate(88 225) rotate(-10)"><path d="M21 23 H92 L84 70 H31Z" fill="#82b4df"/><path d="M91 31 L130 20 L135 29 L91 43Z" fill="#5e9bcf"/><path d="M32 24 Q30-7 59-8 Q88-7 82 24" fill="none" stroke="#5e9bcf" stroke-width="8" stroke-linecap="round"/><path d="M18 29 L4 34" stroke="#5e9bcf" stroke-width="7" stroke-linecap="round"/><path d="M136 32 l-2 5 m9-3 l-2 5 m8-4 l-2 5" stroke="#4f9ec9" stroke-width="3" stroke-linecap="round"/></g>
+<!-- small details -->
+<g fill="#f4fbf6"><circle cx="173" cy="275" r="4"/><circle cx="205" cy="293" r="3"/><circle cx="419" cy="284" r="4"/><circle cx="448" cy="265" r="3"/></g>
+<g fill="#6daea0"><ellipse cx="52" cy="294" rx="25" ry="10" transform="rotate(-35 52 294)"/><ellipse cx="530" cy="303" rx="24" ry="9" transform="rotate(36 530 303)"/></g>
+</svg>
