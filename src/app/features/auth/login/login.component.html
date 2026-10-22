@@ -1,15 +1,29 @@
 <div class="pantalla-auth">
-  <div class="auth-panel">
-    <div class="marca-auth" aria-label="Serenity, aplicación de bienestar">
-      <img class="marca-simbolo" src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
-      <span class="marca-nombre">Serenity</span>
-      <span class="marca-frase">Un espacio para volver a ti</span>
+  <aside class="auth-escena" aria-label="Bienestar emocional">
+    <a class="marca-escena" routerLink="/login" aria-label="Serenity, inicio">
+      <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
+      <span>Serenity</span>
+    </a>
+    <div class="escena-copy">
+      <p class="eyebrow">UN ESPACIO SEGURO PARA TI</p>
+      <h2>Pequeños pasos,<br />grandes cambios.</h2>
+      <p>Cuida tu mente hoy. Tu bienestar también merece tiempo, calma y cariño.</p>
     </div>
+    <img class="escena-ilustracion" src="assets/serenity-moment.svg" alt="Una persona descansa y respira rodeada de naturaleza" />
+    <p class="frase-calmada">“No tienes que resolverlo todo hoy. Empieza por ti.” <span aria-hidden="true">♡</span></p>
+    <div class="escena-detalle detalle-uno" aria-hidden="true">✦</div>
+    <div class="escena-detalle detalle-dos" aria-hidden="true">✧</div>
+  </aside>
 
+  <div class="auth-panel">
+    <div class="marca-auth-mobile">
+      <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
+      <span>Serenity</span>
+    </div>
     <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
       <div class="encabezado-formulario">
-        <p class="eyebrow">TU BIENESTAR, PASO A PASO</p>
-        <h1>Qué bueno tenerte aquí</h1>
+        <p class="eyebrow">QUÉ BUENO TENERTE DE VUELTA</p>
+        <h1>Hola de nuevo</h1>
         <p class="subtitulo">Inicia sesión y regálate un momento para ti.</p>
       </div>
 
@@ -23,7 +37,7 @@
 
       <div class="field">
         <label for="contrasena">Contraseña</label>
-        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" placeholder="Ingresa tu contraseña" />
+        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" placeholder="Tu contraseña" />
         <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
           Ingresa tu contraseña.
         </span>
@@ -33,7 +47,7 @@
       <p class="error error-general" role="alert" *ngIf="error()">{{ error() }}</p>
 
       <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando() || googleCargando()">
-        <span>{{ cargando() ? 'Ingresando…' : 'Ingresar a Serenity' }}</span>
+        <span>{{ cargando() ? 'Ingresando…' : 'Iniciar sesión' }}</span>
         <span aria-hidden="true" *ngIf="!cargando()">→</span>
       </button>
 
@@ -44,7 +58,7 @@
         (credential)="iniciarConGoogle($event)"
         (loadError)="error.set($event)" />
 
-      <p class="alterno">¿Primera vez aquí? <a routerLink="/registro">Crea tu cuenta</a></p>
+      <p class="alterno">¿Todavía no tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
       <p class="nota-privacidad"><span aria-hidden="true">♡</span> Un espacio de autocuidado; tú marcas tu ritmo.</p>
     </form>
     <p class="nota-crisis">Serenity no reemplaza la atención profesional ni los servicios de emergencia.
