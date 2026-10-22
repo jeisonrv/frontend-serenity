@@ -1,16 +1,81 @@
 .contenido {
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1.15rem 1.5rem 2rem;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  transition: background-color .22s ease, color .22s ease;
 }
 
 .contenido.con-sesion {
   margin-left: 270px;
-  padding: 2rem 3rem;
+  padding: 1rem clamp(1.5rem, 3.2vw, 3.5rem) 2.5rem;
 }
+
+.barra-global {
+  min-height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.lema-global {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  color: var(--color-ink-soft);
+  font-size: .82rem;
+  letter-spacing: .01em;
+}
+.punto-latido {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #71B7A1;
+  box-shadow: 0 0 0 4px rgba(113, 183, 161, .14);
+}
+.theme-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .42rem .58rem .42rem .72rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  background: var(--color-surface);
+  color: var(--color-ink);
+  box-shadow: 0 5px 18px var(--color-shadow);
+  cursor: pointer;
+  transition: background .2s ease, border-color .2s ease, transform .15s ease;
+}
+.theme-toggle:hover { transform: translateY(-1px); border-color: var(--color-primary); }
+.theme-icon { font-size: 1.03rem; color: var(--color-primary-dark); }
+.theme-label { font-size: .78rem; font-weight: 700; }
+.theme-track {
+  width: 34px; height: 20px; padding: 3px; border-radius: 999px;
+  background: #B9D6F1; display: inline-flex; align-items: center;
+  transition: background .2s ease;
+}
+.theme-track > span {
+  width: 14px; height: 14px; border-radius: 50%; background: #fff;
+  box-shadow: 0 1px 3px rgba(25, 45, 68, .22);
+  transition: transform .2s ease;
+}
+.theme-track > span.activo { transform: translateX(14px); }
+:host-context(:root[data-theme='dark']) .theme-track { background: #3F638A; }
+
+.contenido:not(.con-sesion) { padding: 0; }
+.contenido:not(.con-sesion) .barra-global { padding: .8rem 1.2rem .25rem; margin-bottom: 0; }
 
 @media (max-width: 760px) {
   .contenido.con-sesion {
     margin-left: 0;
-    padding: 1.25rem 1rem 5.5rem;
+    padding: .9rem .85rem 5.6rem;
   }
+  .barra-global { min-height: 42px; margin-bottom: .8rem; }
+  .lema-global { font-size: .75rem; max-width: 58%; }
+  .theme-toggle { gap: .38rem; padding: .36rem .48rem; }
+  .theme-label { font-size: .73rem; }
+  .contenido:not(.con-sesion) .barra-global { padding: .7rem .85rem .2rem; }
 }
