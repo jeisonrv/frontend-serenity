@@ -264,3 +264,36 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   .empty-garden img { max-height: 150px; object-fit: cover; }
   .garden-content-heading { align-items: flex-start; flex-direction: column; }
 }
+
+
+/* Gestión de usuarios */
+.usuarios-layout { display: grid; grid-template-columns: minmax(270px, .75fr) minmax(0, 1.25fr); align-items: start; gap: 1rem; }
+.usuario-form, .usuarios-lista { min-width: 0; padding: clamp(1.1rem, 2vw, 1.55rem); }
+.user-form-heading { display: flex; gap: .8rem; align-items: center; margin-bottom: 1.3rem; }
+.user-form-icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 16px; background: var(--color-primary-light); color: var(--color-primary-dark); font-size: 1.6rem; }
+.user-form-heading h2, .usuarios-lista-heading h2 { color: var(--color-ink); font-size: 1.1rem; margin: 0 0 .3rem; }
+.user-form-heading p { color: var(--color-ink-soft); font-size: .78rem; line-height: 1.4; margin: 0; }
+.usuario-form .btn { width: 100%; margin-top: .3rem; }
+.usuarios-lista-heading { display: flex; align-items: center; justify-content: space-between; gap: .8rem; padding-bottom: .9rem; margin-bottom: .3rem; border-bottom: 1px solid var(--color-line); }
+.usuarios-lista-heading .eyebrow { color: var(--color-primary); font-size: .65rem; font-weight: 850; letter-spacing: .13em; margin: 0 0 .25rem; }
+.count-users { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 13px; background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 850; }
+.user-items { display: grid; }
+.user-row { display: flex; align-items: center; gap: .8rem; padding: .8rem 0; border-bottom: 1px solid var(--color-line); }
+.user-row:last-child { border-bottom: 0; }
+.user-avatar { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 auto; border-radius: 15px; background: linear-gradient(145deg, #D7EBFC, #A6C9E8); color: #2B5B84; font-weight: 850; }
+.user-info { min-width: 0; display: flex; flex: 1; flex-direction: column; gap: .15rem; }
+.user-info strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--color-ink); font-size: .88rem; }
+.user-info span { overflow-wrap: anywhere; color: var(--color-ink-soft); font-size: .76rem; }
+.btn-delete-user { border: 1px solid var(--color-line); background: var(--color-surface); color: var(--color-danger); border-radius: 10px; padding: .45rem .65rem; cursor: pointer; font-size: .73rem; font-weight: 750; }
+.btn-delete-user:hover { background: var(--color-primary-light); border-color: var(--color-primary); }
+.empty-users { text-align: center; padding: 1rem .25rem .4rem; }
+.empty-users img { width: min(100%, 220px); height: 125px; object-fit: contain; mix-blend-mode: multiply; }
+.empty-users h3 { color: var(--color-ink); font-size: 1rem; margin: .4rem 0 .2rem; }
+.empty-users p { color: var(--color-ink-soft); font-size: .8rem; margin: 0 auto; }
+:root[data-theme='dark'] .empty-users img { mix-blend-mode: normal; }
+.users-error { display: flex; align-items: center; gap: .8rem; margin: .8rem 0 1rem; padding: .9rem 1rem; border: 1px solid #E7B8B8; border-radius: 14px; color: var(--color-danger); background: #FFF5F4; }
+.users-error span { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #F7D9D6; font-weight: 850; }
+.users-error p { margin: 0; font-size: .85rem; }
+:root[data-theme='dark'] .users-error { background: #3B242C; border-color: #73404B; }
+:root[data-theme='dark'] .users-error span { background: #62333D; }
+@media(max-width: 900px) { .usuarios-layout { grid-template-columns: 1fr; } }
