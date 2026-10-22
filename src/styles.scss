@@ -297,3 +297,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 :root[data-theme='dark'] .users-error { background: #3B242C; border-color: #73404B; }
 :root[data-theme='dark'] .users-error span { background: #62333D; }
 @media(max-width: 900px) { .usuarios-layout { grid-template-columns: 1fr; } }
+
+.empty-garden { background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--radius-organic); box-shadow: var(--shadow-soft); padding: clamp(1rem, 3vw, 1.5rem); }
+:root[data-theme='dark'] .empty-garden { background: linear-gradient(140deg, var(--color-surface) 0%, var(--color-accent-soft) 100%); }
