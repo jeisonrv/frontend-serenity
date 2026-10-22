@@ -1,30 +1,35 @@
-<a routerLink="/inicio" class="volver">← Volver</a>
-<h1>Relajación muscular</h1>
-<p>Tensa y luego relaja cada grupo muscular, siguiendo la indicación.</p>
+<a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
+<header class="page-hero">
+  <div>
+    <p class="eyebrow">SUELTA LA TENSIÓN</p>
+    <h1>Relajación muscular</h1>
+    <p class="lead">Recorre cada grupo muscular con calma. Tensa suavemente y después deja que el cuerpo descanse.</p>
+    <div class="hero-tags"><span>♡ Escucha tu cuerpo</span><span>◷ 7 grupos</span></div>
+  </div>
+  <img src="assets/serenity-relaxation.svg" alt="Manos que sostienen un corazón como símbolo de autocuidado" />
+</header>
 
 <section class="card zona" *ngIf="!completado(); else final">
   <ng-container *ngIf="!enCurso()">
-    <p class="intro">7 grupos musculares · tensión de 5s y relajación de 10s cada uno.</p>
-    <button class="btn btn-primary" type="button" (click)="iniciar()">Comenzar</button>
+    <p class="intro">7 grupos musculares · tensión de 5 segundos y relajación de 10 segundos cada uno.</p>
+    <button class="btn btn-primary" type="button" (click)="iniciar()">Comenzar relajación</button>
   </ng-container>
 
   <ng-container *ngIf="enCurso()">
     <div class="barra-progreso"><div class="relleno" [style.width.%]="progreso"></div></div>
-
     <div class="instruccion" [class.tension]="paso.fase === 'tension'">
       <span class="grupo">{{ paso.grupoMuscular }}</span>
       <span class="accion">{{ paso.fase === 'tension' ? 'Tensa' : 'Relaja' }}</span>
       <span class="segundos">{{ segundosPaso() }}</span>
     </div>
-
-    <button class="btn btn-ghost" type="button" (click)="detener()">Detener</button>
+    <button class="btn btn-ghost" type="button" (click)="detener()">Pausar práctica</button>
   </ng-container>
 </section>
 
 <ng-template #final>
   <section class="card zona mensaje-final">
-    <h2>Secuencia completada</h2>
-    <p>Recorriste los 7 grupos musculares.</p>
-    <a routerLink="/inicio" class="btn btn-primary">Volver al inicio</a>
+    <h2>Has completado la secuencia</h2>
+    <p>Recorriste los 7 grupos musculares. Observa cómo te sientes y continúa a tu ritmo.</p>
+    <a routerLink="/inicio" class="btn btn-primary">Volver a mi espacio</a>
   </section>
 </ng-template>
