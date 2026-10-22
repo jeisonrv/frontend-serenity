@@ -9,21 +9,23 @@
   <img src="assets/serenity-garden.svg" alt="Una planta crece bajo un cielo azul pastel en un jardín tranquilo" />
 </header>
 
-<section class="card garden-content" *ngIf="!cargando(); else cargandoTpl">
-  <div class="garden-content-heading">
-    <div><p class="eyebrow">LO QUE HAS CULTIVADO</p><h2>Las plantas de tu camino</h2></div>
-    <span class="count-plants">{{ plantas().length }} {{ plantas().length === 1 ? 'planta' : 'plantas' }}</span>
-  </div>
-  <div class="parcela" *ngIf="plantas().length; else vacio">
-    <div class="planta" *ngFor="let p of plantas()" [class]="etapaCrecimiento(1)">
-      <span class="icono-planta">⚘</span>
-      <span class="tipo">{{ p.tipoPlanta }}</span>
+<section *ngIf="!cargando(); else cargandoTpl">
+  <div class="card garden-content" *ngIf="plantas().length; else vacio">
+    <div class="garden-content-heading">
+      <div><p class="eyebrow">LO QUE HAS CULTIVADO</p><h2>Las plantas de tu camino</h2></div>
+      <span class="count-plants">{{ plantas().length }} {{ plantas().length === 1 ? 'planta' : 'plantas' }}</span>
+    </div>
+    <div class="parcela">
+      <div class="planta" *ngFor="let p of plantas()" [class]="etapaCrecimiento(1)">
+        <span class="icono-planta">⚘</span>
+        <span class="tipo">{{ p.tipoPlanta }}</span>
+      </div>
     </div>
   </div>
 </section>
 
 <ng-template #vacio>
-  <div class="card empty-garden">
+  <div class="empty-garden">
     <img src="assets/serenity-garden.svg" alt="" aria-hidden="true" loading="lazy" />
     <div><h2>Todo gran jardín empieza con una semilla</h2>
       <p>Haz tu primer ejercicio y comienza a cuidar de este espacio.</p>
