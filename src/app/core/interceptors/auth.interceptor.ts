@@ -10,7 +10,7 @@ import { mensajeError } from '../utils/mensaje-error';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(AuthService);
   const router = inject(Router);
-  const authRequest = ['/api/auth/registro', '/api/auth/login', '/api/auth/google']
+  const authRequest = ['/api/auth/registro', '/api/auth/login', '/api/auth/google', '/api/auth/olvide-password', '/api/auth/restablecer-password']
     .some((endpoint) => req.url.endsWith(endpoint));
   if (authRequest) return next(req);
   const token = auth.getToken();
