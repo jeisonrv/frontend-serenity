@@ -1,39 +1,75 @@
-<a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
-<header class="page-hero page-hero-garden">
-  <div>
-    <p class="eyebrow">CRECE A TU PROPIO RITMO</p>
-    <h1>Tu jardín virtual</h1>
-    <p class="lead">Cada ejercicio es una semilla. Cuanto más te cuidas, más espacio das a tu jardín para crecer.</p>
-    <div class="hero-tags"><span>✿ Pequeños avances</span><span>♡ Autocuidado</span></div>
-  </div>
-  <img src="assets/serenity-garden.svg" alt="Una planta crece bajo un cielo azul pastel en un jardín tranquilo" />
-</header>
+<main class="jardin-page">
+  <a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
 
-<section *ngIf="!cargando(); else cargandoTpl">
-  <div class="card garden-content" *ngIf="plantas().length; else vacio">
-    <div class="garden-content-heading">
-      <div><p class="eyebrow">LO QUE HAS CULTIVADO</p><h2>Las plantas de tu camino</h2></div>
-      <span class="count-plants">{{ plantas().length }} {{ plantas().length === 1 ? 'planta' : 'plantas' }}</span>
+  <header class="garden-hero">
+    <div class="hero-copy">
+      <p class="eyebrow">UN LUGAR PARA CRECER</p>
+      <h1>Tu jardín, tu momento 🌿</h1>
+      <p class="lead">No tienes que florecer todos los días. Este pequeño espacio crece contigo, sin prisa y sin comparaciones.</p>
+      <div class="hero-tags"><span>✿ A tu propio ritmo</span><span>♡ Cada pausa importa</span></div>
     </div>
-    <div class="parcela">
-      <div class="planta" *ngFor="let p of plantas()" [class]="etapaCrecimiento(1)">
-        <span class="icono-planta">⚘</span>
-        <span class="tipo">{{ p.tipoPlanta }}</span>
+    <div class="hero-art" aria-hidden="true">
+      <span class="sun-glow"></span><span class="cloud cloud-one"></span><span class="cloud cloud-two"></span>
+      <span class="hero-flower flower-one">🌼</span><span class="hero-flower flower-two">🌷</span><span class="hero-flower flower-three">🌸</span>
+      <span class="hero-grass"></span>
+    </div>
+  </header>
+
+  <p class="notice" *ngIf="error()">{{ error() }}</p>
+
+  <section class="garden-progress" *ngIf="!cargando()">
+    <article class="progress-intro">
+      <div class="level-badge"><span aria-hidden="true">✦</span><span>NIVEL {{ nivel() }}</span></div>
+      <p class="eyebrow">TU ESPACIO FLORECE</p>
+      <h2>{{ mensajeJardin() }}</h2>
+      <p class="muted">Tu jardín refleja las plantas registradas en tus actividades. No hay días perdidos: siempre puedes volver.</p>
+      <div class="next-level" *ngIf="totalPlantas() < 15">
+        <div class="next-level-label"><span>Próxima etapa</span><strong>{{ totalPlantas() < 3 ? 'Brote' : totalPlantas() < 7 ? 'Planta' : 'Floración' }}</strong></div>
+        <div class="progress-track"><span [style.width.%]="progresoSiguiente()"></span></div>
+        <small>{{ totalPlantas() }} {{ totalPlantas() === 1 ? 'planta registrada' : 'plantas registradas' }}</small>
+      </div>
+      <div class="next-level" *ngIf="totalPlantas() >= 15"><strong>Tu jardín está en plena floración ✨</strong><div class="progress-track"><span style="width:100%"></span></div></div>
+    </article>
+    <div class="mini-garden" aria-hidden="true">
+      <span class="mini-spark spark-a">✦</span><span class="mini-spark spark-b">✧</span>
+      <span class="mini-plant plant-a">🌿</span><span class="mini-plant plant-b">🌷</span><span class="mini-plant plant-c">🌱</span>
+      <span class="mini-ground"></span>
+    </div>
+  </section>
+
+  <section class="garden-board">
+    <div class="board-heading">
+      <div><p class="eyebrow">TU PEQUEÑO UNIVERSO</p><h2>Lo que has cultivado</h2><p class="muted">Cada planta representa un registro de tu jardín.</p></div>
+      <div class="plant-count"><span aria-hidden="true">🌱</span><strong>{{ totalPlantas() }}</strong><small>{{ totalPlantas() === 1 ? 'planta' : 'plantas' }}</small></div>
+    </div>
+
+    <div class="filters" role="group" aria-label="Filtrar plantas">
+      <button type="button" [class.active]="filtro() === 'todas'" (click)="cambiarFiltro('todas')">Todo el jardín</button>
+      <button type="button" [class.active]="filtro() === 'flores'" (click)="cambiarFiltro('flores')">Flores</button>
+      <button type="button" [class.active]="filtro() === 'brotes'" (click)="cambiarFiltro('brotes')">Semillas y brotes</button>
+    </div>
+
+    <div class="loading-state" *ngIf="cargando()"><span class="loading-orb" aria-hidden="true"></span><p>Preparando tu jardín…</p></div>
+
+    <div class="garden-landscape" *ngIf="!cargando() && plantas().length">
+      <div class="garden-sky" aria-hidden="true"><span class="sky-star star-one">✦</span><span class="sky-star star-two">✧</span><span class="sky-star star-three">✦</span><span class="sky-butterfly">🦋</span></div>
+      <div class="plot">
+        <article class="plant-card" *ngFor="let planta of plantasVisibles(); let i = index" [class]="'plant-card ' + planta.etapa + ' ' + planta.demora">
+          <div class="plant-visual" [attr.aria-label]="planta.nombre" role="img"><span>{{ planta.simbolo }}</span><i class="leaf leaf-left"></i><i class="leaf leaf-right"></i></div>
+          <span class="plant-name">{{ planta.nombre }}</span>
+          <span class="plant-stage">{{ planta.etapa === 'semilla' ? 'Semilla' : planta.etapa === 'brote' ? 'Brote nuevo' : planta.etapa === 'planta' ? 'En crecimiento' : 'En floración' }}</span>
+        </article>
+        <div class="empty-filter" *ngIf="!plantasVisibles().length"><span>🌿</span><p>Aún no hay plantas en esta categoría. Tu jardín seguirá creciendo.</p><button type="button" class="text-button" (click)="cambiarFiltro('todas')">Ver todo el jardín</button></div>
       </div>
     </div>
-  </div>
-</section>
 
-<ng-template #vacio>
-  <div class="empty-garden">
-    <img src="assets/serenity-garden.svg" alt="" aria-hidden="true" loading="lazy" />
-    <div><h2>Todo gran jardín empieza con una semilla</h2>
-      <p>Haz tu primer ejercicio y comienza a cuidar de este espacio.</p>
-      <a routerLink="/ejercicios/respiracion" class="btn btn-primary">Sembrar mi primera semilla <span aria-hidden="true">→</span></a>
+    <div class="empty-garden" *ngIf="!cargando() && !plantas().length">
+      <div class="empty-illustration" aria-hidden="true"><span class="empty-spark">✦</span><span class="empty-seed">🌰</span><span class="empty-ground"></span><span class="empty-leaf">🌱</span></div>
+      <h3>Todo empieza con algo pequeño</h3>
+      <p>Cuando registres una actividad, aquí podrás ver cómo tu jardín empieza a tomar forma. No hay prisa; este espacio te espera.</p>
+      <a routerLink="/ejercicios/respiracion" class="btn btn-primary">Hacer una pausa de respiración <span aria-hidden="true">→</span></a>
     </div>
-  </div>
-</ng-template>
+  </section>
 
-<ng-template #cargandoTpl>
-  <section class="card"><p class="cargando">Cargando tu jardín…</p></section>
-</ng-template>
+  <section class="garden-note"><span aria-hidden="true">☁</span><p><strong>Un recordatorio amable</strong><br>Tu bienestar no es una competencia. Las plantas son una forma simbólica de celebrar tus actividades, no una medida de cómo deberías sentirte.</p></section>
+</main>
