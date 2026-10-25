@@ -1,6 +1,8 @@
+
 import { APP_INITIALIZER, ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
+
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
@@ -11,51 +13,119 @@ interface RuntimeConfig {
   googleClientId?: string;
 }
 
-function initializeRuntimeConfig(): () => Promise<void> {
-  return async () => {
-    let response: Response;
-    try {
-      response = await fetch('/config.json', { cache: 'no-store' });
-    } catch {
-      if (!environment.production) return;
-      throw new Error('No se pudo cargar la configuración de ejecución.');
-    }
+async function loadRuntimeConfig(): Promise<void> {
+  let config: Partial<RuntimeConfig> | null = null;
 
-    if (response.status === 404 && !environment.production) {
-      response = await fetch('/assets/config.dev.json', { cache: 'no-store' });
-      if (response.status === 404) return;
-    }
-    if (!response.ok) throw new Error('No se pudo cargar la configuración de ejecución.');
+  const configPaths = environment.production
+      ? ['/config.json']
+      : ['/config.json', '/assets/config.dev.json'];
 
-    let config: Partial<RuntimeConfig>;
+  for (const path of configPaths) {
     try {
+      const response = await fetch(path, { cache: 'no-store' });
+
+      if (response.status === 404) {
+        continue;
+      }
+
+      if (!response.ok) {
+        throw new Error(
+            `No se pudo cargar ${path}. Estado HTTP: ${response.status}`
+        );
+      }
+
       config = await response.json() as Partial<RuntimeConfig>;
-    } catch {
-      if (!environment.production) return;
-      throw new Error('La configuración de ejecución no es JSON válido.');
+      break;
+    } catch (error) {
+      if (error instanceof SyntaxError) {
+        throw new Error(`El archivo ${path} no contiene JSON válido.`);
+      }
+
+      if (error instanceof TypeError && !environment.production) {
+        continue;
+      }
+
+      throw error;
     }
-    if (typeof config.apiUrl !== 'string' || typeof config.wsUrl !== 'string') {
-      throw new Error('La configuración de ejecución no contiene API_URL y WS_URL válidas.');
+  }
+
+  if (!config) {
+    if (environment.production) {
+      throw new Error(
+          'No se encontró config.json para la configuración de producción.'
+      );
     }
 
-    const apiUrl = new URL(config.apiUrl);
-    const wsUrl = new URL(config.wsUrl);
-    if (!['http:', 'https:'].includes(apiUrl.protocol) || !['ws:', 'wss:'].includes(wsUrl.protocol)) {
-      throw new Error('La configuración de ejecución contiene protocolos de URL no válidos.');
-    }
+    console.warn(
+        'No se encontró un archivo de configuración de ejecución.'
+    );
+    return;
+  }
 
-    environment.apiUrl = config.apiUrl.replace(/\/+$/, '');
-    environment.wsUrl = config.wsUrl.replace(/\/+$/, '');
-    if (typeof config.googleClientId === 'string') {
-      environment.googleClientId = config.googleClientId.trim();
-    }
-  };
+  if (
+      typeof config.apiUrl !== 'string' ||
+      typeof config.wsUrl !== 'string' ||
+      !config.apiUrl.trim() ||
+      !config.wsUrl.trim()
+  ) {
+    throw new Error(
+        'La configuración debe incluir apiUrl y wsUrl válidas.'
+    );
+  }
+
+  let apiUrl: URL;
+  let wsUrl: URL;
+
+  try {
+    apiUrl = new URL(config.apiUrl);
+    wsUrl = new URL(config.wsUrl);
+  } catch {
+    throw new Error(
+        'apiUrl o wsUrl no contienen una URL válida.'
+    );
+  }
+
+  if (!['http:', 'https:'].includes(apiUrl.protocol)) {
+    throw new Error('apiUrl debe utilizar HTTP o HTTPS.');
+  }
+
+  if (!['ws:', 'wss:'].includes(wsUrl.protocol)) {
+    throw new Error('wsUrl debe utilizar WS o WSS.');
+  }
+
+  environment.apiUrl = config.apiUrl.replace(/\/+$/, '');
+  environment.wsUrl = config.wsUrl.replace(/\/+$/, '');
+
+  const googleClientId =
+      typeof config.googleClientId === 'string'
+          ? config.googleClientId.trim()
+          : '';
+
+  environment.googleClientId = googleClientId;
+
+  if (!googleClientId) {
+    console.warn(
+        'Google OAuth no está configurado. ' +
+        'El inicio de sesión con correo y contraseña seguirá disponible.'
+    );
+  }
+}
+
+function initializeRuntimeConfig(): () => Promise<void> {
+  return loadRuntimeConfig;
 }
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    provideHttpClient(withInterceptors([authInterceptor])),
-    { provide: APP_INITIALIZER, useFactory: initializeRuntimeConfig, multi: true }
+    provideHttpClient(
+        withInterceptors([authInterceptor])
+    ),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: initializeRuntimeConfig,
+      multi: true
+    }
   ]
 };
+

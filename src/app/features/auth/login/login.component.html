@@ -4,13 +4,27 @@
       <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
       <span>Serenity</span>
     </a>
+
     <div class="escena-copy">
       <p class="eyebrow">UN ESPACIO SEGURO PARA TI</p>
       <h2>Pequeños pasos,<br />grandes cambios.</h2>
-      <p>Cuida tu mente hoy. Tu bienestar también merece tiempo, calma y cariño.</p>
+      <p>
+        Cuida tu mente hoy. Tu bienestar también merece tiempo,
+        calma y cariño.
+      </p>
     </div>
-    <img class="escena-ilustracion" src="assets/serenity-moment.svg" alt="Una persona descansa y respira rodeada de naturaleza" />
-    <p class="frase-calmada">“No tienes que resolverlo todo hoy. Empieza por ti.” <span aria-hidden="true">♡</span></p>
+
+    <img
+            class="escena-ilustracion"
+            src="assets/serenity-moment.svg"
+            alt="Una persona descansa y respira rodeada de naturaleza"
+    />
+
+    <p class="frase-calmada">
+      “No tienes que resolverlo todo hoy. Empieza por ti.”
+      <span aria-hidden="true">♡</span>
+    </p>
+
     <div class="escena-detalle detalle-uno" aria-hidden="true">✦</div>
     <div class="escena-detalle detalle-dos" aria-hidden="true">✧</div>
   </aside>
@@ -20,49 +34,134 @@
       <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
       <span>Serenity</span>
     </div>
-    <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
+
+    <form
+            class="card formulario"
+            [formGroup]="form"
+            (ngSubmit)="enviar()"
+    >
       <div class="encabezado-formulario">
         <p class="eyebrow">QUÉ BUENO TENERTE DE VUELTA</p>
         <h1>Hola de nuevo</h1>
-        <p class="subtitulo">Inicia sesión y regálate un momento para ti.</p>
+        <p class="subtitulo">
+          Inicia sesión y regálate un momento para ti.
+        </p>
       </div>
 
+      <!-- Correo electrónico -->
       <div class="field">
         <label for="correo">Correo electrónico</label>
-        <input id="correo" type="email" formControlName="correo" autocomplete="email" placeholder="tu@correo.com" />
-        <span class="error" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
+
+        <input
+                id="correo"
+                type="email"
+                formControlName="correo"
+                autocomplete="email"
+                placeholder="tu@correo.com"
+        />
+
+        <span
+                class="error"
+                *ngIf="
+            form.get('correo')?.touched &&
+            form.get('correo')?.invalid
+          "
+        >
           Ingresa un correo válido.
         </span>
       </div>
 
-      <div class="field">
+      <!-- Contraseña -->
+      <div class="field campo-contrasena">
         <label for="contrasena">Contraseña</label>
-        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" placeholder="Tu contraseña" />
-        <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
+
+        <input
+                id="contrasena"
+                type="password"
+                formControlName="contrasena"
+                autocomplete="current-password"
+                placeholder="Tu contraseña"
+        />
+
+        <span
+                class="error"
+                *ngIf="
+            form.get('contrasena')?.touched &&
+            form.get('contrasena')?.invalid
+          "
+        >
           Ingresa tu contraseña.
         </span>
       </div>
 
-      <p class="mensaje-exito" role="status" *ngIf="confirmacion()">{{ confirmacion() }}</p>
-      <p class="error error-general" role="alert" *ngIf="error()">{{ error() }}</p>
+      <!-- Recuperar contraseña -->
+      <p class="enlace-recuperar">
+        <a routerLink="/recuperar-password">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </p>
 
-      <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando() || googleCargando()">
-        <span>{{ cargando() ? 'Ingresando…' : 'Iniciar sesión' }}</span>
+      <!-- Mensajes de respuesta -->
+      <p
+              class="mensaje-exito"
+              role="status"
+              *ngIf="confirmacion()"
+      >
+        {{ confirmacion() }}
+      </p>
+
+      <p
+              class="error error-general"
+              role="alert"
+              *ngIf="error()"
+      >
+        {{ error() }}
+      </p>
+
+      <!-- Botón de inicio de sesión -->
+      <button
+              class="btn btn-primary boton-ingreso"
+              type="submit"
+              [disabled]="cargando() || googleCargando()"
+      >
+        <span>
+          {{ cargando() ? 'Ingresando…' : 'Iniciar sesión' }}
+        </span>
+
         <span aria-hidden="true" *ngIf="!cargando()">→</span>
       </button>
 
-      <div class="separador-google"><span>o continúa con</span></div>
-      <app-google-identity-button
-        [disabled]="cargando() || googleCargando()"
-        text="continue_with"
-        (credential)="iniciarConGoogle($event)"
-        (loadError)="error.set($event)" />
+      <!-- Inicio de sesión con Google -->
+      <div class="separador-google">
+        <span>o continúa con</span>
+      </div>
 
-      <p class="alterno">¿Todavía no tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
-      <p class="nota-privacidad"><span aria-hidden="true">♡</span> Un espacio de autocuidado; tú marcas tu ritmo.</p>
+      <app-google-identity-button
+              [disabled]="cargando() || googleCargando()"
+              text="continue_with"
+              (credential)="iniciarConGoogle($event)"
+              (loadError)="error.set($event)"
+      />
+
+      <!-- Registro -->
+      <p class="alterno">
+        ¿Todavía no tienes cuenta?
+        <a routerLink="/registro">Regístrate</a>
+      </p>
+
+      <p class="nota-privacidad">
+        <span aria-hidden="true">♡</span>
+        Un espacio de autocuidado; tú marcas tu ritmo.
+      </p>
     </form>
-    <p class="nota-crisis">Serenity no reemplaza la atención profesional ni los servicios de emergencia.
-      <a routerLink="/ayuda">Ver líneas de ayuda</a> · <a routerLink="/terminos">Términos y condiciones</a>
+
+    <!-- Información de ayuda -->
+    <p class="nota-crisis">
+      Serenity no reemplaza la atención profesional ni los servicios
+      de emergencia.
+      <a routerLink="/ayuda">Ver líneas de ayuda</a>
+      ·
+      <a routerLink="/terminos">Términos y condiciones</a>
     </p>
   </div>
 </div>
