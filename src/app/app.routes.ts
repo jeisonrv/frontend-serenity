@@ -34,6 +34,12 @@ export const routes: Routes = [
             .then((m) => m.RecuperarPasswordComponent)
   },
   {
+    path: 'restablecer-password',
+    loadComponent: () =>
+        import('./features/auth/restablecer-password/restablecer-password.component')
+            .then((m) => m.RestablecerPasswordComponent)
+  },
+  {
     path: 'registro',
     loadComponent: () =>
         import('./features/auth/register/register.component')
