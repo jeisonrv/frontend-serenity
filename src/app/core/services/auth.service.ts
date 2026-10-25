@@ -74,6 +74,20 @@ export class AuthService {
     );
   }
 
+  solicitarRecuperacion(correo: string): Observable<void> {
+    return this.http.post<void>(
+      `${environment.apiUrl}/auth/olvide-password`,
+      { correo }
+    );
+  }
+
+  restablecerPassword(token: string, passwordNueva: string): Observable<void> {
+    return this.http.post<void>(
+      `${environment.apiUrl}/auth/restablecer-password`,
+      { token, passwordNueva }
+    );
+  }
+
   getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
   }
