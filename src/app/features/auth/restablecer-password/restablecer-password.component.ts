@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule, HttpErrorResponse } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -27,7 +27,6 @@ export class RestablecerPasswordComponent {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly router: Router,
     private readonly auth: AuthService
   ) {
     this.token = this.route.snapshot.queryParamMap.get('token') ?? '';
