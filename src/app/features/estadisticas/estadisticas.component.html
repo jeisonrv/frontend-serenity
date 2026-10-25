@@ -1,33 +1,79 @@
-<a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
-<header class="page-hero page-hero-statistics">
-  <div>
-    <p class="eyebrow">TU CAMINO, A TU MANERA</p>
-    <h1>Mira todo lo que has avanzado</h1>
-    <p class="lead">Cada pausa que te regalas forma parte de tu proceso. Aquí puedes revisar tu actividad registrada.</p>
-    <div class="hero-tags"><span>✧ A tu ritmo</span><span>♡ Cada avance cuenta</span></div>
-  </div>
-  <img src="assets/serenity-breathing.svg" alt="Ondas de calma que representan el proceso de bienestar" />
-</header>
+<main class="estadisticas-page">
+  <a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
 
-<section class="resumen resumen-actividad" *ngIf="resumen() as r">
-  <div class="card stat"><span class="icono-resumen" aria-hidden="true">◷</span><span class="valor">{{ r.totalSesiones }}</span><span class="etiqueta">Sesiones completadas</span></div>
-  <div class="card stat"><span class="icono-resumen" aria-hidden="true">♡</span><span class="valor">{{ r.minutosTotales }}</span><span class="etiqueta">Minutos dedicados</span></div>
-  <div class="card stat"><span class="icono-resumen" aria-hidden="true">✦</span><span class="valor">{{ r.racha }}</span><span class="etiqueta">Racha actual</span></div>
-</section>
+  <header class="page-hero page-hero-statistics">
+    <div class="hero-copy">
+      <p class="eyebrow">TU CAMINO, A TU MANERA</p>
+      <h1>Cada pequeño paso cuenta</h1>
+      <p class="lead">Mira el tiempo que te has dedicado y las prácticas que te han acompañado. No hay una forma correcta de avanzar: este es tu propio proceso.</p>
+      <div class="hero-tags"><span>✧ A tu ritmo</span><span>♡ Cada avance cuenta</span></div>
+    </div>
+    <img src="assets/serenity-breathing.svg" alt="Ondas suaves que representan la calma" />
+  </header>
 
-<div class="activity-section-heading"><div><p class="eyebrow">TU HISTORIAL</p><h2>Las prácticas que has realizado</h2></div></div>
-<section class="card tabla-card" *ngIf="!cargando(); else cargandoTpl">
-  <table class="tabla" *ngIf="historial().length; else vacio">
-    <thead><tr><th>Ejercicio</th><th>Duración</th><th>Fecha</th></tr></thead>
-    <tbody>
-      <tr *ngFor="let s of historial()">
-        <td><span class="activity-dot" aria-hidden="true">✧</span>{{ s.tipoEjercicio }}</td>
-        <td>{{ s.duracion }}s</td>
-        <td>{{ s.fechaCompletada | date: 'dd/MM/yyyy HH:mm' }}</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
+  <p class="notice" *ngIf="error()">{{ error() }}</p>
 
-<ng-template #vacio><p class="card empty-activity">Aún no tienes sesiones registradas. Tu primera práctica puede empezar con cinco minutos de respiración.</p></ng-template>
-<ng-template #cargandoTpl><p class="card cargando">Cargando tus estadísticas…</p></ng-template>
+  <section class="resumen resumen-actividad" *ngIf="resumen() as r">
+    <article class="card stat stat-mint">
+      <span class="stat-icon" aria-hidden="true">✧</span>
+      <span class="stat-copy"><span class="valor">{{ r.totalSesiones }}</span><span class="etiqueta">Sesiones completadas</span></span>
+    </article>
+    <article class="card stat stat-lilac">
+      <span class="stat-icon" aria-hidden="true">◷</span>
+      <span class="stat-copy"><span class="valor">{{ r.minutosTotales }}</span><span class="etiqueta">Minutos de autocuidado</span></span>
+    </article>
+    <article class="card stat stat-peach">
+      <span class="stat-icon" aria-hidden="true">♡</span>
+      <span class="stat-copy"><span class="valor">{{ r.racha }}</span><span class="etiqueta">Días de racha actual</span></span>
+    </article>
+  </section>
+
+  <section class="analytics-grid" *ngIf="!cargando(); else cargandoTpl">
+    <article class="card chart-card">
+      <div class="section-heading">
+        <div><p class="eyebrow">TU CONSTANCIA</p><h2>Un espacio para ti</h2><p class="muted">Sesiones registradas por día</p></div>
+        <div class="range-switch" role="group" aria-label="Rango de estadísticas">
+          <button type="button" [class.active]="rango() === '7d'" (click)="cambiarRango('7d')">7 días</button>
+          <button type="button" [class.active]="rango() === '30d'" (click)="cambiarRango('30d')">30 días</button>
+        </div>
+      </div>
+      <div class="period-summary"><strong>{{ totalPeriodo() }}</strong><span>sesiones en este periodo</span><strong>{{ minutosPeriodo() }}</strong><span>minutos dedicados</span></div>
+      <div class="bar-chart" [class.month-view]="rango() === '30d'" role="img" [attr.aria-label]="'Actividad diaria: ' + totalPeriodo() + ' sesiones en el periodo'">
+        <div class="bar-column" *ngFor="let dia of barras()">
+          <span class="bar-value" *ngIf="dia.sesiones">{{ dia.sesiones }}</span>
+          <div class="bar-track"><div class="bar-fill" [style.height.%]="dia.altura" [class.has-activity]="dia.sesiones > 0"></div></div>
+          <span class="bar-label">{{ dia.etiqueta }}</span>
+        </div>
+      </div>
+      <p class="chart-footnote">Los días sin registros también forman parte de tu camino. Puedes volver cuando quieras.</p>
+    </article>
+
+    <article class="card activity-card">
+      <div class="section-heading"><div><p class="eyebrow">TUS MOMENTOS</p><h2>Lo que te acompaña</h2></div><span class="decorative-leaf" aria-hidden="true">❧</span></div>
+      <ng-container *ngIf="tiposActividad().length; else sinTipos">
+        <div class="activity-row" *ngFor="let actividad of tiposActividad()">
+          <div class="activity-name"><span class="activity-symbol" [attr.data-type]="actividad.tipo" aria-hidden="true">{{ actividad.tipo === 'respiracion' ? '◌' : actividad.tipo === 'meditacion' ? '☾' : actividad.tipo === 'relajacion' ? '❋' : '♡' }}</span><span>{{ actividad.nombre }}</span></div>
+          <div class="activity-progress"><div class="progress-track"><span [style.width.%]="porcentajeTipo(actividad.cantidad)"></span></div><small>{{ actividad.cantidad }} · {{ porcentajeTipo(actividad.cantidad) }}%</small></div>
+        </div>
+      </ng-container>
+      <ng-template #sinTipos><div class="empty-mini"><span aria-hidden="true">🌱</span><p>Tus prácticas aparecerán aquí cuando completes alguna actividad.</p><a routerLink="/ejercicios/respiracion">Probar respiración guiada →</a></div></ng-template>
+    </article>
+  </section>
+
+  <section class="card history-card" *ngIf="!cargando()">
+    <div class="section-heading"><div><p class="eyebrow">PASO A PASO</p><h2>Tu historial reciente</h2><p class="muted">Cada sesión es tiempo que elegiste dedicarte.</p></div><a routerLink="/jardin" class="text-link">Visitar mi jardín →</a></div>
+    <div class="table-scroll" *ngIf="historial().length; else vacio">
+      <table class="tabla">
+        <thead><tr><th>Práctica</th><th>Duración</th><th>Fecha</th></tr></thead>
+        <tbody><tr *ngFor="let s of historial().slice(0, 8)">
+          <td><span class="activity-dot" aria-hidden="true">✧</span>{{ s.tipoEjercicio | titlecase }}</td>
+          <td>{{ s.duracion >= 60 ? (s.duracion / 60 | number:'1.0-0') + ' min' : s.duracion + ' s' }}</td>
+          <td>{{ s.fechaCompletada | date: 'dd MMM, y · HH:mm' }}</td>
+        </tr></tbody>
+      </table>
+    </div>
+    <ng-template #vacio><p class="empty-activity">Aún no tienes sesiones registradas. Tu primera práctica puede empezar con unos minutos de respiración.</p></ng-template>
+  </section>
+</main>
+
+<ng-template #cargandoTpl><section class="card loading-state"><span class="loading-orb" aria-hidden="true"></span><p>Cargando tus estadísticas…</p></section></ng-template>
