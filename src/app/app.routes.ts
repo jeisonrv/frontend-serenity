@@ -8,7 +8,6 @@ export const routes: Routes = [
     pathMatch: 'full',
     redirectTo: 'inicio'
   },
-
   {
     path: 'ayuda',
     loadComponent: () =>
@@ -45,7 +44,6 @@ export const routes: Routes = [
         import('./features/auth/register/register.component')
             .then((m) => m.RegisterComponent)
   },
-
   {
     path: 'cuenta',
     canActivate: [authGuard],
@@ -53,7 +51,6 @@ export const routes: Routes = [
         import('./features/cuenta/cuenta.component')
             .then((m) => m.CuentaComponent)
   },
-
   {
     path: 'inicio',
     canActivate: [authGuard, roleGuard],
@@ -61,14 +58,6 @@ export const routes: Routes = [
     loadComponent: () =>
         import('./features/dashboard/dashboard.component')
             .then((m) => m.DashboardComponent)
-  },
-  {
-    path: 'usuarios',
-    canActivate: [authGuard, roleGuard],
-    data: { roles: ['USUARIO'] },
-    loadComponent: () =>
-        import('./features/usuarios/usuarios.component')
-            .then((m) => m.UsuariosComponent)
   },
   {
     path: 'ejercicios/respiracion',
@@ -126,8 +115,6 @@ export const routes: Routes = [
         import('./features/estadisticas/estadisticas.component')
             .then((m) => m.EstadisticasComponent)
   },
-
-  // Panel del oyente
   {
     path: 'oyente',
     canActivate: [authGuard, roleGuard],
@@ -136,8 +123,6 @@ export const routes: Routes = [
         import('./features/oyente/panel-oyente.component')
             .then((m) => m.PanelOyenteComponent)
   },
-
-  // Panel de moderación
   {
     path: 'moderacion',
     canActivate: [authGuard, roleGuard],
@@ -146,8 +131,6 @@ export const routes: Routes = [
         import('./features/moderacion/panel-moderacion.component')
             .then((m) => m.PanelModeracionComponent)
   },
-
-  // Chat
   {
     path: 'chat/:id',
     canActivate: [authGuard, roleGuard],
@@ -164,7 +147,6 @@ export const routes: Routes = [
         import('./features/chat/chat.component')
             .then((m) => m.ChatComponent)
   },
-
   {
     path: '**',
     redirectTo: 'inicio'
