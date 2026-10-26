@@ -53,16 +53,21 @@ const DECORACIONES: Record<DecoracionJardin, number> = {
 export class JardinInteractivoService {
   private readonly estadoInterno = signal<EstadoJardinInteractivo>({ ...ESTADO_INICIAL, plantas: [] });
   readonly estado = this.estadoInterno.asReadonly();
+  private claveCargada = '';
 
   constructor(private readonly auth: AuthService) {
     this.estadoInterno.set(this.leerEstado());
   }
 
   cargar(): void {
-    this.estadoInterno.set(this.leerEstado());
+    const clave = this.claveAlmacenamiento();
+    if (clave === this.claveCargada) return;
+    this.claveCargada = clave;
+    this.estadoInterno.set(this.leerEstado(clave));
   }
 
   registrarActividad(tipoActividad: string): void {
+    this.cargar();
     const actual = this.estadoInterno();
     const numero = actual.actividadesCompletadas;
     const tipo = TIPOS[numero % TIPOS.length];
@@ -85,6 +90,7 @@ export class JardinInteractivoService {
   }
 
   sembrarSemilla(tipo: TipoPlanta = 'lavanda'): string {
+    this.cargar();
     const actual = this.estadoInterno();
     const nueva: PlantaInteractiva = {
       id: this.nuevoId(),
@@ -99,6 +105,7 @@ export class JardinInteractivoService {
   }
 
   regarPlanta(id: string): EtapaPlanta | null {
+    this.cargar();
     const actual = this.estadoInterno();
     const planta = actual.plantas.find((item) => item.id === id);
     if (!planta || planta.riegos >= 3) return null;
@@ -114,6 +121,7 @@ export class JardinInteractivoService {
   }
 
   cambiarTipoPlanta(id: string, tipo: TipoPlanta): void {
+    this.cargar();
     const actual = this.estadoInterno();
     this.guardar({
       ...actual,
@@ -124,16 +132,19 @@ export class JardinInteractivoService {
   }
 
   decoracionDesbloqueada(decoracion: DecoracionJardin): boolean {
+    this.cargar();
     return this.estadoInterno().xp >= DECORACIONES[decoracion];
   }
 
   seleccionarDecoracion(decoracion: DecoracionJardin): boolean {
+    this.cargar();
     if (!this.decoracionDesbloqueada(decoracion)) return false;
     this.guardar({ ...this.estadoInterno(), decoracion });
     return true;
   }
 
   alternarAmbiente(): void {
+    this.cargar();
     const actual = this.estadoInterno();
     this.guardar({ ...actual, modoNoche: !actual.modoNoche });
   }
@@ -141,15 +152,15 @@ export class JardinInteractivoService {
   private guardar(estado: EstadoJardinInteractivo): void {
     this.estadoInterno.set(estado);
     try {
-      localStorage.setItem(this.claveAlmacenamiento(), JSON.stringify(estado));
+      localStorage.setItem(this.claveCargada, JSON.stringify(estado));
     } catch {
       // Si el navegador bloquea el almacenamiento, el jardín sigue funcionando en memoria.
     }
   }
 
-  private leerEstado(): EstadoJardinInteractivo {
+  private leerEstado(clave: string): EstadoJardinInteractivo {
     try {
-      const raw = localStorage.getItem(this.claveAlmacenamiento());
+      const raw = localStorage.getItem(clave);
       if (!raw) return { ...ESTADO_INICIAL, plantas: [] };
       const guardado = JSON.parse(raw) as Partial<EstadoJardinInteractivo>;
       return {
@@ -179,6 +190,7 @@ export class JardinInteractivoService {
   }
 
   sincronizarRegistros(registros: RegistroJardin[]): void {
+    this.cargar();
     if (!Array.isArray(registros) || registros.length === 0) return;
     const actual = this.estadoInterno();
     const idsConocidos = new Set(
