@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DiarioService } from '../../../core/services/diario.service';
+import { JardinInteractivoService } from '../../../core/services/jardin-interactivo.service';
 import { EntradaDiario } from '../../../core/models/entrada-diario.model';
 import { mensajeError } from '../../../core/utils/mensaje-error';
 
@@ -44,7 +45,8 @@ export class DiarioComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private diarioService: DiarioService
+    private diarioService: DiarioService,
+    private jardinInteractivo: JardinInteractivoService
   ) {
     this.form = this.fb.group({
       contenido: ['', [Validators.required, Validators.minLength(5)]]
@@ -173,6 +175,7 @@ export class DiarioComponent implements OnInit {
         next: () => {
           this.guardando.set(false);
           this.guardado.set(true);
+          this.jardinInteractivo.registrarActividad('diario emocional');
           this.form.reset();
           this.cargarEntradas();
         },
