@@ -51,12 +51,11 @@ const DECORACIONES: Record<DecoracionJardin, number> = {
 
 @Injectable({ providedIn: 'root' })
 export class JardinInteractivoService {
-  private readonly estadoInterno = signal<EstadoJardinInteractivo>(this.leerEstado());
+  private readonly estadoInterno = signal<EstadoJardinInteractivo>({ ...ESTADO_INICIAL, plantas: [] });
   readonly estado = this.estadoInterno.asReadonly();
 
   constructor(private readonly auth: AuthService) {
-    // Recargar al entrar a la vista por si cambió el usuario en la misma sesión.
-    this.cargar();
+    this.estadoInterno.set(this.leerEstado());
   }
 
   cargar(): void {
