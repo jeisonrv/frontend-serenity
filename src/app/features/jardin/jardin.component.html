@@ -5,7 +5,7 @@
     <div class="hero-copy">
       <p class="eyebrow">UN LUGAR PARA CRECER</p>
       <h1>Tu jardín, tu momento 🌿</h1>
-      <p class="lead">No tienes que florecer todos los días. Este pequeño espacio crece contigo, sin prisa y sin comparaciones.</p>
+      <p class="lead">Cada pequeña pausa puede convertirse en algo bonito. Cuida tus plantas, personaliza tu espacio y crece sin prisa.</p>
       <div class="hero-tags"><span>✿ A tu propio ritmo</span><span>♡ Cada pausa importa</span></div>
     </div>
     <div class="hero-art" aria-hidden="true">
@@ -15,20 +15,21 @@
     </div>
   </header>
 
-  <p class="notice" *ngIf="error()">{{ error() }}</p>
+  <p class="notice" role="status" *ngIf="error()">{{ error() }}</p>
 
-  <section class="garden-progress" *ngIf="!cargando()">
+  <section class="garden-progress" aria-label="Progreso del jardín">
     <article class="progress-intro">
       <div class="level-badge"><span aria-hidden="true">✦</span><span>NIVEL {{ nivel() }}</span></div>
       <p class="eyebrow">TU ESPACIO FLORECE</p>
       <h2>{{ mensajeJardin() }}</h2>
-      <p class="muted">Tu jardín refleja las plantas registradas en tus actividades. No hay días perdidos: siempre puedes volver.</p>
-      <div class="next-level" *ngIf="totalPlantas() < 15">
-        <div class="next-level-label"><span>Próxima etapa</span><strong>{{ totalPlantas() < 3 ? 'Brote' : totalPlantas() < 7 ? 'Planta' : 'Floración' }}</strong></div>
-        <div class="progress-track"><span [style.width.%]="progresoSiguiente()"></span></div>
-        <small>{{ totalPlantas() }} {{ totalPlantas() === 1 ? 'planta registrada' : 'plantas registradas' }}</small>
+      <p class="muted">Completar una actividad te da 20 XP y crea una semilla. Regar una planta le ayuda a crecer y suma 5 XP.</p>
+      <div class="next-level">
+        <div class="next-level-label"><span>Progreso al siguiente nivel</span><strong>{{ xp() }} XP</strong></div>
+        <div class="progress-track" role="progressbar" aria-label="Progreso al siguiente nivel" [attr.aria-valuenow]="progresoSiguiente()" aria-valuemin="0" aria-valuemax="100">
+          <span [style.width.%]="progresoSiguiente()"></span>
+        </div>
+        <small>{{ nombreSiguienteNivel() }}</small>
       </div>
-      <div class="next-level" *ngIf="totalPlantas() >= 15"><strong>Tu jardín está en plena floración ✨</strong><div class="progress-track"><span style="width:100%"></span></div></div>
     </article>
     <div class="mini-garden" aria-hidden="true">
       <span class="mini-spark spark-a">✦</span><span class="mini-spark spark-b">✧</span>
@@ -39,48 +40,109 @@
 
   <section class="garden-board">
     <div class="board-heading">
-      <div><p class="eyebrow">TU PEQUEÑO UNIVERSO</p><h2>Lo que has cultivado</h2><p class="muted">Cada planta representa un registro de tu jardín.</p></div>
-      <div class="plant-count"><span aria-hidden="true">🌱</span><strong>{{ totalPlantas() }}</strong><small>{{ totalPlantas() === 1 ? 'planta' : 'plantas' }}</small></div>
+      <div>
+        <p class="eyebrow">TU PEQUEÑO UNIVERSO</p>
+        <h2>Lo que has cultivado</h2>
+        <p class="muted">Toca cualquier planta para regarla o cambiar su aspecto.</p>
+      </div>
+      <div class="board-actions">
+        <div class="plant-count"><span aria-hidden="true">🌱</span><strong>{{ totalPlantas() }}</strong><small>{{ totalPlantas() === 1 ? 'planta' : 'plantas' }}</small></div>
+        <button type="button" class="btn btn-primary seed-button" (click)="sembrarSemilla()">＋ Sembrar semilla</button>
+      </div>
     </div>
 
     <div class="filters" role="group" aria-label="Filtrar plantas">
-      <button type="button" [class.active]="filtro() === 'todas'" (click)="cambiarFiltro('todas')">Todo el jardín</button>
-      <button type="button" [class.active]="filtro() === 'flores'" (click)="cambiarFiltro('flores')">Flores</button>
-      <button type="button" [class.active]="filtro() === 'brotes'" (click)="cambiarFiltro('brotes')">Semillas y brotes</button>
+      <button type="button" [class.active]="filtro() === 'todas'" [attr.aria-pressed]="filtro() === 'todas'" (click)="cambiarFiltro('todas')">Todo el jardín</button>
+      <button type="button" [class.active]="filtro() === 'flores'" [attr.aria-pressed]="filtro() === 'flores'" (click)="cambiarFiltro('flores')">Flores</button>
+      <button type="button" [class.active]="filtro() === 'brotes'" [attr.aria-pressed]="filtro() === 'brotes'" (click)="cambiarFiltro('brotes')">Semillas y brotes</button>
     </div>
 
     <div class="loading-state" *ngIf="cargando()"><span class="loading-orb" aria-hidden="true"></span><p>Preparando tu jardín…</p></div>
 
-    <div class="garden-landscape" *ngIf="!cargando() && plantas().length">
-      <div class="garden-sky" aria-hidden="true"><span class="sky-star star-one">✦</span><span class="sky-star star-two">✧</span><span class="sky-star star-three">✦</span><span class="sky-butterfly">🦋</span></div>
+    <div
+      class="garden-landscape"
+      *ngIf="!cargando() && plantasVisuales().length"
+      [class.night]="estado().modoNoche"
+      [class.decoracion-mariposas]="estado().decoracion === 'mariposas'"
+      [class.decoracion-faroles]="estado().decoracion === 'faroles'"
+      [class.decoracion-fuente]="estado().decoracion === 'fuente'"
+      [class.animacion-riego]="animacionRiego()"
+    >
+      <div class="garden-sky" aria-hidden="true">
+        <span class="sky-star star-one">✦</span><span class="sky-star star-two">✧</span><span class="sky-star star-three">✦</span>
+        <span class="sky-butterfly" *ngIf="estado().decoracion === 'mariposas' || estado().decoracion === 'natural'">🦋</span>
+        <span class="sky-lanterns" *ngIf="estado().decoracion === 'faroles'">🏮　🏮</span>
+        <span class="sky-fountain" *ngIf="estado().decoracion === 'fuente'">⛲</span>
+        <span class="sky-moon" *ngIf="estado().modoNoche">☾</span>
+        <span class="water-drop drop-one">💧</span><span class="water-drop drop-two">💧</span><span class="water-drop drop-three">💧</span>
+      </div>
       <div class="plot">
-        <article class="plant-card" *ngFor="let planta of plantasVisibles(); let i = index" [class]="'plant-card ' + planta.etapa + ' ' + planta.demora">
-          <div class="plant-visual" [attr.aria-label]="planta.nombre" role="img"><span>{{ planta.simbolo }}</span><i class="leaf leaf-left"></i><i class="leaf leaf-right"></i></div>
-          <span class="plant-name">{{ planta.nombre }}</span>
-          <span class="plant-stage">{{ planta.etapa === 'semilla' ? 'Semilla' : planta.etapa === 'brote' ? 'Brote nuevo' : planta.etapa === 'planta' ? 'En crecimiento' : 'En floración' }}</span>
+        <article
+          class="plant-card"
+          *ngFor="let planta of plantasVisibles()"
+          [ngClass]="[planta.etapa, planta.demora, plantaSeleccionadaId() === planta.id ? 'selected' : '']"
+        >
+          <button
+            class="plant-select"
+            type="button"
+            (click)="seleccionarPlanta(planta)"
+            [attr.aria-pressed]="plantaSeleccionadaId() === planta.id"
+            [attr.aria-label]="'Seleccionar ' + planta.nombre + ', etapa: ' + etiquetaEtapa(planta.etapa)"
+          >
+            <span class="plant-visual" role="img" [attr.aria-label]="planta.nombre"><span>{{ planta.simbolo }}</span><i class="leaf leaf-left"></i><i class="leaf leaf-right"></i></span>
+            <span class="plant-name">{{ planta.nombre }}</span>
+            <span class="plant-stage">{{ etiquetaEtapa(planta.etapa) }}</span>
+            <span class="plant-hint">{{ planta.etapa === 'floracion' ? '¡Está floreciendo!' : 'Toca para cuidar' }}</span>
+          </button>
         </article>
-        <div class="empty-filter" *ngIf="!plantasVisibles().length"><span>🌿</span><p>Aún no hay plantas en esta categoría. Tu jardín seguirá creciendo.</p><button type="button" class="text-button" (click)="cambiarFiltro('todas')">Ver todo el jardín</button></div>
+        <div class="empty-filter" *ngIf="!plantasVisibles().length"><span>🌿</span><p>Aún no hay plantas en esta categoría. Puedes explorar otra parte de tu jardín.</p><button type="button" class="text-button" (click)="cambiarFiltro('todas')">Ver todo el jardín</button></div>
       </div>
     </div>
 
-    <div class="empty-garden" *ngIf="!cargando() && !plantas().length">
+    <div class="loading-state" *ngIf="!cargando() && !plantasVisuales().length">
       <div class="empty-illustration" aria-hidden="true"><span class="empty-spark">✦</span><span class="empty-seed">🌰</span><span class="empty-ground"></span><span class="empty-leaf">🌱</span></div>
-      <h3>Todo empieza con algo pequeño</h3>
-      <p>Cuando registres una actividad, aquí podrás ver cómo tu jardín empieza a tomar forma. No hay prisa; este espacio te espera.</p>
-      <a routerLink="/ejercicios/respiracion" class="btn btn-primary">Hacer una pausa de respiración <span aria-hidden="true">→</span></a>
+      <p class="empty-title">Todo empieza con algo pequeño</p>
+      <p class="muted empty-description">Siembra tu primera semilla o completa una actividad de bienestar y aparecerá aquí.</p>
+    </div>
+
+    <section class="plant-detail" *ngIf="plantaSeleccionada() as seleccionada" aria-live="polite">
+      <div class="detail-heading">
+        <span class="detail-emoji" aria-hidden="true">{{ seleccionada.etapa === 'floracion' ? '🌸' : seleccionada.etapa === 'planta' ? '🪴' : seleccionada.etapa === 'brote' ? '🌱' : '🌰' }}</span>
+        <div><p class="eyebrow">CUIDA TU PLANTA</p><h3>{{ seleccionada.nombre }}</h3><p class="muted">{{ etiquetaEtapa(seleccionada.etapa) }} · {{ seleccionada.riegos }}/3 cuidados</p></div>
+      </div>
+      <div class="detail-actions">
+        <button type="button" class="btn btn-primary" (click)="regarSeleccionada()" [disabled]="seleccionada.etapa === 'floracion'">💧 Regar (+5 XP)</button>
+        <div class="plant-customizer" role="group" aria-label="Personalizar planta">
+          <span>Personalizar:</span>
+          <button type="button" class="type-option" [class.active]="seleccionada.tipo === 'lavanda'" [attr.aria-pressed]="seleccionada.tipo === 'lavanda'" (click)="cambiarTipo('lavanda')">🪻 Lavanda</button>
+          <button type="button" class="type-option" [class.active]="seleccionada.tipo === 'girasol'" [attr.aria-pressed]="seleccionada.tipo === 'girasol'" (click)="cambiarTipo('girasol')">🌻 Girasol</button>
+          <button type="button" class="type-option" [class.active]="seleccionada.tipo === 'tulipan'" [attr.aria-pressed]="seleccionada.tipo === 'tulipan'" (click)="cambiarTipo('tulipan')">🌷 Tulipán</button>
+        </div>
+      </div>
+    </section>
+    <p class="feedback-message" role="status" *ngIf="mensajeFeedback()">{{ mensajeFeedback() }}</p>
+  </section>
+
+  <section class="customize-board">
+    <div class="rewards-heading"><p class="eyebrow">HAZLO TUYO</p><h2>Personaliza el ambiente</h2><p class="muted">Desbloquea decoraciones a medida que ganas experiencia. No hay penalizaciones por descansar.</p></div>
+    <div class="customize-tools">
+      <button type="button" class="custom-option" [class.active]="estado().decoracion === 'natural'" [attr.aria-pressed]="estado().decoracion === 'natural'" (click)="cambiarDecoracion('natural')"><span>🌿</span><strong>Natural</strong><small>Disponible</small></button>
+      <button type="button" class="custom-option" [class.active]="estado().decoracion === 'mariposas'" [class.locked]="!decoracionDesbloqueada('mariposas')" [attr.aria-pressed]="estado().decoracion === 'mariposas'" (click)="cambiarDecoracion('mariposas')"><span>🦋</span><strong>Mariposas</strong><small>{{ decoracionDesbloqueada('mariposas') ? 'Disponible' : '🔒 40 XP' }}</small></button>
+      <button type="button" class="custom-option" [class.active]="estado().decoracion === 'faroles'" [class.locked]="!decoracionDesbloqueada('faroles')" [attr.aria-pressed]="estado().decoracion === 'faroles'" (click)="cambiarDecoracion('faroles')"><span>🏮</span><strong>Faroles</strong><small>{{ decoracionDesbloqueada('faroles') ? 'Disponible' : '🔒 80 XP' }}</small></button>
+      <button type="button" class="custom-option" [class.active]="estado().decoracion === 'fuente'" [class.locked]="!decoracionDesbloqueada('fuente')" [attr.aria-pressed]="estado().decoracion === 'fuente'" (click)="cambiarDecoracion('fuente')"><span>⛲</span><strong>Fuente</strong><small>{{ decoracionDesbloqueada('fuente') ? 'Disponible' : '🔒 140 XP' }}</small></button>
+      <button type="button" class="custom-option night-option" [class.active]="estado().modoNoche" [attr.aria-pressed]="estado().modoNoche" (click)="alternarAmbiente()"><span>{{ estado().modoNoche ? '🌙' : '☀️' }}</span><strong>{{ estado().modoNoche ? 'Modo noche' : 'Modo día' }}</strong><small>Toca para cambiar</small></button>
     </div>
   </section>
 
-
-  <section class="rewards-board" *ngIf="!cargando()">
-    <div class="rewards-heading"><p class="eyebrow">RECOMPENSAS AMABLES</p><h2>Semillas que has ganado</h2><p class="muted">Cada actividad puede ayudarte a descubrir una nueva etapa. No hay penalizaciones por descansar.</p></div>
+  <section class="rewards-board">
+    <div class="rewards-heading"><p class="eyebrow">RECOMPENSAS AMABLES</p><h2>Lo que has desbloqueado</h2><p class="muted">Celebra cada avance; tu bienestar no es una competencia.</p></div>
     <div class="rewards-grid">
       <article class="reward" *ngFor="let recompensa of recompensas()" [class.unlocked]="recompensa.desbloqueada">
         <span class="reward-icon" aria-hidden="true">{{ recompensa.desbloqueada ? recompensa.icono : '🔒' }}</span>
-        <div><h3>{{ recompensa.nombre }}</h3><p>{{ recompensa.descripcion }}</p><span>{{ recompensa.desbloqueada ? 'Disponible en tu jardín' : 'Aún por descubrir' }}</span></div>
+        <div><h3>{{ recompensa.nombre }}</h3><p>{{ recompensa.descripcion }}</p><span>{{ recompensa.desbloqueada ? 'Desbloqueado' : 'Sigue a tu ritmo' }}</span></div>
       </article>
     </div>
   </section>
 
-  <section class="garden-note"><span aria-hidden="true">☁</span><p><strong>Un recordatorio amable</strong><br>Tu bienestar no es una competencia. Las plantas son una forma simbólica de celebrar tus actividades, no una medida de cómo deberías sentirte.</p></section>
+  <section class="garden-note"><span aria-hidden="true">☁</span><p><strong>Un recordatorio amable</strong><br>Las plantas celebran las actividades que haces para ti; no son una medida de cómo deberías sentirte. Puedes volver cuando lo necesites.</p></section>
 </main>
