@@ -28,3 +28,19 @@ h1 { margin-top: 0.6rem; }
 .chip.seleccionado { background: var(--color-primary); color: #fff; border-color: var(--color-primary); }
 
 .mensaje-final { text-align: center; }
+
+.ambiente { position: relative; display: grid; place-items: center; width: 190px; height: 190px; margin: .2rem auto; }
+.aura { position: absolute; display: block; border-radius: 50%; transition: transform 1.8s ease, opacity 1.8s ease; }
+.aura-externa { width: 184px; height: 184px; background: radial-gradient(circle,rgba(153,202,185,.1),rgba(153,202,185,.02) 65%,transparent 70%); border: 1px solid rgba(141,190,174,.28); }
+.aura-media { width: 130px; height: 130px; background: radial-gradient(circle at 35% 30%,#e5f3df,#b7d9cb 58%,#8ebbb4); box-shadow: 0 0 36px rgba(123,183,167,.25); }
+.aura-central { display: grid; place-items: center; width: 68px; height: 68px; border-radius: 50%; color: #fff; background: linear-gradient(145deg,#6faaa0,#8c9fc3); font-size: 1.7rem; box-shadow: 0 0 30px rgba(123,183,167,.4); }
+.ambiente.en-curso .aura-externa { animation: auraPulse 8s ease-in-out infinite; }
+.ambiente.en-curso .aura-media { animation: auraBreathe 8s ease-in-out infinite; }
+.ambiente.en-curso .aura-central { animation: starGlow 4s ease-in-out infinite; }
+.guia { max-width: 520px; margin: 0; color: var(--color-ink-soft); line-height: 1.8; text-align: center; }
+.nota-calma { max-width: 500px; padding: .9rem 1rem; border-radius: 16px; background: var(--color-surface-alt); color: var(--color-ink-soft); font-size: .85rem; line-height: 1.7; text-align: center; }
+.final-icono { font-size: 3rem; filter: drop-shadow(0 0 20px rgba(130,175,164,.4)); }
+@keyframes auraBreathe { 0%,100% { transform: scale(.88); opacity: .82; } 50% { transform: scale(1.08); opacity: 1; } }
+@keyframes auraPulse { 0%,100% { transform: scale(.95); opacity: .55; } 50% { transform: scale(1.05); opacity: 1; } }
+@keyframes starGlow { 0%,100% { box-shadow: 0 0 20px rgba(123,183,167,.25); } 50% { box-shadow: 0 0 42px rgba(123,183,167,.6); } }
+@media(prefers-reduced-motion:reduce) { .ambiente.en-curso .aura-externa,.ambiente.en-curso .aura-media,.ambiente.en-curso .aura-central { animation: none; } }

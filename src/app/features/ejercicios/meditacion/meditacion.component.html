@@ -3,15 +3,19 @@
   <div>
     <p class="eyebrow">PRESENCIA PLENA</p>
     <h1>Meditación guiada</h1>
-    <p class="lead">Busca una postura cómoda, elige cuánto tiempo dedicarte y deja que el resto espere un momento.</p>
-    <div class="hero-tags"><span>♡ A tu ritmo</span><span>◷ 5–15 min</span></div>
+    <p class="lead">Encuentra una postura cómoda. No necesitas hacerlo perfecto: basta con darte este momento.</p>
+    <div class="hero-tags"><span>♡ A tu ritmo</span><span>◷ 3–15 min</span><span>✦ Sin presión</span></div>
   </div>
   <img src="assets/serenity-meditation.svg" alt="Una persona meditando tranquilamente al aire libre" />
 </header>
 
 <section class="card zona" *ngIf="!completado(); else final">
-  <p class="panel-label">TU MOMENTO DE CALMA</p>
-  <div class="temporizador">{{ minutosMostrados }}</div>
+  <p class="panel-label">{{ enCurso() ? 'QUÉDATE EN ESTE MOMENTO' : 'PREPARA TU ESPACIO DE CALMA' }}</p>
+  <div class="ambiente" [class.en-curso]="enCurso()" role="img" aria-label="Luz suave que acompaña la meditación">
+    <span class="aura aura-externa"></span><span class="aura aura-media"></span><span class="aura aura-central">✦</span>
+  </div>
+  <p class="guia" aria-live="polite">{{ enCurso() ? 'Relaja los hombros. Deja que tus pensamientos pasen sin tener que resolverlos ahora.' : 'Si te ayuda, suaviza la mirada y nota el apoyo del suelo bajo tus pies.' }}</p>
+  <div class="temporizador" aria-live="polite">{{ minutosMostrados }}</div>
 
   <div class="duraciones" *ngIf="!enCurso()">
     <button *ngFor="let d of duracionesDisponibles" class="chip" type="button"
@@ -20,14 +24,16 @@
     </button>
   </div>
 
+  <p class="nota-calma" *ngIf="enCurso()">No tienes que controlar cada pensamiento. Vuelve con amabilidad a tu respiración cuando lo desees.</p>
   <button *ngIf="!enCurso()" class="btn btn-primary" type="button" (click)="iniciar()">Comenzar meditación</button>
   <button *ngIf="enCurso()" class="btn btn-ghost" type="button" (click)="detener()">Pausar práctica</button>
 </section>
 
 <ng-template #final>
   <section class="card zona mensaje-final">
-    <h2>Un momento para recordar</h2>
-    <p>Meditaste {{ duracionMin() }} minutos. Gracias por hacer espacio para ti.</p>
+    <div class="final-icono" aria-hidden="true">🌙</div>
+    <h2>Te has regalado un momento</h2>
+    <p>Completaste {{ duracionMin() }} minutos de práctica. Puedes llevarte esta pausa al resto de tu día, sin ninguna obligación.</p>
     <a routerLink="/inicio" class="btn btn-primary">Volver a mi espacio</a>
   </section>
 </ng-template>

@@ -16,4 +16,13 @@
   </div>
 </section>
 
+<section class="misiones" *ngIf="!cargando()">
+  <div class="misiones-heading"><p class="eyebrow">INVITACIONES AMABLES</p><h2>Pequeños pasos para hoy</h2><p>No son tareas pendientes ni rachas que mantener. Elige una, cambia de idea o descansa.</p></div>
+  <article class="card mision" *ngFor="let m of misiones">
+    <span class="mision-icono" aria-hidden="true">{{ m.icono }}</span>
+    <div class="mision-copy"><h3>{{ m.titulo }}</h3><p>{{ m.detalle }}</p></div>
+    <a [routerLink]="m.ruta" class="mision-link">Explorar <span aria-hidden="true">→</span></a>
+  </article>
+</section>
+
 <ng-template #cargandoTpl><p class="cargando">Cargando tus logros…</p></ng-template>

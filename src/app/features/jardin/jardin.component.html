@@ -71,5 +71,16 @@
     </div>
   </section>
 
+
+  <section class="rewards-board" *ngIf="!cargando()">
+    <div class="rewards-heading"><p class="eyebrow">RECOMPENSAS AMABLES</p><h2>Semillas que has ganado</h2><p class="muted">Cada actividad puede ayudarte a descubrir una nueva etapa. No hay penalizaciones por descansar.</p></div>
+    <div class="rewards-grid">
+      <article class="reward" *ngFor="let recompensa of recompensas()" [class.unlocked]="recompensa.desbloqueada">
+        <span class="reward-icon" aria-hidden="true">{{ recompensa.desbloqueada ? recompensa.icono : '🔒' }}</span>
+        <div><h3>{{ recompensa.nombre }}</h3><p>{{ recompensa.descripcion }}</p><span>{{ recompensa.desbloqueada ? 'Disponible en tu jardín' : 'Aún por descubrir' }}</span></div>
+      </article>
+    </div>
+  </section>
+
   <section class="garden-note"><span aria-hidden="true">☁</span><p><strong>Un recordatorio amable</strong><br>Tu bienestar no es una competencia. Las plantas son una forma simbólica de celebrar tus actividades, no una medida de cómo deberías sentirte.</p></section>
 </main>

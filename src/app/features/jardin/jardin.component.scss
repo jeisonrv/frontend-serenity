@@ -18,3 +18,14 @@ h1 { margin: 0; color: #263d35; font-size: clamp(2rem, 4vw, 3.15rem); line-heigh
 @media(max-width:850px) { .garden-progress { grid-template-columns: 1fr; }.mini-garden { height: 150px; }.hero-art { flex-basis: 230px; height: 190px; } }
 @media(max-width:600px) { .garden-hero { align-items: flex-start; padding: 1.3rem; border-radius: 20px; }.hero-art { flex: 0 0 95px; height: 140px; margin-top: 1rem; }.sun-glow { right: 15px; width: 35px; height: 35px; }.hero-flower { font-size: 2rem; bottom: 25px; }.flower-two { font-size: 2.5rem; bottom: 20px; }.flower-three { font-size: 1.8rem; }.cloud-one { left: 5px; }.cloud-two { display: none; }.hero-tags { gap: .4rem; }.hero-tags span { font-size: .68rem; }.board-heading h2 { font-size: 1.15rem; }.plot { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .6rem; padding: 1.5rem .7rem .8rem; }.plant-card { padding: .4rem .2rem .6rem; }.garden-landscape { min-height: 240px; }.plant-visual { height: 70px; }.plant-visual>span { font-size: 2.7rem; }.garden-note { padding: .8rem; } }
 @media(prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+
+.rewards-board { margin-top: 1rem; padding: clamp(1rem,2.8vw,1.6rem); border: 1px solid #e9eee9; border-radius: 24px; background: #fff; box-shadow: 0 10px 30px rgba(42,63,51,.045); }
+.rewards-heading h2 { margin: 0; color: #2d463a; font-size: 1.35rem; }
+.rewards-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(230px,1fr)); gap: .75rem; margin-top: 1rem; }
+.reward { display: flex; gap: .8rem; align-items: flex-start; padding: 1rem; border: 1px solid #e9eee9; border-radius: 17px; background: #f7f8f5; opacity: .72; }
+.reward.unlocked { border-color: #c7dfc6; background: #f0f8ed; opacity: 1; }
+.reward-icon { display: grid; place-items: center; flex: 0 0 46px; height: 46px; border-radius: 14px; background: #e8eee6; font-size: 1.5rem; }
+.reward.unlocked .reward-icon { background: #dcefd9; }
+.reward h3 { margin: 0 0 .3rem; color: #2d463a; font-size: .93rem; }
+.reward p { margin: 0 0 .45rem; color: #75847a; font-size: .78rem; line-height: 1.5; }
+.reward div span { color: #62816a; font-size: .68rem; font-weight: 800; }

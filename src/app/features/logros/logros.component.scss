@@ -10,3 +10,15 @@
 .logro.bloqueado .estado-logro { color: var(--color-ink-soft); }
 .cargando { color: var(--color-ink-soft); }
 @media(max-width:760px){.grid-logros{grid-template-columns:1fr}.logro{min-height:unset}}
+
+.misiones { margin-top: 2rem; display: grid; gap: .8rem; }
+.misiones-heading { margin-bottom: .25rem; }
+.misiones-heading h2 { margin: 0 0 .45rem; color: var(--color-ink); }
+.misiones-heading p:last-child { color: var(--color-ink-soft); line-height: 1.6; }
+.mision { display: flex; align-items: center; gap: 1rem; padding: 1rem; }
+.mision-icono { display: grid; place-items: center; flex: 0 0 48px; height: 48px; border-radius: 16px; background: var(--color-primary-light); font-size: 1.5rem; }
+.mision-copy { flex: 1; }
+.mision-copy h3 { margin: 0 0 .25rem; color: var(--color-ink); font-size: .98rem; }
+.mision-copy p { margin: 0; color: var(--color-ink-soft); font-size: .83rem; line-height: 1.5; }
+.mision-link { white-space: nowrap; color: var(--color-primary-dark); font-size: .82rem; font-weight: 800; text-decoration: none; }
+@media(max-width:560px) { .mision { align-items: flex-start; flex-wrap: wrap; } .mision-link { margin-left: 60px; } }
