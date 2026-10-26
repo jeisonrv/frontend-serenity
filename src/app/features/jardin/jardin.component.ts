@@ -29,7 +29,7 @@ export class JardinComponent implements OnInit {
   readonly plantasVisuales = computed<PlantaVisual[]>(() => {
     const datos = this.plantas();
     return datos.map((registro, indice) => {
-      const etapa = this.etapaCrecimiento(datos.length);
+      const etapa = this.etapaCrecimiento(registro.fechaRegistro);
       const tipo = (registro.tipoPlanta || '').toLowerCase();
       const simbolo = tipo.includes('flor') ? '🌼'
         : tipo.includes('lavanda') ? '🪻'
@@ -57,6 +57,15 @@ export class JardinComponent implements OnInit {
   });
 
   readonly totalPlantas = computed(() => this.plantas().length);
+  readonly recompensas = computed(() => {
+    const total = this.totalPlantas();
+    return [
+      { nombre: 'Primera semilla', descripcion: 'Tu jardín ya tiene un comienzo', icono: '🌱', desbloqueada: total >= 1 },
+      { nombre: 'Pequeño brote', descripcion: 'Registra 3 momentos de cuidado', icono: '🌿', desbloqueada: total >= 3 },
+      { nombre: 'Jardín en calma', descripcion: 'Registra 7 momentos de cuidado', icono: '🌷', desbloqueada: total >= 7 },
+      { nombre: 'Rincón florecido', descripcion: 'Registra 15 momentos de cuidado', icono: '🌼', desbloqueada: total >= 15 }
+    ];
+  });
   readonly nivel = computed(() => {
     const total = this.totalPlantas();
     return total >= 15 ? 4 : total >= 7 ? 3 : total >= 3 ? 2 : total > 0 ? 1 : 0;
