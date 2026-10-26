@@ -111,10 +111,13 @@ export class JardinComponent implements OnInit {
     this.filtro.set(filtro);
   }
 
-  etapaCrecimiento(cantidadRegistros: number): Etapa {
-    if (cantidadRegistros < 3) return 'semilla';
-    if (cantidadRegistros < 7) return 'brote';
-    if (cantidadRegistros < 15) return 'planta';
+  etapaCrecimiento(fechaRegistro: string): Etapa {
+    const fecha = new Date(fechaRegistro);
+    if (Number.isNaN(fecha.getTime())) return 'semilla';
+    const dias = Math.max(0, Math.floor((Date.now() - fecha.getTime()) / 86_400_000));
+    if (dias < 1) return 'semilla';
+    if (dias < 3) return 'brote';
+    if (dias < 7) return 'planta';
     return 'floracion';
   }
 }
