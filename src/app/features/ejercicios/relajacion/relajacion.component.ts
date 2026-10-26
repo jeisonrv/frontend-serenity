@@ -2,6 +2,7 @@ import { Component, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EjerciciosService } from '../../../core/services/ejercicios.service';
+import { JardinInteractivoService } from '../../../core/services/jardin-interactivo.service';
 
 interface PasoRelajacion {
   grupoMuscular: string;
@@ -38,7 +39,10 @@ export class RelajacionComponent implements OnDestroy {
 
   private intervalo?: ReturnType<typeof setInterval>;
 
-  constructor(private ejerciciosService: EjerciciosService) {}
+  constructor(
+    private ejerciciosService: EjerciciosService,
+    private jardinInteractivo: JardinInteractivoService
+  ) {}
 
   get paso(): PasoRelajacion {
     return this.secuencia[this.pasoActual()];
@@ -86,6 +90,8 @@ export class RelajacionComponent implements OnDestroy {
     clearInterval(this.intervalo);
     this.enCurso.set(false);
     this.completado.set(true);
+
+    this.jardinInteractivo.registrarActividad('relajacion');
 
     this.ejerciciosService
       .registrarSesion({ tipoEjercicio: 'relajacion', duracion: this.segundosTotales() })
