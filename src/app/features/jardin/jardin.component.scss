@@ -29,3 +29,67 @@ h1 { margin: 0; color: #263d35; font-size: clamp(2rem, 4vw, 3.15rem); line-heigh
 .reward h3 { margin: 0 0 .3rem; color: #2d463a; font-size: .93rem; }
 .reward p { margin: 0 0 .45rem; color: #75847a; font-size: .78rem; line-height: 1.5; }
 .reward div span { color: #62816a; font-size: .68rem; font-weight: 800; }
+
+
+/* Interacciones accesibles del jardín */
+.board-actions { display: flex; align-items: center; gap: .75rem; flex-wrap: wrap; justify-content: flex-end; }
+.seed-button { white-space: nowrap; }
+.plant-select { display: flex; width: 100%; height: 100%; flex-direction: column; align-items: center; gap: .25rem; padding: .2rem; border: 0; border-radius: 14px; background: transparent; color: inherit; cursor: pointer; font: inherit; }
+.plant-select:focus-visible, .filters button:focus-visible, .custom-option:focus-visible, .type-option:focus-visible, .detail-actions .btn:focus-visible { outline: 3px solid #78a8d9; outline-offset: 3px; }
+.plant-card.selected { border-color: #81b4d9; background: rgba(239,248,255,.95); box-shadow: 0 0 0 2px rgba(129,180,217,.22); }
+.plant-card.selected .plant-hint { color: #376b8e; }
+.plant-hint { margin-top: .15rem; color: #8a9a8a; font-size: .62rem; }
+.empty-title { margin: .3rem 0 0; color: #2d463a; font-size: 1.2rem; font-weight: 750; }
+.empty-description { max-width: 420px; text-align: center; }
+.plant-detail { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap; margin-top: 1rem; padding: 1rem 1.15rem; border: 1px solid #dceaf3; border-radius: 18px; background: linear-gradient(120deg,#f5fbff,#fff); animation: rise .25s ease both; }
+.detail-heading { display: flex; align-items: center; gap: .85rem; min-width: 210px; }
+.detail-emoji { display: grid; place-items: center; width: 58px; height: 58px; border-radius: 16px; background: #e8f4fb; font-size: 2rem; }
+.detail-heading .eyebrow { margin-bottom: .2rem; color: #5d8cac; }
+.detail-heading h3 { margin: 0; color: #2f566c; font-size: 1.05rem; }
+.detail-heading .muted { margin-top: .2rem; font-size: .76rem; }
+.detail-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .75rem; }
+.plant-customizer { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; color: #718276; font-size: .75rem; }
+.type-option { padding: .45rem .6rem; border: 1px solid #e1e9e3; border-radius: 999px; background: #fff; color: #5d7163; cursor: pointer; font: inherit; }
+.type-option.active { border-color: #9fc6df; background: #eaf6ff; color: #376b8e; font-weight: 750; }
+.detail-actions .btn:disabled { cursor: not-allowed; opacity: .55; }
+.feedback-message { margin: .8rem .2rem 0; padding: .75rem 1rem; border-radius: 12px; background: #eff8f0; color: #497352; font-size: .84rem; animation: rise .25s ease both; }
+.customize-board { margin-top: 1rem; padding: clamp(1rem,2.8vw,1.6rem); border: 1px solid #e9eee9; border-radius: 24px; background: #fff; box-shadow: 0 10px 30px rgba(42,63,51,.045); }
+.rewards-heading h2 { margin: 0; color: #2d463a; font-size: 1.35rem; }
+.customize-tools { display: grid; grid-template-columns: repeat(auto-fit,minmax(125px,1fr)); gap: .65rem; margin-top: 1rem; }
+.custom-option { display: flex; min-height: 112px; flex-direction: column; align-items: flex-start; justify-content: center; gap: .2rem; padding: .85rem; border: 1px solid #e6ece7; border-radius: 16px; background: #fbfdfb; color: #526f5b; text-align: left; cursor: pointer; transition: transform .2s ease,border-color .2s ease,background .2s ease; }
+.custom-option:hover { transform: translateY(-2px); border-color: #b5d4e8; }
+.custom-option.active { border-color: #8cb7d4; background: #edf7ff; box-shadow: inset 0 0 0 1px rgba(140,183,212,.2); color: #376b8e; }
+.custom-option.locked { background: #fafbf9; color: #8c978d; }
+.custom-option>span { font-size: 1.65rem; }
+.custom-option strong { font-size: .83rem; }
+.custom-option small { color: #89978d; font-size: .68rem; }
+.garden-landscape.night { background: linear-gradient(180deg,#283d62 0%,#455b78 51%,#5f806f 100%); }
+.garden-landscape.night .plot { background: linear-gradient(180deg,transparent 44%,rgba(66,112,83,.55) 44%,rgba(44,88,62,.82) 100%); }
+.garden-landscape.night .plant-card { border-color: rgba(207,227,246,.26); background: rgba(238,246,255,.85); }
+.garden-landscape.night .sky-star { color: #ffedb0; }
+.garden-landscape.night .plant-name { color: #35566b; }
+.garden-landscape.night .plant-stage, .garden-landscape.night .plant-hint { color: #6e8291; }
+.sky-moon { position: absolute; top: 12%; right: 14%; color: #fff1bb; font-size: 2.1rem; filter: drop-shadow(0 0 15px rgba(255,241,187,.4)); animation: float 5s ease-in-out infinite; }
+.sky-lanterns { position: absolute; top: 42%; left: 9%; right: 9%; display: flex; justify-content: space-between; font-size: 1.5rem; opacity: .95; animation: float 4s ease-in-out infinite; }
+.sky-fountain { position: absolute; right: 5%; bottom: -2%; font-size: 3rem; opacity: .88; }
+.water-drop { position: absolute; top: 10%; opacity: 0; font-size: 1rem; }
+.drop-one { left: 38%; }.drop-two { left: 52%; }.drop-three { left: 66%; }
+.garden-landscape.animacion-riego .water-drop { animation: water-fall .75s ease-out both; }
+.garden-landscape.animacion-riego .drop-two { animation-delay: .1s; }
+.garden-landscape.animacion-riego .drop-three { animation-delay: .18s; }
+@keyframes water-fall { 0% { opacity: 0; transform: translateY(-8px) scale(.7); } 25% { opacity: 1; } 100% { opacity: 0; transform: translateY(105px) scale(1.1); } }
+
+@media(max-width:700px) {
+  .board-heading { align-items: flex-start; }
+  .board-actions { align-items: flex-end; }
+  .seed-button { padding: .6rem .7rem; font-size: .78rem; }
+  .plant-detail { align-items: stretch; }
+  .detail-actions { align-items: flex-start; flex-direction: column; }
+  .plant-customizer { align-items: flex-start; }
+}
+@media(max-width:460px) {
+  .board-heading { flex-direction: column; }
+  .board-actions { width: 100%; justify-content: space-between; }
+  .customize-tools { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .plant-customizer { gap: .3rem; }
+}
