@@ -10,7 +10,6 @@ import {
   PlantaInteractiva,
   TipoPlanta
 } from '../../core/services/jardin-interactivo.service';
-import { RegistroJardin } from '../../core/models/jardin.model';
 
 type FiltroPlantas = 'todas' | 'flores' | 'brotes';
 
