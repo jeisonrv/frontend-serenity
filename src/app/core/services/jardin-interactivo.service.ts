@@ -192,36 +192,57 @@ export class JardinInteractivoService {
   sincronizarRegistros(registros: RegistroJardin[]): void {
     this.cargar();
     if (!Array.isArray(registros) || registros.length === 0) return;
+
     const actual = this.estadoInterno();
     const idsConocidos = new Set(
-      actual.plantas.filter((planta) => planta.idBackend !== undefined).map((planta) => planta.idBackend)
+      actual.plantas
+        .filter((planta) => planta.idBackend !== undefined)
+        .map((planta) => planta.idBackend)
     );
+    const porImportar = registros.filter(
+      (registro) => Number.isFinite(registro.idJardin) && !idsConocidos.has(registro.idJardin)
+    );
+    if (porImportar.length === 0) return;
 
-    const nuevas = registros
-      .filter((registro) => Number.isFinite(registro.idJardin) && !idsConocidos.has(registro.idJardin))
-      .map((registro): PlantaInteractiva => {
-        const texto = (registro.tipoPlanta || '').toLocaleLowerCase();
-        const tipo: TipoPlanta = texto.includes('girasol') ? 'girasol'
-          : texto.includes('tulip') ? 'tulipan' : 'lavanda';
-        const fecha = new Date(registro.fechaRegistro);
-        const dias = Number.isNaN(fecha.getTime())
-          ? 0
-          : Math.max(0, Math.floor((Date.now() - fecha.getTime()) / 86_400_000));
-        const etapa: EtapaPlanta = dias >= 7 ? 'floracion' : dias >= 3 ? 'planta' : dias >= 1 ? 'brote' : 'semilla';
-        const riegos = etapa === 'floracion' ? 3 : etapa === 'planta' ? 2 : etapa === 'brote' ? 1 : 0;
-        return {
-          id: `registro-${registro.idJardin}`,
-          idBackend: registro.idJardin,
-          tipo,
-          nombre: registro.tipoPlanta || NOMBRES[tipo],
-          etapa,
-          riegos,
-          creadaEn: registro.fechaRegistro
-        };
+    const plantas = [...actual.plantas];
+    for (const registro of porImportar) {
+      const fechaRegistro = new Date(registro.fechaRegistro);
+      const candidata = plantas.findIndex((planta) => {
+        if (planta.idBackend !== undefined || !planta.actividadOrigen) return false;
+        const fechaLocal = new Date(planta.creadaEn);
+        return !Number.isNaN(fechaRegistro.getTime())
+          && !Number.isNaN(fechaLocal.getTime())
+          && Math.abs(fechaRegistro.getTime() - fechaLocal.getTime()) <= 86_400_000;
       });
 
-    if (nuevas.length > 0) {
-      this.guardar({ ...actual, plantas: [...nuevas, ...actual.plantas].slice(0, 80) });
+      // Si el backend creó una planta al registrar la actividad, vinculamos ese
+      // registro con la semilla local existente en vez de duplicar la planta.
+      if (candidata >= 0) {
+        plantas[candidata] = { ...plantas[candidata], idBackend: registro.idJardin };
+        continue;
+      }
+
+      const texto = (registro.tipoPlanta || '').toLocaleLowerCase();
+      const tipo: TipoPlanta = texto.includes('girasol') ? 'girasol'
+        : texto.includes('tulip') ? 'tulipan' : 'lavanda';
+      const fecha = new Date(registro.fechaRegistro);
+      const dias = Number.isNaN(fecha.getTime())
+        ? 0
+        : Math.max(0, Math.floor((Date.now() - fecha.getTime()) / 86_400_000));
+      const etapa: EtapaPlanta = dias >= 7 ? 'floracion' : dias >= 3 ? 'planta' : dias >= 1 ? 'brote' : 'semilla';
+      const riegos = etapa === 'floracion' ? 3 : etapa === 'planta' ? 2 : etapa === 'brote' ? 1 : 0;
+
+      plantas.unshift({
+        id: `registro-${registro.idJardin}`,
+        idBackend: registro.idJardin,
+        tipo,
+        nombre: registro.tipoPlanta || NOMBRES[tipo],
+        etapa,
+        riegos,
+        creadaEn: registro.fechaRegistro
+      });
     }
+
+    this.guardar({ ...actual, plantas: plantas.slice(0, 80) });
   }
 }
