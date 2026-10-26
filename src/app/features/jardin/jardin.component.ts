@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit, computed, signal } from '@angular/core';
+import { Component, OnDestroy, OnInit, Signal, computed, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { JardinService } from '../../core/services/jardin.service';
 import {
   DecoracionJardin,
+  EstadoJardinInteractivo,
   EtapaPlanta,
   JardinInteractivoService,
   PlantaInteractiva,
@@ -34,7 +35,6 @@ interface RecompensaJardin {
   styleUrl: './jardin.component.scss'
 })
 export class JardinComponent implements OnInit, OnDestroy {
-  readonly registrosBackend = signal<RegistroJardin[]>([]);
   readonly cargando = signal(true);
   readonly error = signal('');
   readonly filtro = signal<FiltroPlantas>('todas');
@@ -42,7 +42,7 @@ export class JardinComponent implements OnInit, OnDestroy {
   readonly mensajeFeedback = signal('');
   readonly animacionRiego = signal(false);
 
-  readonly estado = this.jardinInteractivo.estado;
+  readonly estado: Signal<EstadoJardinInteractivo>;
 
   readonly plantasVisuales = computed<PlantaVisual[]>(() =>
     this.estado().plantas.map((planta, indice) => ({
@@ -130,7 +130,9 @@ export class JardinComponent implements OnInit, OnDestroy {
   constructor(
     private readonly jardinService: JardinService,
     private readonly jardinInteractivo: JardinInteractivoService
-  ) {}
+  ) {
+    this.estado = this.jardinInteractivo.estado;
+  }
 
   ngOnInit(): void {
     this.jardinInteractivo.cargar();
@@ -146,8 +148,9 @@ export class JardinComponent implements OnInit, OnDestroy {
     this.error.set('');
     this.jardinService.obtenerJardin().subscribe({
       next: (registros) => {
-        const seguros = Array.isArray(registros) ? registros : [];
-        this.registrosBackend.set(seguridadLista(seguros));
+        const seguros = Array.isArray(registros)
+          ? registros.filter((registro) => Boolean(registro && Number.isFinite(registro.idJardin)))
+          : [];
         this.jardinInteractivo.sincronizarRegistros(seguros);
         this.cargando.set(false);
       },
@@ -235,6 +238,3 @@ export class JardinComponent implements OnInit, OnDestroy {
   }
 }
 
-function seguridadLista(registros: RegistroJardin[]): RegistroJardin[] {
-  return registros.filter((registro) => Boolean(registro && Number.isFinite(registro.idJardin)));
-}
