@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 import { AnimoService } from '../../core/services/animo.service';
+import { JardinInteractivoService } from '../../core/services/jardin-interactivo.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mensajeError } from '../../core/utils/mensaje-error';
 
@@ -70,7 +71,11 @@ export class DashboardComponent implements OnInit {
     }
   ];
 
-  constructor(public auth: AuthService, private animoService: AnimoService) {}
+  constructor(
+    public auth: AuthService,
+    private animoService: AnimoService,
+    private jardinInteractivo: JardinInteractivoService
+  ) {}
 
   ngOnInit(): void {
     this.animoService.obtenerAnimoHoy().subscribe({
@@ -84,7 +89,10 @@ export class DashboardComponent implements OnInit {
     this.mensajeAnimo.set('');
     this.errorAnimo.set('');
     this.animoService.registrarAnimo(valor).subscribe({
-      next: () => this.mensajeAnimo.set('Tu registro de ánimo se guardó. Gracias por escucharte.'),
+      next: () => {
+        this.jardinInteractivo.registrarActividad('estado de ánimo');
+        this.mensajeAnimo.set('Tu registro de ánimo se guardó. Gracias por escucharte. +20 XP para tu jardín.');
+      },
       error: (error: HttpErrorResponse) => this.errorAnimo.set(mensajeError(error, 'No pudimos guardar tu ánimo. Inténtalo de nuevo.'))
     });
   }
