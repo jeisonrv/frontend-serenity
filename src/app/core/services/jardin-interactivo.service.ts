@@ -56,7 +56,7 @@ export class JardinInteractivoService {
   private claveCargada = '';
 
   constructor(private readonly auth: AuthService) {
-    this.estadoInterno.set(this.leerEstado());
+    this.cargar();
   }
 
   cargar(): void {
