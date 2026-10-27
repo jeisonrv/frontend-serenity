@@ -2,6 +2,7 @@ import { Component, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EjerciciosService } from '../../../core/services/ejercicios.service';
+import { JardinInteractivoService } from '../../../core/services/jardin-interactivo.service';
 
 // RF5: sesión de meditación temporizada
 @Component({
@@ -20,7 +21,10 @@ export class MeditacionComponent implements OnDestroy {
 
   private intervalo?: ReturnType<typeof setInterval>;
 
-  constructor(private ejerciciosService: EjerciciosService) {}
+  constructor(
+    private ejerciciosService: EjerciciosService,
+    private jardinInteractivo: JardinInteractivoService
+  ) {}
 
   get minutosMostrados(): string {
     const m = Math.floor(this.segundosRestantes() / 60);
@@ -52,7 +56,9 @@ export class MeditacionComponent implements OnDestroy {
 
     this.ejerciciosService
       .registrarSesion({ tipoEjercicio: 'meditacion', duracion: this.duracionMin() * 60 })
-      .subscribe();
+      .subscribe({
+        next: () => this.jardinInteractivo.registrarActividad('meditacion')
+      });
   }
 
   ngOnDestroy(): void {
