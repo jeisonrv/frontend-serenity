@@ -2,6 +2,7 @@ import { Component, OnDestroy, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { EjerciciosService } from '../../../core/services/ejercicios.service';
+import { JardinInteractivoService } from '../../../core/services/jardin-interactivo.service';
 
 type Fase = 'inhala' | 'sostiene' | 'exhala' | 'reposo';
 
@@ -33,7 +34,10 @@ export class RespiracionComponent implements OnDestroy {
 
   private intervalo?: ReturnType<typeof setInterval>;
 
-  constructor(private ejerciciosService: EjerciciosService) {}
+  constructor(
+    private ejerciciosService: EjerciciosService,
+    private jardinInteractivo: JardinInteractivoService
+  ) {}
 
   get etiquetaFase(): string {
     return { inhala: 'Inhala', sostiene: 'Sostén', exhala: 'Exhala', reposo: 'Reposa' }[this.fase()];
@@ -87,7 +91,9 @@ export class RespiracionComponent implements OnDestroy {
 
     this.ejerciciosService
       .registrarSesion({ tipoEjercicio: 'respiracion', duracion: this.segundosTotales() })
-      .subscribe();
+      .subscribe({
+        next: () => this.jardinInteractivo.registrarActividad('respiracion')
+      });
   }
 
   ngOnDestroy(): void {
