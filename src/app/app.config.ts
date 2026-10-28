@@ -12,6 +12,15 @@ interface RuntimeConfig {
   wsUrl: string;
   googleClientId?: string;
 }
+function removeTrailingSlashes(value: string): string {
+  let end = value.length;
+
+  while (end > 0 && value[end - 1] === '/') {
+    end--;
+  }
+
+  return value.slice(0, end);
+}
 
 async function loadRuntimeConfig(): Promise<void> {
   let config: Partial<RuntimeConfig> | null = null;
@@ -93,8 +102,8 @@ async function loadRuntimeConfig(): Promise<void> {
     throw new Error('wsUrl debe utilizar WS o WSS.');
   }
 
-  environment.apiUrl = config.apiUrl.replace(/\/+$/, '');
-  environment.wsUrl = config.wsUrl.replace(/\/+$/, '');
+  environment.apiUrl = removeTrailingSlashes(config.apiUrl);
+  environment.wsUrl = removeTrailingSlashes(config.wsUrl);
 
   const googleClientId =
       typeof config.googleClientId === 'string'

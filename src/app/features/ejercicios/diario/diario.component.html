@@ -25,8 +25,13 @@
 
   <form [formGroup]="form" (ngSubmit)="guardar()">
     <div class="field">
-      <textarea rows="8" formControlName="contenido"
-        [placeholder]="promptSeleccionado() === 'Libre' ? 'Escribe lo que quieras…' : promptSeleccionado()"></textarea>
+     <label for="contenido-diario">Texto de tu diario emocional</label>
+     <textarea
+       id="contenido-diario"
+        rows="8"
+       formControlName="contenido"
+       [placeholder]="promptSeleccionado() === 'Libre' ? 'Escribe lo que quieras…' : promptSeleccionado()">
+</textarea>
       <span class="error" *ngIf="form.get('contenido')?.touched && form.get('contenido')?.invalid">
         Escribe al menos unas palabras.
       </span>

@@ -53,8 +53,19 @@
   <div class="modal-reporte" *ngIf="mostrarReporte()">
     <div class="card contenido-modal">
       <h3>Reportar conversación</h3>
-      <textarea rows="3" [ngModel]="motivoReporte()" (ngModelChange)="motivoReporte.set($event)" name="motivo" required maxlength="1000" placeholder="Describe brevemente el motivo"></textarea>
-      <div class="botones-modal">
+     <label for="motivo-reporte">Motivo del reporte</label>
+       <textarea
+         id="motivo-reporte"
+            rows="3"
+           [ngModel]="motivoReporte()"
+           (ngModelChange)="motivoReporte.set($event)"
+           name="motivo"
+           required
+             maxlength="1000"
+          placeholder="Describe brevemente el motivo">
+         </textarea>
+
+<div class="botones-modal">
         <button class="btn btn-ghost" type="button" (click)="mostrarReporte.set(false)">Cancelar</button>
         <button class="btn btn-primary" type="button" [disabled]="!motivoReporte().trim() || procesando()" (click)="enviarReporte()">Enviar reporte</button>
       </div>

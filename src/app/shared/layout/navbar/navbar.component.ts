@@ -59,6 +59,6 @@ export class NavbarComponent {
 
   salir(): void {
     this.auth.cerrarSesion();
-    this.router.navigate(['/login']);
+    void this.router.navigate(['/login']);
   }
 }
