@@ -4,3 +4,4 @@ dist/
 .env
 .env.*
 /src/assets/config.dev.json
+coverage/
