@@ -4,10 +4,15 @@ on:
   push:
     branches:
       - 'feature/jardin-interactivo-animado-fix'
+  pull_request:
+    branches:
+      - desarrollo
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 permissions:
   contents: read
+  pull-requests: read
 
 jobs:
   build-and-analyze:
