@@ -1,87 +1,180 @@
+
+<!-- BANNER PRINCIPAL -->
 <section class="welcome-hero">
   <div class="welcome-copy">
     <p class="eyebrow">UN MOMENTO PARA TI</p>
-    <h1>Hola, {{ auth.usuario()?.username }} <span aria-hidden="true">✦</span></h1>
+
+    <h1>
+      Hola, {{ auth.usuario()?.username }}
+      <span aria-hidden="true">✦</span>
+    </h1>
+
     <h2>¿Y si hoy empiezas por respirar?</h2>
-    <p>Un espacio para bajar el ritmo, escucharte y reconocer todo lo que ya estás haciendo por ti.</p>
+
+    <p>
+      Un espacio para bajar el ritmo, escucharte y reconocer todo lo que ya
+      estás haciendo por ti.
+    </p>
+
     <div class="hero-actions">
       <a class="btn btn-primary" routerLink="/ejercicios/respiracion">
         Regalarme cinco minutos <span aria-hidden="true">→</span>
       </a>
-      <span class="hero-note"><span aria-hidden="true">♡</span> Sin prisa. A tu manera.</span>
+
+      <span class="hero-note">
+        <span aria-hidden="true">♡</span>
+        Sin prisa. A tu manera.
+      </span>
     </div>
   </div>
+
   <div class="hero-art">
-    <img src="assets/serenity-moment.svg" alt="Una persona disfrutando de un momento de calma rodeada de naturaleza" />
+    <img
+            src="assets/serenity-moment.png"
+            alt="Una persona meditando tranquilamente junto a un lago, rodeada de montañas y naturaleza"
+    />
+
     <div class="hero-quote">
       <span class="quote-mark" aria-hidden="true">“</span>
-      <span>Pequeños pasos,<br />grandes cambios.</span>
+      <span>
+        Pequeños pasos,<br />
+        grandes cambios.
+      </span>
     </div>
+
     <span class="floating-leaf leaf-one" aria-hidden="true">✧</span>
     <span class="floating-leaf leaf-two" aria-hidden="true">✦</span>
   </div>
 </section>
 
+<!-- FRASE MOTIVACIONAL DEL DÍA -->
+<section
+        class="frase-del-dia"
+        aria-label="Frase motivacional del día"
+        *ngIf="fraseDelDia() as frase"
+>
+  <div class="frase-icono" aria-hidden="true">✦</div>
+
+  <div class="frase-contenido">
+    <p class="eyebrow">UNA PAUSA PARA TI</p>
+
+    <blockquote>
+      “{{ frase.frase }}”
+    </blockquote>
+
+    <p class="frase-autor">
+      — {{ frase.autor }}
+    </p>
+  </div>
+</section>
+
+<!-- ESTADO DE ÁNIMO -->
 <section class="section-heading">
   <div>
     <p class="eyebrow">CÓMO ESTÁS POR DENTRO</p>
     <h2>¿Cómo te sientes hoy?</h2>
     <p>Todos los estados de ánimo tienen un lugar aquí.</p>
   </div>
-  <span class="date-pill"><span aria-hidden="true">◷</span> {{ fechaHoy }}</span>
+
+  <span class="date-pill">
+    <span aria-hidden="true">◷</span>
+    {{ fechaHoy }}
+  </span>
 </section>
 
 <section class="card mood-panel">
   <div class="mood-intro">
     <div class="mood-icon" aria-hidden="true">♡</div>
+
     <div>
       <h3>Haz una pausa para escucharte</h3>
-      <p>Elige lo que más se acerca a cómo te sientes en este momento.</p>
+      <p>
+        Elige lo que más se acerca a cómo te sientes en este momento.
+      </p>
     </div>
   </div>
+
   <div class="opciones">
     <button
-      *ngFor="let opcion of opcionesAnimo"
-      class="opcion"
-      type="button"
-      (click)="registrarAnimo(opcion.valor)"
-      [class.seleccionado]="animoSeleccionado() === opcion.valor"
-      [attr.aria-pressed]="animoSeleccionado() === opcion.valor"
-      [attr.aria-label]="opcion.etiqueta">
+            *ngFor="let opcion of opcionesAnimo"
+            class="opcion"
+            type="button"
+            (click)="registrarAnimo(opcion.valor)"
+            [class.seleccionado]="animoSeleccionado() === opcion.valor"
+            [attr.aria-pressed]="animoSeleccionado() === opcion.valor"
+            [attr.aria-label]="opcion.etiqueta"
+    >
       <span class="emoji">{{ opcion.icono }}</span>
       <span class="etiqueta">{{ opcion.etiqueta }}</span>
     </button>
   </div>
-  <p class="confirmacion-animo" *ngIf="mensajeAnimo()" role="status"><span aria-hidden="true">✓</span> {{ mensajeAnimo() }}</p>
-  <p class="error-animo" *ngIf="errorAnimo()" role="alert">{{ errorAnimo() }}</p>
+
+  <p
+          class="confirmacion-animo"
+          *ngIf="mensajeAnimo()"
+          role="status"
+  >
+    <span aria-hidden="true">✓</span>
+    {{ mensajeAnimo() }}
+  </p>
+
+  <p
+          class="error-animo"
+          *ngIf="errorAnimo()"
+          role="alert"
+  >
+    {{ errorAnimo() }}
+  </p>
 </section>
 
+<!-- RESUMEN DEL PROGRESO -->
 <section class="section-heading section-heading-progress">
   <div>
     <p class="eyebrow">TU PROCESO</p>
     <h2>Cada pequeño avance cuenta</h2>
   </div>
-  <a class="text-link" routerLink="/estadisticas">Ver mi actividad <span aria-hidden="true">→</span></a>
+
+  <a class="text-link" routerLink="/estadisticas">
+    Ver mi actividad <span aria-hidden="true">→</span>
+  </a>
 </section>
 
 <section class="resumen" *ngIf="auth.usuario() as usuario">
   <div class="card stat stat-level">
     <div class="stat-icon" aria-hidden="true">✿</div>
-    <div><span class="stat-caption">Tu nivel</span><span class="valor">{{ usuario.nivel }}</span></div>
+
+    <div>
+      <span class="stat-caption">Tu nivel</span>
+      <span class="valor">{{ usuario.nivel }}</span>
+    </div>
+
     <span class="stat-foot">Sigue creciendo</span>
   </div>
+
   <div class="card stat stat-xp">
     <div class="stat-icon" aria-hidden="true">✧</div>
-    <div><span class="stat-caption">Experiencia</span><span class="valor">{{ usuario.xp }} <small>XP</small></span></div>
+
+    <div>
+      <span class="stat-caption">Experiencia</span>
+      <span class="valor">{{ usuario.xp }} <small>XP</small></span>
+    </div>
+
     <span class="stat-foot">Cada práctica suma</span>
   </div>
+
   <div class="card stat stat-coins">
     <div class="stat-icon" aria-hidden="true">♡</div>
-    <div><span class="stat-caption">Monedas</span><span class="valor">{{ usuario.monedas ?? 0 }}</span></div>
+
+    <div>
+      <span class="stat-caption">Monedas</span>
+      <span class="valor">{{ usuario.monedas ?? 0 }}</span>
+    </div>
+
     <span class="stat-foot">Ganadas en tu camino</span>
   </div>
 </section>
 
+<!-- EJERCICIOS -->
 <section class="section-heading section-heading-exercises">
   <div>
     <p class="eyebrow">RITUALES PARA TI</p>
@@ -91,36 +184,70 @@
 </section>
 
 <section class="grid-ejercicios">
-  <a class="card acceso" *ngFor="let acceso of accesos" [routerLink]="acceso.ruta">
+  <a
+          class="card acceso"
+          *ngFor="let acceso of accesos"
+          [routerLink]="acceso.ruta"
+  >
     <div class="acceso-imagen">
-      <img [src]="acceso.imagen" [alt]="acceso.alt" loading="lazy" />
+      <img
+              [src]="acceso.imagen"
+              [alt]="acceso.alt"
+              loading="lazy"
+      />
+
       <span class="duracion">{{ acceso.duracion }}</span>
     </div>
+
     <div class="acceso-contenido">
       <div class="acceso-tipo">{{ acceso.categoria }}</div>
+
       <h3>{{ acceso.titulo }}</h3>
       <p>{{ acceso.desc }}</p>
-      <span class="acceso-accion">Explorar práctica <span aria-hidden="true">↗</span></span>
+
+      <span class="acceso-accion">
+        Explorar práctica <span aria-hidden="true">↗</span>
+      </span>
     </div>
   </a>
 </section>
 
+<!-- JARDÍN VIRTUAL Y REFLEXIÓN -->
 <section class="bottom-grid">
   <article class="card garden-card">
     <div class="garden-copy">
       <p class="eyebrow">TU ESPACIO VERDE</p>
       <h2>Tu jardín virtual</h2>
-      <p>Cuida una planta a la vez, igual que cuidas de ti.</p>
-      <a routerLink="/jardin" class="btn btn-ghost">Visitar mi jardín <span aria-hidden="true">→</span></a>
+
+      <p>
+        Cuida una planta a la vez, igual que cuidas de ti.
+      </p>
+
+      <a routerLink="/jardin" class="btn btn-ghost">
+        Visitar mi jardín <span aria-hidden="true">→</span>
+      </a>
     </div>
-    <img src="assets/serenity-garden.svg" alt="Una planta verde que crece en una maceta" loading="lazy" />
+
+    <img
+            src="assets/serenity-garden.svg"
+            alt="Una planta verde que crece en una maceta"
+            loading="lazy"
+    />
   </article>
 
   <article class="card reflection-card">
     <div class="reflection-symbol" aria-hidden="true">✎</div>
+
     <p class="eyebrow">UN ESPACIO PARA SOLTAR</p>
     <h2>¿Qué te gustaría dejar ir hoy?</h2>
-    <p>No necesitas tener todas las respuestas. A veces, escribir es una buena manera de empezar.</p>
-    <a class="text-link" routerLink="/ejercicios/diario">Escribir en mi diario <span aria-hidden="true">→</span></a>
+
+    <p>
+      No necesitas tener todas las respuestas. A veces, escribir es una
+      buena manera de empezar.
+    </p>
+
+    <a class="text-link" routerLink="/ejercicios/diario">
+      Escribir en mi diario <span aria-hidden="true">→</span>
+    </a>
   </article>
 </section>
