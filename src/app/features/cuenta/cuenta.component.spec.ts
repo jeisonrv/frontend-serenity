@@ -111,8 +111,9 @@ describe('CuentaComponent', () => {
     component.cambiarPassword();
     expect(component.errorPassword()).toContain('no coinciden');
 
-    component.passwordNueva.set('actual');
-    component.confirmarPassword.set('actual');
+    component.passwordActual.set('ClaveActual123');
+    component.passwordNueva.set('ClaveActual123');
+    component.confirmarPassword.set('ClaveActual123');
     component.cambiarPassword();
     expect(component.errorPassword()).toContain('diferente');
     expect(auth.cambiarPassword).not.toHaveBeenCalled();

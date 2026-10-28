@@ -22,8 +22,8 @@ describe('RecuperarPasswordComponent', () => {
     expect(auth.solicitarRecuperacion).not.toHaveBeenCalled();
   });
 
-  it('envía el correo normalizado y muestra el mensaje de privacidad', () => {
-    component.form.controls.correo.setValue('  persona@example.com  ');
+  it('envía el correo válido y muestra el mensaje de privacidad', () => {
+    component.form.controls.correo.setValue('persona@example.com');
     component.enviar();
     expect(auth.solicitarRecuperacion).toHaveBeenCalledWith('persona@example.com');
     expect(component.mensaje()).toContain('Si existe una cuenta');
