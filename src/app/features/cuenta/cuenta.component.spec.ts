@@ -1,4 +1,5 @@
-import { EnvironmentInjector, runInInjectionContext, TestBed } from '@angular/core';
+import { EnvironmentInjector, runInInjectionContext } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
 import { HttpErrorResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
@@ -143,7 +144,7 @@ describe('CuentaComponent', () => {
     auth.cambiarPassword.and.returnValue(throwError(() =>
       new HttpErrorResponse({ status: 500, error: { message: 'Error personalizado' } })
     ));
-    component.cambiarPassword.set(false);
+    component.cambiandoPassword.set(false);
     component.passwordActual.set('ViejaClave123');
     component.passwordNueva.set('NuevaClave123');
     component.confirmarPassword.set('NuevaClave123');
