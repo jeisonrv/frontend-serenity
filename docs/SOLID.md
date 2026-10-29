@@ -26,6 +26,10 @@ Angular proporciona inyección de dependencias para que los componentes reciban 
 
 **Mejora pendiente:** cuando se requiera sustituir servicios concretos en pruebas o cambiar implementaciones, se pueden crear contratos e `InjectionToken` para que los componentes dependan de abstracciones. No se añadieron tokens a todos los servicios porque la arquitectura actual no necesita esa complejidad de forma uniforme.
 
+Para `AuthService` se evaluó un `InjectionToken` y no se añadió: los tests de `LoginComponent` y `RegisterComponent` pueden proporcionar un doble de `AuthService` directamente, sin un token adicional. La abstracción no aporta una mejora a esos tests mientras no exista otra implementación de autenticación.
+
+El `LoggerService` centraliza las salidas de error y advertencia de autenticación, diario, chat en tiempo real y carga de configuración. `info` y `debug` solo escriben fuera de producción.
+
 ## Cómo comprobar los cambios
 
 - Revisar `ChatService` y `ChatRealtimeService` para verificar la separación HTTP/WebSocket.
