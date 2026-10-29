@@ -113,8 +113,25 @@ describe('JardinInteractivoService', () => {
   it('recupera el estado inicial si el almacenamiento contiene JSON inválido', () => {
     localStorage.setItem('serenity_jardin_interactivo_v1_101', '{mal json');
     const recuperado = new JardinInteractivoService(authFor(101));
-    expect(recuperado.estado().xp).toBe(0);
-    expect(recuperado.estado().plantas).toEqual([]);
+    expect(recuperado.estado()).toEqual({
+      xp: 0, actividadesCompletadas: 0, plantas: [], decoracion: 'natural', modoNoche: false
+    });
+  });
+
+  it('usa el estado inicial si no hay estado guardado', () => {
+    localStorage.removeItem('serenity_jardin_interactivo_v1_101');
+    const recuperado = new JardinInteractivoService(authFor(101));
+    expect(recuperado.estado()).toEqual({
+      xp: 0, actividadesCompletadas: 0, plantas: [], decoracion: 'natural', modoNoche: false
+    });
+  });
+
+  it('recupera el estado inicial desde JSON corrupto con forma inesperada', () => {
+    localStorage.setItem('serenity_jardin_interactivo_v1_101', 'null');
+    const recuperado = new JardinInteractivoService(authFor(101));
+    expect(recuperado.estado()).toEqual({
+      xp: 0, actividadesCompletadas: 0, plantas: [], decoracion: 'natural', modoNoche: false
+    });
   });
 
   it('limita el jardín a ochenta plantas', () => {
