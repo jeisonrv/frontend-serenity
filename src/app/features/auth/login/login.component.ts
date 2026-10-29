@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { LoggerService } from '../../../core/services/logger.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mensajeError } from '../../../core/utils/mensaje-error';
 import { mensajeGoogleError } from '../../../core/utils/mensaje-google-error';
@@ -26,7 +27,8 @@ export class LoginComponent {
  constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private logger: LoggerService
   ) {
     this.form = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
@@ -60,7 +62,7 @@ export class LoginComponent {
         void this.router.navigate([destino]);
       },
       error: (err: HttpErrorResponse) => {
-        console.error(err);
+        this.logger.error(err);
         this.error.set(mensajeError(err, 'Ocurrió un error al iniciar sesión.'));
         this.cargando.set(false);
       }

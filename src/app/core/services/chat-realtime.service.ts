@@ -3,6 +3,7 @@ import { Client, IMessage } from '@stomp/stompjs';
 import { environment } from '../../../environments/environment';
 import { MensajeChat } from '../models/conversacion.model';
 import { AuthService } from './auth.service';
+import { LoggerService } from './logger.service';
 
 /**
  * Gestiona exclusivamente la mensajería en tiempo real por STOMP/WebSocket.
@@ -15,7 +16,7 @@ export class ChatRealtimeService {
   readonly conectado = signal(false);
   readonly error = signal<string | null>(null);
 
-  constructor(private auth: AuthService) {}
+  constructor(private auth: AuthService, private logger: LoggerService) {}
 
   conectar(idConversacion: number, mensajesIniciales: MensajeChat[] = []): void {
     this.desconectar();
@@ -33,7 +34,7 @@ export class ChatRealtimeService {
             const nuevo = JSON.parse(msg.body) as MensajeChat;
             this.mensajes.update((actuales) => [...actuales, nuevo]);
           } catch {
-            console.error('No fue posible interpretar un mensaje recibido por WebSocket.');
+            this.logger.error('No fue posible interpretar un mensaje recibido por WebSocket.');
           }
         });
       },

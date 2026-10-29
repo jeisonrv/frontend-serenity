@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { LoggerService } from '../../../core/services/logger.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mensajeError } from '../../../core/utils/mensaje-error';
 import { mensajeGoogleError } from '../../../core/utils/mensaje-google-error';
@@ -25,7 +26,8 @@ export class RegisterComponent {
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private logger: LoggerService
   ) {
     this.form = this.fb.group({
       nombreUsuario: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
@@ -54,7 +56,7 @@ export class RegisterComponent {
         state: { authSuccess: 'Tu cuenta se creó correctamente. Ya puedes iniciar sesión.' }
       }),
       error: (err: HttpErrorResponse) => {
-        console.error(err);
+        this.logger.error(err);
         this.error.set(mensajeError(err, 'Ocurrió un error al crear la cuenta.'));
         this.cargando.set(false);
       }

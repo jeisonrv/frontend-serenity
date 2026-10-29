@@ -1,11 +1,12 @@
 import { AuthService } from './auth.service';
 import { ChatRealtimeService } from './chat-realtime.service';
+import { LoggerService } from './logger.service';
 
 describe('ChatRealtimeService', () => {
   let service: ChatRealtimeService;
 
   beforeEach(() => {
-    service = new ChatRealtimeService({ token: 'token-prueba' } as unknown as AuthService);
+    service = new ChatRealtimeService({ token: 'token-prueba' } as unknown as AuthService, new LoggerService());
   });
 
   it('no envía mensajes cuando el cliente no está conectado', () => {

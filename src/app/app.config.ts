@@ -6,6 +6,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './core/interceptors/auth.interceptor';
 import { routes } from './app.routes';
 import { environment } from '../environments/environment';
+import { LoggerService } from './core/services/logger.service';
 
 interface RuntimeConfig {
   apiUrl: string;
@@ -22,7 +23,7 @@ function removeTrailingSlashes(value: string): string {
   return value.slice(0, end);
 }
 
-async function loadRuntimeConfig(): Promise<void> {
+async function loadRuntimeConfig(logger: LoggerService): Promise<void> {
   let config: Partial<RuntimeConfig> | null = null;
 
   const configPaths = environment.production
@@ -65,7 +66,7 @@ async function loadRuntimeConfig(): Promise<void> {
       );
     }
 
-    console.warn(
+    logger.warn(
         'No se encontró un archivo de configuración de ejecución.'
     );
     return;
@@ -113,15 +114,15 @@ async function loadRuntimeConfig(): Promise<void> {
   environment.googleClientId = googleClientId;
 
   if (!googleClientId) {
-    console.warn(
+    logger.warn(
         'Google OAuth no está configurado. ' +
         'El inicio de sesión con correo y contraseña seguirá disponible.'
     );
   }
 }
 
-function initializeRuntimeConfig(): () => Promise<void> {
-  return loadRuntimeConfig;
+function initializeRuntimeConfig(logger: LoggerService): () => Promise<void> {
+  return () => loadRuntimeConfig(logger);
 }
 
 export const appConfig: ApplicationConfig = {
@@ -133,6 +134,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: initializeRuntimeConfig,
+      deps: [LoggerService],
       multi: true
     }
   ]

@@ -2,6 +2,7 @@ import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
+import { LoggerService } from '../../../core/services/logger.service';
 import { RegisterComponent } from './register.component';
 
 describe('RegisterComponent', () => {
@@ -14,7 +15,7 @@ describe('RegisterComponent', () => {
   });
 
   it('valida campos, longitud y aceptación de términos', () => {
-    const component = new RegisterComponent(new FormBuilder(), auth, router);
+    const component = new RegisterComponent(new FormBuilder(), auth, router, new LoggerService());
     component.enviar();
     expect(component.form.invalid).toBeTrue();
     expect(auth.registrar).not.toHaveBeenCalled();
@@ -22,7 +23,7 @@ describe('RegisterComponent', () => {
 
   it('registra y navega al login con confirmación', () => {
     auth.registrar.and.returnValue(of({ id: 1, username: 'ana', email: 'ana@example.com', nivel: 1, xp: 0 }));
-    const component = new RegisterComponent(new FormBuilder(), auth, router);
+    const component = new RegisterComponent(new FormBuilder(), auth, router, new LoggerService());
     component.form.setValue({ nombreUsuario: 'ana', correo: 'ana@example.com', contrasena: 'secreto', aceptaTerminos: true });
     component.enviar();
     expect(auth.registrar).toHaveBeenCalledWith({ username: 'ana', email: 'ana@example.com', password: 'secreto' });
@@ -31,7 +32,7 @@ describe('RegisterComponent', () => {
 
   it('muestra error y libera el estado de carga si falla el registro', () => {
     auth.registrar.and.returnValue(throwError(() => ({ status: 409, error: { mensaje: 'Correo existente' } })));
-    const component = new RegisterComponent(new FormBuilder(), auth, router);
+    const component = new RegisterComponent(new FormBuilder(), auth, router, new LoggerService());
     component.form.setValue({ nombreUsuario: 'ana', correo: 'ana@example.com', contrasena: 'secreto', aceptaTerminos: true });
     component.enviar();
     expect(component.error()).toBeTruthy();

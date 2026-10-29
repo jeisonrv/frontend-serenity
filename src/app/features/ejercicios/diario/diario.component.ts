@@ -5,6 +5,7 @@ import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DiarioService } from '../../../core/services/diario.service';
+import { LoggerService } from '../../../core/services/logger.service';
 import { JardinInteractivoService } from '../../../core/services/jardin-interactivo.service';
 import { EntradaDiario } from '../../../core/models/entrada-diario.model';
 import { mensajeError } from '../../../core/utils/mensaje-error';
@@ -46,7 +47,8 @@ export class DiarioComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private diarioService: DiarioService,
-    private jardinInteractivo: JardinInteractivoService
+    private jardinInteractivo: JardinInteractivoService,
+    private logger: LoggerService
   ) {
     this.form = this.fb.group({
       contenido: ['', [Validators.required, Validators.minLength(5)]]
@@ -74,7 +76,7 @@ export class DiarioComponent implements OnInit {
         ));
       },
       error: (error: HttpErrorResponse) => {
-        console.error(error);
+        this.logger.error(error);
         this.errorEntradas.set(mensajeError(error, 'No pudimos cargar tus entradas. Inténtalo de nuevo.'));
       }
     });
