@@ -3,7 +3,10 @@ name: Serenity - SonarQube Cloud
 on:
   push:
     branches:
-      - 'feature/jardin-interactivo-animado'
+      - main
+      - preproduccion
+      - 'feature/**'
+  pull_request:
 
 permissions:
   contents: read
