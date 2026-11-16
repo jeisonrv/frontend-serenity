@@ -13,6 +13,9 @@
   --color-accent: #9BD2BE;
   --color-accent-soft: #E8F7EF;
   --color-danger: #B54747;
+  --color-success: #34735E;
+  --color-control: #FBFDFF;
+  --color-table-head: #F7FAFE;
   --color-shadow: rgba(41, 83, 128, .09);
   --font-display: 'Aptos Display', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: 'Aptos', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -35,6 +38,9 @@
   --color-accent: #83CDB3;
   --color-accent-soft: #1B3B3A;
   --color-danger: #FF9D9D;
+  --color-success: #8ED6B7;
+  --color-control: #1B2E48;
+  --color-table-head: #203653;
   --color-shadow: rgba(0, 0, 0, .22);
   --shadow-soft: 0 14px 35px rgba(0, 0, 0, .18);
 }
@@ -65,6 +71,12 @@ h3 { font-size: 1.15rem; }
 p { max-width: 66ch; }
 a { color: var(--color-primary-dark); }
 button, input, textarea, select { font: inherit; }
+input, textarea, select {
+  color: var(--color-ink);
+  background: var(--color-control);
+  border-color: var(--color-line);
+}
+option { color: var(--color-ink); background: var(--color-surface); }
 button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
   outline: 3px solid #8FBCE8;
   outline-offset: 3px;

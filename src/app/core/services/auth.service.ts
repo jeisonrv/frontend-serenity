@@ -37,11 +37,11 @@ export class AuthService {
         );
   }
 
-  iniciarConGoogle(credential: string): Observable<LoginResponse> {
+  iniciarConGoogle(credential: string, username?: string, consentimientos?: { acceptTerms: boolean; acceptSensitiveData: boolean }): Observable<LoginResponse> {
     return this.http
         .post<LoginResponse>(
             `${environment.apiUrl}/auth/google`,
-            { credential }
+            { credential, ...(username ? { username } : {}), ...(consentimientos ?? {}) }
         )
         .pipe(
             tap((res) => this.guardarSesion(res))

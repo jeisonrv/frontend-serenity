@@ -8,6 +8,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { mensajeError } from '../../../core/utils/mensaje-error';
 import { mensajeGoogleError } from '../../../core/utils/mensaje-google-error';
 import { GoogleIdentityButtonComponent } from '../../../shared/google-identity-button/google-identity-button.component';
+import { ConsentService } from '../../../core/services/consent.service';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +29,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private logger: LoggerService
+    private logger: LoggerService,
+    private consent: ConsentService
   ) {
     this.form = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
@@ -60,6 +62,8 @@ export class LoginComponent {
             ? '/moderacion'
             : '/inicio';
         void this.router.navigate([destino]);
+        this.consent.revisionPendiente.set(false);
+        setTimeout(() => this.revisarConsentimientos(), 0);
       },
       error: (err: HttpErrorResponse) => {
         this.logger.error(err);
@@ -86,6 +90,15 @@ export class LoginComponent {
   private navegarSegunRol(rol?: string): void {
     const destino = rol === 'OYENTE' ? '/oyente' : rol === 'MODERADOR' ? '/moderacion' : '/inicio';
     void this.router.navigate([destino]);
+    setTimeout(() => this.revisarConsentimientos(), 0);
     this.googleCargando.set(false);
+  }
+
+  private revisarConsentimientos(): void {
+    this.consent.consultar().subscribe({ next: status => {
+      if (!status.termsAccepted || (status.currentTermsVersion && status.termsVersion !== status.currentTermsVersion)) {
+        this.consent.revisionPendiente.set(true);
+      }
+    }, error: () => undefined });
   }
 }

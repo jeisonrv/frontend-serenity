@@ -87,19 +87,28 @@ async function loadRuntimeConfig(logger: LoggerService): Promise<void> {
   let wsUrl: URL;
 
   try {
-    apiUrl = new URL(config.apiUrl);
-    wsUrl = new URL(config.wsUrl);
+    apiUrl = new URL(config.apiUrl, window.location.origin);
+    wsUrl = new URL(config.wsUrl, window.location.origin);
   } catch {
     throw new Error(
         'apiUrl o wsUrl no contienen una URL válida.'
     );
   }
 
-  if (!['http:', 'https:'].includes(apiUrl.protocol)) {
+  const apiIsRelative = config.apiUrl.startsWith('/') && !config.apiUrl.startsWith('//');
+  const wsIsRelative = config.wsUrl.startsWith('/') && !config.wsUrl.startsWith('//');
+
+  if (!apiIsRelative && !/^https?:\/\//i.test(config.apiUrl)) {
+    throw new Error('apiUrl debe utilizar HTTP o HTTPS.');
+  }
+  if (!apiIsRelative && !['http:', 'https:'].includes(apiUrl.protocol)) {
     throw new Error('apiUrl debe utilizar HTTP o HTTPS.');
   }
 
-  if (!['ws:', 'wss:'].includes(wsUrl.protocol)) {
+  if (!wsIsRelative && !/^wss?:\/\//i.test(config.wsUrl)) {
+    throw new Error('wsUrl debe utilizar WS o WSS.');
+  }
+  if (!wsIsRelative && !['ws:', 'wss:'].includes(wsUrl.protocol)) {
     throw new Error('wsUrl debe utilizar WS o WSS.');
   }
 

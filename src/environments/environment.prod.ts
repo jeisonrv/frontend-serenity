@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: '',
-  wsUrl: '',
+  apiUrl: '/api',
+  wsUrl: '/ws',
   googleClientId: ''
 };

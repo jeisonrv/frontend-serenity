@@ -370,15 +370,19 @@
   margin: 0 0 0.65rem;
 }
 
+.consentimientos { margin: .75rem 0; padding: .9rem; border: 1px solid var(--color-line); border-radius: 16px; background: var(--color-surface-alt); }
+.consentimientos h2 { margin: 0 0 .65rem; color: var(--color-ink); font-size: 1rem; }
+.nota-consentimiento { margin: .25rem 0 .6rem 1.5rem; color: var(--color-ink-soft); font-size: .75rem; line-height: 1.45; }
+
 /* Tema oscuro */
-:root[data-theme='dark'] .pantalla-auth {
+:host-context(:root[data-theme='dark']) .pantalla-auth {
   background:
     radial-gradient(ellipse at 12% 15%, rgba(36, 67, 101, 0.34), transparent 38%),
     radial-gradient(ellipse at 88% 86%, rgba(31, 74, 69, 0.24), transparent 34%),
     var(--color-bg);
 }
 
-:root[data-theme='dark'] .auth-escena {
+:host-context(:root[data-theme='dark']) .auth-escena {
   background: linear-gradient(
     145deg,
     #152B44 0%,
@@ -388,26 +392,26 @@
   border-color: var(--color-line);
 }
 
-:root[data-theme='dark'] .marca-escena,
-:root[data-theme='dark'] .escena-copy h2 {
+:host-context(:root[data-theme='dark']) .marca-escena,
+:host-context(:root[data-theme='dark']) .escena-copy h2 {
   color: #D4E9FF;
 }
 
-:root[data-theme='dark'] .escena-copy .eyebrow {
+:host-context(:root[data-theme='dark']) .escena-copy .eyebrow {
   color: #9BC9F0;
 }
 
-:root[data-theme='dark'] .escena-copy p:not(.eyebrow),
-:root[data-theme='dark'] .frase-calmada {
+:host-context(:root[data-theme='dark']) .escena-copy p:not(.eyebrow),
+:host-context(:root[data-theme='dark']) .frase-calmada {
   color: #B5C9DF;
 }
 
-:root[data-theme='dark'] .escena-ilustracion {
+:host-context(:root[data-theme='dark']) .escena-ilustracion {
   mix-blend-mode: normal;
   border: 1px solid var(--color-line);
 }
 
-:root[data-theme='dark'] .mensaje-exito {
+:host-context(:root[data-theme='dark']) .mensaje-exito {
   color: #9BDEC5;
 }
 

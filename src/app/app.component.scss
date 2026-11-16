@@ -66,6 +66,15 @@
 :host-context(:root[data-theme='dark']) .theme-track { background: #3F638A; }
 
 .contenido:not(.con-sesion) { padding: 0; }
+.aviso-consentimiento { position: fixed; z-index: 1100; right: 1rem; bottom: 1rem; display: flex; align-items: center; gap: 1rem; max-width: min(680px, calc(100vw - 2rem)); padding: 1rem; border: 1px solid var(--color-line); border-radius: 18px; background: var(--color-surface); color: var(--color-ink); box-shadow: var(--shadow-soft); }
+.aviso-consentimiento p { margin: 0; }
+.aviso-consentimiento > button { border: 0; background: transparent; color: var(--color-ink); font-size: 1.4rem; cursor: pointer; }
+.modal-consentimiento { position: fixed; z-index: 1200; inset: 0; display: grid; place-items: center; overflow: auto; padding: 1rem; background: rgba(8, 19, 34, .72); }
+.dialog-consentimiento { width: min(100%, 650px); max-height: min(90vh, 850px); overflow: auto; }
+.dialog-consentimiento label { display: flex; align-items: flex-start; gap: .7rem; margin: 1rem 0; }
+.dialog-consentimiento label input { margin-top: .35rem; accent-color: var(--color-primary); }
+.dialog-consentimiento p { color: var(--color-ink-soft); }
+.dialog-consentimiento .error { color: var(--color-danger); }
 .contenido:not(.con-sesion) .barra-global { padding: .8rem 1.2rem .25rem; margin-bottom: 0; }
 
 @media (max-width: 760px) {

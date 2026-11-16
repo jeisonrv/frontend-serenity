@@ -5,6 +5,29 @@
   <p>Administra el acceso a tu cuenta de Serenity.</p>
 </header>
 
+<section class="card privacidad-cuenta" aria-labelledby="titulo-privacidad-cuenta">
+  <h2 id="titulo-privacidad-cuenta">Privacidad y consentimientos</h2>
+  <p>Consulta y administra tus autorizaciones. <a routerLink="/terminos">Lee los Términos y la Política de Tratamiento de Datos Personales</a>.</p>
+  <p *ngIf="cargandoConsentimientos()" role="status">Consultando tus consentimientos…</p>
+  <ng-container *ngIf="consentimientos() as c">
+    <p><strong>Términos:</strong> {{ terminosPendientes(c) ? 'Pendientes' : 'Aceptados' }}<span *ngIf="c.termsVersion"> · Versión {{ c.termsVersion }}</span><span *ngIf="c.termsAcceptedAt"> · {{ c.termsAcceptedAt | date:'medium' }}</span></p>
+    <div *ngIf="terminosPendientes(c)" class="consentimiento-terminos">
+      <p>Para mantener tu cuenta activa, acepta los términos obligatorios y confirma que fuiste informado de la política.</p>
+      <label>
+        <input type="checkbox" [ngModel]="confirmaTerminos()" (ngModelChange)="confirmaTerminos.set($event)" [ngModelOptions]="{standalone: true}">
+        He leído y acepto los Términos y condiciones y confirmo que fui informado de la Política de Tratamiento de Datos Personales.
+      </label>
+      <button class="boton-password" type="button" (click)="aceptarTerminosVigentes()" [disabled]="guardandoConsentimiento() || !confirmaTerminos()">Aceptar términos y política</button>
+    </div>
+    <p><strong>Autorización de datos emocionales:</strong> {{ c.sensitiveDataConsentActive ? 'Activa' : 'Inactiva' }}<span *ngIf="c.sensitiveConsentVersion"> · Versión {{ c.sensitiveConsentVersion }}</span><span *ngIf="c.sensitiveConsentAt"> · {{ c.sensitiveConsentAt | date:'medium' }}</span></p>
+    <p>Esta autorización es opcional. Si la rechazas, las funciones que requieren guardar o consultar tus datos emocionales permanecerán bloqueadas.</p>
+    <button class="boton-password" type="button" (click)="cambiarAutorizacionSensibles(!c.sensitiveDataConsentActive)" [disabled]="guardandoConsentimiento() || (terminosPendientes(c) && !c.sensitiveDataConsentActive)">
+      {{ c.sensitiveDataConsentActive ? 'Revocar autorización' : 'Activar autorización de datos sensibles' }}
+    </button>
+  </ng-container>
+  <p class="error" role="alert" *ngIf="errorConsentimiento()">{{ errorConsentimiento() }}</p>
+  <p class="exito" role="status" *ngIf="mensajeConsentimiento()">{{ mensajeConsentimiento() }}</p>
+</section>
 <!-- Cambiar contraseña -->
 <section class="card cambiar-password" aria-labelledby="titulo-password">
   <h2 id="titulo-password">Cambiar contraseña</h2>

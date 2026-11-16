@@ -23,8 +23,12 @@ export class ChatRealtimeService {
     this.mensajes.set(mensajesIniciales);
     this.error.set(null);
 
+    // STOMP usa WebSocket nativo; convierte rutas relativas al esquema seguro de la página.
+    const wsUrl = environment.wsUrl.startsWith('/')
+      ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}${environment.wsUrl}`
+      : environment.wsUrl;
     const client = new Client({
-      brokerURL: environment.wsUrl,
+      brokerURL: wsUrl,
       connectHeaders: { Authorization: `Bearer ${this.auth.token ?? ''}` },
       reconnectDelay: 3000,
       onConnect: () => {

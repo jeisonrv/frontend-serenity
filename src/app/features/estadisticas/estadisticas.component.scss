@@ -32,3 +32,39 @@ h2 { margin: 0; color: #2d463a; font-size: 1.25rem; letter-spacing: -.025em; }.m
 @keyframes spin { to { transform: rotate(360deg); } }
 @media(max-width: 850px) { .analytics-grid { grid-template-columns: 1fr; }.page-hero { gap: 1rem; }.page-hero img { width: 25%; min-width: 110px; } }
 @media(max-width: 600px) { .page-hero { align-items: flex-start; padding: 1.35rem; border-radius: 20px; }.page-hero img { width: 100px; min-width: 100px; }.hero-tags { gap: .4rem; }.hero-tags span { font-size: .7rem; }.resumen { grid-template-columns: 1fr; gap: .65rem; }.stat { padding: .9rem 1rem; }.stat-icon { flex-basis: 40px; height: 40px; }.valor { font-size: 1.45rem; }.section-heading { flex-direction: column; }.range-switch { align-self: flex-start; }.bar-chart { gap: .25rem; height: 160px; }.bar-label { font-size: .6rem; }.bar-chart.month-view { gap: .12rem; }.month-view .bar-label { font-size: .48rem; }.period-summary { gap: .25rem; } }
+:host-context(:root[data-theme='dark']) .estadisticas-page .page-hero { background: linear-gradient(120deg, #172B44, #1B2E48 65%, #263044); border: 1px solid var(--color-line); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .page-hero h1,
+:host-context(:root[data-theme='dark']) .estadisticas-page h2 { color: var(--color-ink); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .eyebrow { color: #9CCAF2; }
+:host-context(:root[data-theme='dark']) .estadisticas-page .lead,
+:host-context(:root[data-theme='dark']) .estadisticas-page .muted,
+:host-context(:root[data-theme='dark']) .estadisticas-page .chart-footnote,
+:host-context(:root[data-theme='dark']) .estadisticas-page .empty-mini,
+:host-context(:root[data-theme='dark']) .estadisticas-page .empty-activity,
+:host-context(:root[data-theme='dark']) .estadisticas-page .loading-state { color: var(--color-ink-soft); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .hero-tags span { background: var(--color-surface-alt); color: var(--color-ink); border-color: var(--color-line); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .stat,
+:host-context(:root[data-theme='dark']) .estadisticas-page .card { background: var(--color-surface); border-color: var(--color-line); box-shadow: var(--shadow-soft); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .stat-mint { background: linear-gradient(135deg, #173831, #15243A); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .stat-lilac { background: linear-gradient(135deg, #302B48, #15243A); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .stat-peach { background: linear-gradient(135deg, #40332B, #15243A); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .valor,
+:host-context(:root[data-theme='dark']) .estadisticas-page .period-summary strong { color: #A7D9BA; }
+:host-context(:root[data-theme='dark']) .estadisticas-page .etiqueta,
+:host-context(:root[data-theme='dark']) .estadisticas-page .period-summary,
+:host-context(:root[data-theme='dark']) .estadisticas-page .activity-name,
+:host-context(:root[data-theme='dark']) .estadisticas-page .tabla th,
+:host-context(:root[data-theme='dark']) .estadisticas-page .tabla td { color: var(--color-ink-soft); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .range-switch,
+:host-context(:root[data-theme='dark']) .estadisticas-page .bar-track { background: #0F1D30; }
+:host-context(:root[data-theme='dark']) .estadisticas-page .range-switch button { color: var(--color-ink-soft); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .range-switch button.active { background: #294663; color: #EAF4FF; }
+:host-context(:root[data-theme='dark']) .estadisticas-page .bar-fill { background: #2A4260; }
+:host-context(:root[data-theme='dark']) .estadisticas-page .activity-row,
+:host-context(:root[data-theme='dark']) .estadisticas-page .tabla th,
+:host-context(:root[data-theme='dark']) .estadisticas-page .tabla td,
+:host-context(:root[data-theme='dark']) .estadisticas-page .bar-chart { border-color: var(--color-line); }
+:host-context(:root[data-theme='dark']) .estadisticas-page .activity-symbol { background: #203B5A; color: #BEDFFF; }
+:host-context(:root[data-theme='dark']) .estadisticas-page .activity-symbol[data-type="meditacion"] { background: #302B48; color: #D0C4FF; }
+:host-context(:root[data-theme='dark']) .estadisticas-page .activity-symbol[data-type="relajacion"] { background: #40332B; color: #FFD1AC; }
+:host-context(:root[data-theme='dark']) .estadisticas-page .notice { background: #3B3527; color: #F4E2B4; }

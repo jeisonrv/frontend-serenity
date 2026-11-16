@@ -33,7 +33,8 @@ export class RegisterComponent {
       nombreUsuario: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
       correo: ['', [Validators.required, Validators.email]],
       contrasena: ['', [Validators.required, Validators.minLength(6)]],
-      aceptaTerminos: [false, Validators.requiredTrue]
+      aceptaTerminos: [false, Validators.requiredTrue],
+      aceptaDatosSensibles: [false]
     });
   }
 
@@ -41,6 +42,9 @@ export class RegisterComponent {
     if (this.googleCargando() || this.cargando()) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      if (this.form.get('aceptaTerminos')?.invalid) {
+        setTimeout(() => document.getElementById('aceptaTerminos')?.focus());
+      }
       return;
     }
 
@@ -50,7 +54,9 @@ export class RegisterComponent {
     this.auth.registrar({
       username: this.form.value.nombreUsuario!,
       email: this.form.value.correo!,
-      password: this.form.value.contrasena!
+      password: this.form.value.contrasena!,
+      acceptTerms: this.form.value.aceptaTerminos === true,
+      acceptSensitiveData: this.form.value.aceptaDatosSensibles === true
     }).subscribe({
       next: () => this.router.navigate(['/login'], {
         state: { authSuccess: 'Tu cuenta se creó correctamente. Ya puedes iniciar sesión.' }
@@ -71,9 +77,18 @@ export class RegisterComponent {
       this.error.set('Debes aceptar los términos y condiciones para continuar.');
       return;
     }
+    const username = this.form.get('nombreUsuario');
+    if (username?.invalid) {
+      username?.markAsTouched();
+      this.error.set('El nombre de usuario debe tener entre 3 y 50 caracteres.');
+      return;
+    }
     this.error.set(null);
     this.googleCargando.set(true);
-    this.auth.iniciarConGoogle(credential).subscribe({
+    this.auth.iniciarConGoogle(credential, this.form.value.nombreUsuario, {
+      acceptTerms: true,
+      acceptSensitiveData: this.form.value.aceptaDatosSensibles === true
+    }).subscribe({
       next: (response) => {
         const destino = response.usuario.rol === 'OYENTE'
           ? '/oyente'

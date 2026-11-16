@@ -1,9 +1,10 @@
 <header class="encabezado-panel">
-  <div>
+  <div class="encabezado-copy">
     <p class="eyebrow">SERENITY · SEGURIDAD DE LA COMUNIDAD</p>
     <h1>Panel de moderación</h1>
     <p>Revisa reportes y administra restricciones de acceso.</p>
   </div>
+  <img class="imagen-panel" src="assets/serenity-garden.svg" alt="Ilustración de una planta que representa el cuidado de la comunidad" />
   <button class="btn btn-ghost" type="button" (click)="cargarReportes(); cargarRestringidos()"
     [disabled]="cargandoReportes() || cargandoRestringidos()">Actualizar</button>
 </header>
@@ -12,6 +13,7 @@
 <p class="confirmacion" role="status" *ngIf="confirmacion()">{{ confirmacion() }}</p>
 
 <section class="seccion" aria-labelledby="titulo-reportes">
+  <div class="intro-seccion"><span class="icono-seccion" aria-hidden="true">✧</span><p>Revisa cada caso con atención y consulta el detalle antes de tomar una decisión.</p></div>
   <div class="titulo-seccion">
     <div>
       <h2 id="titulo-reportes">Reportes</h2>

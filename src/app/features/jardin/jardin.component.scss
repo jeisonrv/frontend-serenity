@@ -18,6 +18,57 @@ h1 { margin: 0; color: #263d35; font-size: clamp(2rem, 4vw, 3.15rem); line-heigh
 @media(max-width:850px) { .garden-progress { grid-template-columns: 1fr; }.mini-garden { height: 150px; }.hero-art { flex-basis: 230px; height: 190px; } }
 @media(max-width:600px) { .garden-hero { align-items: flex-start; padding: 1.3rem; border-radius: 20px; }.hero-art { flex: 0 0 95px; height: 140px; margin-top: 1rem; }.sun-glow { right: 15px; width: 35px; height: 35px; }.hero-flower { font-size: 2rem; bottom: 25px; }.flower-two { font-size: 2.5rem; bottom: 20px; }.flower-three { font-size: 1.8rem; }.cloud-one { left: 5px; }.cloud-two { display: none; }.hero-tags { gap: .4rem; }.hero-tags span { font-size: .68rem; }.board-heading h2 { font-size: 1.15rem; }.plot { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .6rem; padding: 1.5rem .7rem .8rem; }.plant-card { padding: .4rem .2rem .6rem; }.garden-landscape { min-height: 240px; }.plant-visual { height: 70px; }.plant-visual>span { font-size: 2.7rem; }.garden-note { padding: .8rem; } }
 @media(prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; } }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-progress,
+:host-context(:root[data-theme='dark']) .jardin-page .garden-board,
+:host-context(:root[data-theme='dark']) .jardin-page .rewards-board,
+:host-context(:root[data-theme='dark']) .jardin-page .customize-board,
+:host-context(:root[data-theme='dark']) .jardin-page .plant-detail { background: var(--color-surface); border-color: var(--color-line); box-shadow: var(--shadow-soft); }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-board .board-heading h2 { color: var(--color-ink); }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-board .board-heading .muted { color: var(--color-ink-soft); }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-board .plant-count { background: #203B32; }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-board .plant-count strong { color: #B8E8D3; }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-board .plant-count small { color: #A8BCD4; }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-hero { background: linear-gradient(120deg, #172B44, #1B302F 56%, #282844); border: 1px solid var(--color-line); }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-hero h1 { color: var(--color-ink); }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-hero .lead { color: var(--color-ink-soft); }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-hero .eyebrow { color: #9CCAF2; }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-hero .hero-tags span { background: #203B32; border-color: #36584D; color: #C2E6D2; }
+:host-context(:root[data-theme='dark']) .jardin-page .hero-art { background: linear-gradient(#263A56 0%, #244B44 70%); }
+:host-context(:root[data-theme='dark']) .jardin-page .progress-intro h2,
+:host-context(:root[data-theme='dark']) .jardin-page .board-heading h2,
+:host-context(:root[data-theme='dark']) .jardin-page .rewards-heading h2,
+:host-context(:root[data-theme='dark']) .jardin-page .empty-garden h3,
+:host-context(:root[data-theme='dark']) .jardin-page .empty-title,
+:host-context(:root[data-theme='dark']) .jardin-page .detail-heading h3 { color: var(--color-ink); }
+:host-context(:root[data-theme='dark']) .jardin-page .muted,
+:host-context(:root[data-theme='dark']) .jardin-page .empty-garden p,
+:host-context(:root[data-theme='dark']) .jardin-page .plant-customizer,
+:host-context(:root[data-theme='dark']) .jardin-page .garden-note { color: var(--color-ink-soft); }
+:host-context(:root[data-theme='dark']) .jardin-page .next-level-label,
+:host-context(:root[data-theme='dark']) .jardin-page .next-level small { color: #A8BCD4; }
+:host-context(:root[data-theme='dark']) .jardin-page .rewards-board .reward { background: #1B2E48; border-color: var(--color-line); opacity: 1; }
+:host-context(:root[data-theme='dark']) .jardin-page .rewards-board .reward.unlocked { background: #173831; border-color: #28554D; }
+:host-context(:root[data-theme='dark']) .jardin-page .reward h3 { color: var(--color-ink); }
+:host-context(:root[data-theme='dark']) .jardin-page .reward p,
+:host-context(:root[data-theme='dark']) .jardin-page .reward div span { color: var(--color-ink-soft); }
+:host-context(:root[data-theme='dark']) .jardin-page .reward-icon { background: #263A50; }
+:host-context(:root[data-theme='dark']) .jardin-page .reward.unlocked .reward-icon { background: #245047; }
+:host-context(:root[data-theme='dark']) .jardin-page .custom-option,
+:host-context(:root[data-theme='dark']) .jardin-page .filters button,
+:host-context(:root[data-theme='dark']) .jardin-page .type-option { background: var(--color-surface-alt); border-color: var(--color-line); color: var(--color-ink-soft); }
+:host-context(:root[data-theme='dark']) .jardin-page .custom-option.active,
+:host-context(:root[data-theme='dark']) .jardin-page .filters button.active,
+:host-context(:root[data-theme='dark']) .jardin-page .type-option.active { background: #203B5A; border-color: #52769A; color: #DCEEFF; }
+:host-context(:root[data-theme='dark']) .jardin-page .custom-option.locked { background: #17263A; color: #91A5BC; }
+:host-context(:root[data-theme='dark']) .jardin-page .plant-name { color: #294C3D; }
+:host-context(:root[data-theme='dark']) .jardin-page .plant-stage,
+:host-context(:root[data-theme='dark']) .jardin-page .plant-hint { color: #486355; }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-note { background: #1B302D; border-color: #31534C; }
+:host-context(:root[data-theme='dark']) .jardin-page .garden-note strong { color: #B8E8D3; }
+:host-context(:root[data-theme='dark']) .jardin-page .notice,
+:host-context(:root[data-theme='dark']) .jardin-page .feedback-message { background: #173831; color: #B8E8D3; }
+:host-context(:root[data-theme='dark']) .jardin-page .level-badge,
+:host-context(:root[data-theme='dark']) .jardin-page .plant-count { background: #203B32; color: #B8E8D3; }
 
 .rewards-board { margin-top: 1rem; padding: clamp(1rem,2.8vw,1.6rem); border: 1px solid #e9eee9; border-radius: 24px; background: #fff; box-shadow: 0 10px 30px rgba(42,63,51,.045); }
 .rewards-heading h2 { margin: 0; color: #2d463a; font-size: 1.35rem; }

@@ -2,12 +2,15 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 
 import { AuthService } from '../../core/services/auth.service';
 import { RecordatoriosService } from '../../core/services/recordatorios.service';
 import { mensajeGoogleError } from '../../core/utils/mensaje-google-error';
 import { GoogleIdentityButtonComponent } from '../../shared/google-identity-button/google-identity-button.component';
+import { ConsentService } from '../../core/services/consent.service';
+import { ConsentStatus } from '../../core/models/consent.model';
 
 @Component({
   selector: 'app-cuenta',
@@ -15,7 +18,8 @@ import { GoogleIdentityButtonComponent } from '../../shared/google-identity-butt
   imports: [
     CommonModule,
     FormsModule,
-    GoogleIdentityButtonComponent
+    GoogleIdentityButtonComponent,
+    RouterLink
   ],
   templateUrl: './cuenta.component.html',
   styleUrl: './cuenta.component.scss'
@@ -40,13 +44,64 @@ export class CuentaComponent implements OnInit {
   readonly cambiandoPassword = signal(false);
   readonly errorPassword = signal<string | null>(null);
   readonly mensajePassword = signal<string | null>(null);
+  readonly consentimientos = signal<ConsentStatus | null>(null);
+  readonly cargandoConsentimientos = signal(false);
+  readonly guardandoConsentimiento = signal(false);
+  readonly errorConsentimiento = signal<string | null>(null);
+  readonly mensajeConsentimiento = signal<string | null>(null);
+  readonly confirmaTerminos = signal(false);
 
-  constructor(public auth: AuthService) {}
+  constructor(public auth: AuthService, private readonly consent: ConsentService) {}
 
   ngOnInit(): void {
     if (this.auth.isLoggedIn()) {
       this.cargarRecordatorios();
+      this.cargarConsentimientos();
     }
+  }
+
+  cargarConsentimientos(): void {
+    this.cargandoConsentimientos.set(true);
+    this.consent.consultar().subscribe({
+      next: status => { this.consentimientos.set(status); this.cargandoConsentimientos.set(false); },
+      error: () => { this.errorConsentimiento.set('No se pudo consultar el estado de tus consentimientos.'); this.cargandoConsentimientos.set(false); }
+    });
+  }
+
+  terminosPendientes(status: ConsentStatus): boolean {
+    return status.termsAcceptancePending === true || !status.termsAccepted ||
+      (!!status.currentTermsVersion && status.termsVersion !== status.currentTermsVersion);
+  }
+
+  aceptarTerminosVigentes(): void {
+    if (this.guardandoConsentimiento() || !this.confirmaTerminos()) return;
+    this.guardandoConsentimiento.set(true);
+    this.errorConsentimiento.set(null);
+    this.consent.aceptarTerminos().pipe(finalize(() => this.guardandoConsentimiento.set(false))).subscribe({
+      next: status => {
+        this.consentimientos.set(status);
+        this.confirmaTerminos.set(false);
+        this.mensajeConsentimiento.set('Términos y política aceptados. Ahora puedes elegir si autorizas el tratamiento de datos sensibles.');
+      },
+      error: () => this.errorConsentimiento.set('No se pudieron aceptar los términos vigentes. Inténtalo de nuevo.')
+    });
+  }
+
+  cambiarAutorizacionSensibles(activar: boolean): void {
+    if (this.guardandoConsentimiento()) return;
+    const status = this.consentimientos();
+    if (activar && (!status || this.terminosPendientes(status))) {
+      this.errorConsentimiento.set('Primero debes aceptar los Términos y condiciones y confirmar que fuiste informado de la Política de Tratamiento de Datos.');
+      return;
+    }
+    if (!activar && !window.confirm('Al revocar, Serenity dejará de guardar nuevos registros emocionales y las funciones de estado de ánimo, diario y progreso que dependen de ellos quedarán desactivadas. ¿Deseas continuar?')) return;
+    this.guardandoConsentimiento.set(true);
+    this.errorConsentimiento.set(null);
+    const request = activar ? this.consent.autorizarDatosSensibles() : this.consent.revocarDatosSensibles();
+    request.subscribe({
+      next: () => { this.mensajeConsentimiento.set(activar ? 'Autorización activada.' : 'Autorización revocada.'); this.cargarConsentimientos(); this.guardandoConsentimiento.set(false); },
+      error: () => { this.errorConsentimiento.set('No se pudo actualizar la autorización. Inténtalo de nuevo.'); this.guardandoConsentimiento.set(false); }
+    });
   }
 
   cargarRecordatorios(): void {

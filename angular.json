@@ -30,6 +30,14 @@
           },
           "configurations": {
             "production": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "src/assets",
+                  "output": "/assets",
+                  "ignore": ["config.dev.json"]
+                }
+              ],
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",

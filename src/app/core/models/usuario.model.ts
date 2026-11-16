@@ -35,6 +35,8 @@ export interface RegistroRequest {
   username: string;
   email: string;
   password: string;
+  acceptTerms: boolean;
+  acceptSensitiveData: boolean;
 }
 
 export interface LoginRequest {

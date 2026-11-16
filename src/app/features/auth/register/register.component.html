@@ -51,14 +51,20 @@
         </span>
       </div>
 
-      <label class="aceptacion-legal">
-        <input type="checkbox" formControlName="aceptaTerminos" />
-        <span>He leído y acepto los <a routerLink="/terminos" target="_blank" rel="noopener noreferrer">términos y condiciones</a>.</span>
-      </label>
-      <span class="error error-terminos" *ngIf="form.get('aceptaTerminos')?.touched && form.get('aceptaTerminos')?.invalid">
-        Debes aceptar los términos para continuar.
-      </span>
-
+      <section class="consentimientos" aria-labelledby="titulo-privacidad">
+        <h2 id="titulo-privacidad">Privacidad y consentimiento</h2>
+        <label class="aceptacion-legal" for="aceptaTerminos">
+          <input id="aceptaTerminos" type="checkbox" formControlName="aceptaTerminos" aria-describedby="error-terminos" />
+          <span>He leído y acepto los <a routerLink="/terminos" target="_blank" rel="noopener noreferrer">Términos y condiciones</a> y he sido informado sobre su <a routerLink="/terminos" fragment="politica-datos" target="_blank" rel="noopener noreferrer">Política de Tratamiento de Datos Personales</a>.</span>
+        </label>
+        <span id="error-terminos" class="error error-terminos" role="alert" *ngIf="form.get('aceptaTerminos')?.touched && form.get('aceptaTerminos')?.invalid">Debes aceptar los términos y condiciones para crear tu cuenta.</span>
+        <label class="aceptacion-legal" for="aceptaDatosSensibles">
+          <input id="aceptaDatosSensibles" type="checkbox" formControlName="aceptaDatosSensibles" />
+          <span>Autorizo explícitamente el tratamiento de mis registros emocionales y de bienestar para guardar mi historial y progreso, conforme a la <a routerLink="/terminos" fragment="politica-datos" target="_blank" rel="noopener noreferrer">Política de Tratamiento de Datos Personales</a>. Entiendo que se trata de información sensible y que su suministro es facultativo.</span>
+        </label>
+        <p class="nota-consentimiento">Si no la autorizas, podrás usar Serenity, pero las funciones que guardan tus registros emocionales (estado de ánimo, diario, progreso) estarán desactivadas. Puedes cambiarlo en Mi cuenta.</p>
+        <p class="nota-consentimiento">Si eres menor de edad, se requiere la autorización de tu representante legal.</p>
+      </section>
       <p class="error error-general" role="alert" *ngIf="error()">{{ error() }}</p>
 
       <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando() || googleCargando()">

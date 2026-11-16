@@ -4,7 +4,6 @@
       <span class="simbolo-marca" aria-hidden="true">✦</span>
       <span>Serenity</span>
     </a>
-    <a routerLink="/registro" class="volver">Crear cuenta</a>
   </header>
 
   <section class="introduccion">
@@ -14,8 +13,10 @@
     <p class="aviso-borrador"><strong>Versión preliminar:</strong> este contenido debe ser revisado y aprobado por la persona responsable del proyecto y por asesoría jurídica antes de publicar Serenity para usuarios reales.</p>
   </section>
 
+  <p class="metadata-legal">Términos versión {{ version() }} · Política versión {{ versionPolitica() }} · Última actualización: {{ fechaActualizacion() }}</p>
+  <nav class="indice-legal" aria-label="Índice de contenidos"><h2>En esta página</h2><ol><li><a href="#terminos">Términos y condiciones</a></li><li><a href="#politica-datos">Política de tratamiento de datos personales</a></li><li><a href="#datos-sensibles">Datos sensibles y autorización</a></li><li><a href="#derechos">Derechos del titular</a></li><li><a href="#menores">Niños, niñas y adolescentes</a></li><li><a href="#identidad">Identidad y privacidad</a></li></ol></nav>
   <article class="contenido-legal">
-    <section>
+    <section id="terminos">
       <h2>1. ¿Qué es Serenity?</h2>
       <p>Serenity es una aplicación digital de bienestar y autocuidado emocional. Sus recursos pueden incluir ejercicios de respiración, meditación y relajación, registro del estado de ánimo, diario personal y herramientas de seguimiento de hábitos.</p>
     </section>
@@ -41,8 +42,8 @@
     </section>
     <section>
       <h2>6. Privacidad y datos personales</h2>
-      <p>La cuenta y las funciones de Serenity pueden implicar el tratamiento de datos como nombre de usuario, correo electrónico y registros que la persona decida guardar. Antes de la publicación para usuarios reales, el responsable del proyecto debe disponer de una Política de Tratamiento de Datos Personales independiente que informe, entre otros aspectos, la identidad y contacto del responsable, las finalidades del tratamiento, los derechos de los titulares, el procedimiento para ejercerlos, los periodos de conservación y las medidas de protección aplicables, conforme a la normativa colombiana.</p>
-      <p>No compartas en formularios o conversaciones información que no quieras incluir en la aplicación. La descripción definitiva de los datos tratados debe coincidir con lo que realmente implementen el frontend y el backend.</p>
+      <p>La cuenta y las funciones de Serenity pueden implicar el tratamiento de datos como nombre de usuario, correo electrónico y registros que la persona decida guardar. Consulta la Política de Tratamiento de Datos Personales detallada en esta página para conocer los datos tratados, las finalidades y tus derechos.</p>
+      <p>No compartas en formularios o conversaciones información que no quieras incluir en la aplicación.</p>
     </section>
     <section>
       <h2>7. Alcance de la responsabilidad</h2>
@@ -52,6 +53,27 @@
     <section>
       <h2>8. Actualizaciones y contacto</h2>
       <p>Estos términos deberán actualizarse cuando cambien las funcionalidades, las prácticas de tratamiento de datos o los requisitos legales. Antes de la puesta en producción, esta sección deberá identificar el responsable de la aplicación, un canal de contacto y la fecha de entrada en vigor de la versión aprobada.</p>
+    </section>
+    <section id="politica-datos" class="politica-completa">
+      <header class="encabezado-politica">
+        <p class="eyebrow">{{ politica.nombre }}</p>
+        <h2>{{ politica.titulo }}</h2>
+        <p class="subtitulo-politica"><strong>{{ politica.subtitulo }}</strong></p>
+        <p><strong>Versión:</strong> {{ politica.version }}<br /><strong>Última actualización:</strong> {{ politica.actualizacion }}<br /><strong>Ámbito de aplicación:</strong> {{ politica.ambito }}.</p>
+      </header>
+      <section *ngFor="let seccion of politica.secciones" [id]="seccion.id">
+        <h2>{{ seccion.titulo }}</h2>
+        <p *ngFor="let parrafo of seccion.parrafos">{{ parrafo }}</p>
+        <div *ngFor="let subseccion of seccion.subsecciones">
+          <h3>{{ subseccion.titulo }}</h3>
+          <p *ngFor="let parrafo of subseccion.parrafos">{{ parrafo }}</p>
+          <ul *ngIf="subseccion.lista"><li *ngFor="let item of subseccion.lista">{{ item }}</li></ul>
+        </div>
+        <ol *ngIf="seccion.id === 'finalidades' && seccion.lista"><li *ngFor="let item of seccion.lista">{{ item }}</li></ol>
+        <ul *ngIf="seccion.id !== 'finalidades' && seccion.lista"><li *ngFor="let item of seccion.lista">{{ item }}</li></ul>
+        <p *ngIf="seccion.cierre">{{ seccion.cierre }}</p>
+      </section>
+      <footer class="firma-politica"><strong>{{ politica.nombre }}</strong><em>La privacidad es parte del bienestar.</em></footer>
     </section>
   </article>
 
