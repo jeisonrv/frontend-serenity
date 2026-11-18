@@ -6,6 +6,7 @@ import {
   LoginRequest,
   LoginResponse,
   RegistroRequest,
+  RolSerenity,
   UsuarioResponse
 } from '../models/usuario.model';
 
@@ -33,7 +34,7 @@ export class AuthService {
             datos
         )
         .pipe(
-            tap((res) => this.guardarSesion(res))
+            tap((res) => this.guardarSesion(this.normalizarRespuesta(res)))
         );
   }
 
@@ -44,7 +45,7 @@ export class AuthService {
             { credential, ...(username ? { username } : {}), ...(consentimientos ?? {}) }
         )
         .pipe(
-            tap((res) => this.guardarSesion(res))
+            tap((res) => this.guardarSesion(this.normalizarRespuesta(res)))
         );
   }
 
@@ -97,7 +98,26 @@ export class AuthService {
   }
 
   isLoggedIn(): boolean {
-    return this.getToken() !== null;
+    const token = this.getToken();
+    if (!token) return false;
+    if (this.tokenExpirado(token)) {
+      this.logout();
+      return false;
+    }
+    return true;
+  }
+
+  getRole(): RolSerenity | null {
+    const usuario = this.usuario();
+    if (usuario?.rol) return usuario.rol;
+
+    const claims = this.leerClaimsJwt();
+    const rawRole =
+      claims?.['rol'] ??
+      claims?.['role'] ??
+      claims?.['roles'] ??
+      claims?.['authorities'];
+    return this.normalizarRol(rawRole);
   }
 
   logout(): void {
@@ -119,6 +139,79 @@ export class AuthService {
     localStorage.setItem(TOKEN_KEY, res.token);
     localStorage.setItem(USER_KEY, JSON.stringify(res.usuario));
     this._usuario.set(res.usuario);
+  }
+
+  private normalizarRespuesta(res: LoginResponse): LoginResponse {
+    const raw = res as unknown as Record<string, unknown>;
+    const token =
+      typeof raw['token'] === 'string' ? raw['token'] :
+      typeof raw['accessToken'] === 'string' ? raw['accessToken'] :
+      typeof raw['jwt'] === 'string' ? raw['jwt'] : '';
+
+    const usuarioRaw =
+      (raw['usuario'] as Record<string, unknown> | undefined) ??
+      (raw['user'] as Record<string, unknown> | undefined) ??
+      raw;
+
+    const usuario = usuarioRaw as unknown as UsuarioResponse;
+    const rol = usuario.rol ?? this.normalizarRol(
+      usuarioRaw['rol'] ??
+      usuarioRaw['role'] ??
+      usuarioRaw['roles'] ??
+      usuarioRaw['authorities'] ??
+      this.leerClaimsJwt()?.['rol'] ??
+      this.leerClaimsJwt()?.['role'] ??
+      this.leerClaimsJwt()?.['roles'] ??
+      this.leerClaimsJwt()?.['authorities']
+    );
+
+    if (!token) throw new Error('El backend no devolvió un token válido.');
+    if (!usuario || typeof usuario !== 'object') throw new Error('El backend no devolvió el usuario autenticado.');
+
+    const usuarioNormalizado = rol
+      ? { ...usuario, rol }
+      : { ...usuario };
+    return { token, usuario: usuarioNormalizado };
+  }
+
+  private leerClaimsJwt(): Record<string, unknown> | null {
+    const token = this.getToken();
+    if (!token) return null;
+    const parts = token.split('.');
+    if (parts.length !== 3) return null;
+    try {
+      const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
+      return JSON.parse(atob(padded)) as Record<string, unknown>;
+    } catch {
+      return null;
+    }
+  }
+
+  private tokenExpirado(token: string): boolean {
+    const parts = token.split('.');
+    if (parts.length !== 3) return false;
+    try {
+      const base64 = parts[1].replace(/-/g, '+').replace(/_/g, '/');
+      const padded = base64.padEnd(base64.length + (4 - base64.length % 4) % 4, '=');
+      const payload = JSON.parse(atob(padded)) as { exp?: number };
+      return typeof payload.exp === 'number' && payload.exp * 1000 <= Date.now();
+    } catch {
+      return false;
+    }
+  }
+
+  private normalizarRol(rawRole: unknown): RolSerenity | null {
+    if (Array.isArray(rawRole)) rawRole = rawRole[0];
+    if (typeof rawRole === 'string') {
+      const role = rawRole.replace(/^ROLE_/i, '').toUpperCase();
+      if (role === 'USUARIO' || role === 'OYENTE' || role === 'MODERADOR') return role;
+    }
+    if (rawRole && typeof rawRole === 'object') {
+      const authority = (rawRole as { authority?: unknown }).authority;
+      if (typeof authority === 'string') return this.normalizarRol(authority);
+    }
+    return null;
   }
 
   private leerUsuarioGuardado(): UsuarioResponse | null {

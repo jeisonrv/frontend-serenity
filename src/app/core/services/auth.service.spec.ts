@@ -53,9 +53,10 @@ describe('AuthService', () => {
 
   it('registra un usuario', () => {
     const datos = { username: 'nuevo', email: 'nuevo@example.com', password: 'password' };
-    service.registrar(datos).subscribe();
+    const registro = { ...datos, acceptTerms: true, acceptSensitiveData: false };
+    service.registrar(registro).subscribe();
     const request = http.expectOne(environment.apiUrl + '/auth/registro');
-    expect(request.request.body).toEqual(datos);
+    expect(request.request.body).toEqual(registro);
     request.flush(usuario);
   });
 
@@ -96,5 +97,13 @@ describe('AuthService', () => {
     expect(service.token).toBeNull();
     expect(service.usuario()).toBeNull();
     expect(service.isLoggedIn()).toBeFalse();
+  });
+
+  it('rechaza una sesión cuyo JWT expiró', () => {
+    const payload = btoa(JSON.stringify({ exp: 1, rol: 'OYENTE' }));
+    localStorage.setItem('serenity_token', `header.${payload}.firma`);
+    localStorage.setItem('serenity_usuario', JSON.stringify({ ...usuario, rol: 'OYENTE' }));
+    expect(service.isLoggedIn()).toBeFalse();
+    expect(service.token).toBeNull();
   });
 });

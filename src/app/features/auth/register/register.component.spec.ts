@@ -24,16 +24,34 @@ describe('RegisterComponent', () => {
   it('registra y navega al login con confirmación', () => {
     auth.registrar.and.returnValue(of({ id: 1, username: 'ana', email: 'ana@example.com', nivel: 1, xp: 0 }));
     const component = new RegisterComponent(new FormBuilder(), auth, router, new LoggerService());
-    component.form.setValue({ nombreUsuario: 'ana', correo: 'ana@example.com', contrasena: 'secreto', aceptaTerminos: true });
+    component.form.setValue({
+      nombreUsuario: 'ana',
+      correo: 'ana@example.com',
+      contrasena: 'secreto',
+      aceptaTerminos: true,
+      aceptaDatosSensibles: false
+    });
     component.enviar();
-    expect(auth.registrar).toHaveBeenCalledWith({ username: 'ana', email: 'ana@example.com', password: 'secreto' });
+    expect(auth.registrar).toHaveBeenCalledWith({
+      username: 'ana',
+      email: 'ana@example.com',
+      password: 'secreto',
+      acceptTerms: true,
+      acceptSensitiveData: false
+    });
     expect(router.navigate).toHaveBeenCalledWith(['/login'], { state: { authSuccess: jasmine.any(String) } });
   });
 
   it('muestra error y libera el estado de carga si falla el registro', () => {
     auth.registrar.and.returnValue(throwError(() => ({ status: 409, error: { mensaje: 'Correo existente' } })));
     const component = new RegisterComponent(new FormBuilder(), auth, router, new LoggerService());
-    component.form.setValue({ nombreUsuario: 'ana', correo: 'ana@example.com', contrasena: 'secreto', aceptaTerminos: true });
+    component.form.setValue({
+      nombreUsuario: 'ana',
+      correo: 'ana@example.com',
+      contrasena: 'secreto',
+      aceptaTerminos: true,
+      aceptaDatosSensibles: false
+    });
     component.enviar();
     expect(component.error()).toBeTruthy();
     expect(component.cargando()).toBeFalse();

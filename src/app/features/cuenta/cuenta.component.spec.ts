@@ -5,11 +5,13 @@ import { of, throwError } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 import { RecordatoriosService } from '../../core/services/recordatorios.service';
 import { CuentaComponent } from './cuenta.component';
+import { ConsentService } from '../../core/services/consent.service';
 
 describe('CuentaComponent', () => {
   let component: CuentaComponent;
   let auth: jasmine.SpyObj<AuthService>;
   let recordatorios: jasmine.SpyObj<RecordatoriosService>;
+  let consent: jasmine.SpyObj<ConsentService>;
 
   beforeEach(() => {
     recordatorios = jasmine.createSpyObj<RecordatoriosService>(
@@ -20,16 +22,27 @@ describe('CuentaComponent', () => {
     auth = jasmine.createSpyObj<AuthService>(
       'AuthService', ['isLoggedIn', 'vincularGoogle', 'cambiarPassword']
     );
+    consent = jasmine.createSpyObj<ConsentService>('ConsentService', ['consultar']);
+    consent.consultar.and.returnValue(of({
+      termsAccepted: true,
+      termsAcceptedAt: null,
+      termsVersion: '1',
+      currentTermsVersion: '1',
+      sensitiveDataConsentActive: false
+    }));
     auth.isLoggedIn.and.returnValue(true);
     auth.vincularGoogle.and.returnValue(of(void 0));
     auth.cambiarPassword.and.returnValue(of(void 0));
 
     TestBed.configureTestingModule({
-      providers: [{ provide: RecordatoriosService, useValue: recordatorios }]
+      providers: [
+        { provide: RecordatoriosService, useValue: recordatorios },
+        { provide: ConsentService, useValue: consent }
+      ]
     });
     component = runInInjectionContext(
       TestBed.inject(EnvironmentInjector),
-      () => new CuentaComponent(auth)
+      () => new CuentaComponent(auth, consent)
     );
   });
 

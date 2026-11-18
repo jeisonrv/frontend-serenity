@@ -56,12 +56,14 @@ export class LoginComponent {
       password: this.form.value.contrasena!
     }).subscribe({
       next: (response) => {
-        const destino = response.usuario.rol === 'OYENTE'
+        const rol = response.usuario.rol ?? this.auth.getRole();
+        const destino = rol === 'OYENTE'
           ? '/oyente'
-          : response.usuario.rol === 'MODERADOR'
+          : rol === 'MODERADOR'
             ? '/moderacion'
             : '/inicio';
         void this.router.navigate([destino]);
+        this.cargando.set(false);
         this.consent.revisionPendiente.set(false);
         setTimeout(() => this.revisarConsentimientos(), 0);
       },
