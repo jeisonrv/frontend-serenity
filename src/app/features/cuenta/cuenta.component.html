@@ -29,7 +29,61 @@
   <p class="exito" role="status" *ngIf="mensajeConsentimiento()">{{ mensajeConsentimiento() }}</p>
 </section>
 <!-- Cambiar contraseña -->
-<section class="card cambiar-password" aria-labelledby="titulo-password">
+<p class="error" role="alert" *ngIf="errorPerfil()">{{ errorPerfil() }}</p>
+<p *ngIf="cargandoPerfil()" role="status">Actualizando tu perfil…</p>
+
+<section class="card cambiar-password" aria-labelledby="titulo-crear-password" *ngIf="tienePassword() === false">
+  <h2 id="titulo-crear-password">Crear contraseña</h2>
+  <p>
+    Crea una contraseña para iniciar sesión también con tu correo.
+  </p>
+
+  <form (ngSubmit)="crearPassword()" #formCrearPassword="ngForm">
+    <div class="campo-password">
+      <label for="passwordParaCrear">Nueva contraseña</label>
+      <input
+              id="passwordParaCrear"
+              name="passwordParaCrear"
+              type="password"
+              autocomplete="new-password"
+              [value]="passwordParaCrear()"
+              (input)="passwordParaCrear.set($any($event.target).value)"
+              minlength="8"
+              maxlength="72"
+              required
+      />
+      <small>Debe tener entre 8 y 72 caracteres.</small>
+    </div>
+
+    <div class="campo-password">
+      <label for="confirmarPasswordParaCrear">Confirmar nueva contraseña</label>
+      <input
+              id="confirmarPasswordParaCrear"
+              name="confirmarPasswordParaCrear"
+              type="password"
+              autocomplete="new-password"
+              [value]="confirmarPasswordParaCrear()"
+              (input)="confirmarPasswordParaCrear.set($any($event.target).value)"
+              minlength="8"
+              maxlength="72"
+              required
+      />
+    </div>
+
+    <p class="error" role="alert" *ngIf="errorPassword()">{{ errorPassword() }}</p>
+    <p class="exito" role="status" *ngIf="mensajePassword()">{{ mensajePassword() }}</p>
+
+    <button
+            class="boton-password"
+            type="submit"
+            [disabled]="creandoPassword() || !formCrearPassword.valid"
+    >
+      {{ creandoPassword() ? 'Creando contraseña…' : 'Crear contraseña' }}
+    </button>
+  </form>
+</section>
+
+<section class="card cambiar-password" aria-labelledby="titulo-password" *ngIf="tienePassword() === true">
   <h2 id="titulo-password">Cambiar contraseña</h2>
   <p>
     Actualiza tu contraseña para mantener segura tu cuenta de Serenity.
@@ -118,6 +172,8 @@
     de acceso actual.
   </p>
 
+  <p *ngIf="googleVinculado()" role="status">Cuenta vinculada con Google.</p>
+
   <p class="error" role="alert" *ngIf="error()">
     {{ error() }}
   </p>
@@ -127,6 +183,7 @@
   </p>
 
   <app-google-identity-button
+          *ngIf="!googleVinculado()"
           [disabled]="vinculando()"
           text="continue_with"
           (credential)="vincularConGoogle($event)"

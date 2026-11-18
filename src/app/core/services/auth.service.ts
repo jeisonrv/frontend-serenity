@@ -1,6 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, map, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import {
   LoginRequest,
@@ -60,7 +60,7 @@ export class AuthService {
     return this.http.post<UsuarioResponse>(
         `${environment.apiUrl}/auth/registro`,
         datos
-    );
+    ).pipe(map((usuario) => this.normalizarUsuario(usuario)));
   }
   cambiarPassword(
       passwordActual: string,
@@ -72,6 +72,20 @@ export class AuthService {
           passwordActual,
           passwordNueva
         }
+    );
+  }
+
+  crearPassword(passwordNueva: string): Observable<void> {
+    return this.http.post<void>(
+        `${environment.apiUrl}/auth/crear-password`,
+        { passwordNueva }
+    );
+  }
+
+  refrescarPerfil(): Observable<UsuarioResponse> {
+    return this.http.get<UsuarioResponse>(`${environment.apiUrl}/usuarios/me`).pipe(
+      map((usuario) => this.normalizarUsuario(usuario)),
+      tap((usuario) => this.actualizarUsuario(usuario))
     );
   }
 
@@ -168,10 +182,14 @@ export class AuthService {
     if (!token) throw new Error('El backend no devolvió un token válido.');
     if (!usuario || typeof usuario !== 'object') throw new Error('El backend no devolvió el usuario autenticado.');
 
-    const usuarioNormalizado = rol
-      ? { ...usuario, rol }
-      : { ...usuario };
+    const usuarioNormalizado = this.normalizarUsuario(
+      rol ? { ...usuario, rol } : usuario
+    );
     return { token, usuario: usuarioNormalizado };
+  }
+
+  private normalizarUsuario(usuario: UsuarioResponse): UsuarioResponse {
+    return { ...usuario, googleVinculado: usuario.googleVinculado ?? false };
   }
 
   private leerClaimsJwt(): Record<string, unknown> | null {

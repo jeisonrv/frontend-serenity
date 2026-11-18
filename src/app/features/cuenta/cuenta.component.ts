@@ -28,6 +28,10 @@ export class CuentaComponent implements OnInit {
   private readonly recordatoriosService = inject(RecordatoriosService);
 
   readonly vinculando = signal(false);
+  readonly googleVinculado = signal(false);
+  readonly tienePassword = signal<boolean | null>(null);
+  readonly cargandoPerfil = signal(false);
+  readonly errorPerfil = signal<string | null>(null);
   readonly error = signal<string | null>(null);
   readonly mensaje = signal<string | null>(null);
 
@@ -40,6 +44,9 @@ export class CuentaComponent implements OnInit {
   readonly passwordActual = signal('');
   readonly passwordNueva = signal('');
   readonly confirmarPassword = signal('');
+  readonly passwordParaCrear = signal('');
+  readonly confirmarPasswordParaCrear = signal('');
+  readonly creandoPassword = signal(false);
 
   readonly cambiandoPassword = signal(false);
   readonly errorPassword = signal<string | null>(null);
@@ -55,6 +62,9 @@ export class CuentaComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.auth.isLoggedIn()) {
+      this.googleVinculado.set(this.auth.usuario()?.googleVinculado ?? false);
+      this.tienePassword.set(this.auth.usuario()?.tienePassword ?? null);
+      this.refrescarPerfil();
       this.cargarRecordatorios();
       this.cargarConsentimientos();
     }
@@ -170,12 +180,83 @@ export class CuentaComponent implements OnInit {
         )
         .subscribe({
           next: () => {
+            this.googleVinculado.set(true);
+            const usuario = this.auth.usuario();
+            if (usuario) this.auth.actualizarUsuario({ ...usuario, googleVinculado: true });
+            this.refrescarPerfil();
             this.mensaje.set('Google quedó vinculado a tu cuenta.');
           },
           error: (err: HttpErrorResponse) => {
-            this.error.set(
-                mensajeGoogleError(err, 'vinculacion')
-            );
+            this.error.set(err.status === 409
+              ? 'Esta cuenta de Google ya está vinculada a otro usuario.'
+              : mensajeGoogleError(err, 'vinculacion'));
+          }
+        });
+  }
+
+  private refrescarPerfil(): void {
+    this.cargandoPerfil.set(true);
+    this.errorPerfil.set(null);
+    this.auth.refrescarPerfil()
+        .pipe(finalize(() => this.cargandoPerfil.set(false)))
+        .subscribe({
+          next: (usuario) => {
+            this.googleVinculado.set(usuario.googleVinculado ?? false);
+            this.tienePassword.set(usuario.tienePassword ?? null);
+          },
+          error: () => {
+            this.errorPerfil.set('No se pudo actualizar la información de tu perfil.');
+          }
+        });
+  }
+
+  crearPassword(): void {
+    this.errorPassword.set(null);
+    this.mensajePassword.set(null);
+
+    if (this.creandoPassword()) return;
+
+    const nueva = this.passwordParaCrear();
+    const confirmar = this.confirmarPasswordParaCrear();
+    if (!nueva || !confirmar) {
+      this.errorPassword.set('Completa todos los campos.');
+      return;
+    }
+    if (nueva.length < 8 || nueva.length > 72) {
+      this.errorPassword.set('La nueva contraseña debe tener entre 8 y 72 caracteres.');
+      return;
+    }
+    if (nueva !== confirmar) {
+      this.errorPassword.set('La nueva contraseña y su confirmación no coinciden.');
+      return;
+    }
+
+    this.creandoPassword.set(true);
+    this.auth.crearPassword(nueva)
+        .pipe(finalize(() => this.creandoPassword.set(false)))
+        .subscribe({
+          next: () => {
+            this.passwordParaCrear.set('');
+            this.confirmarPasswordParaCrear.set('');
+            this.tienePassword.set(true);
+            const usuario = this.auth.usuario();
+            if (usuario) this.auth.actualizarUsuario({ ...usuario, tienePassword: true });
+            this.refrescarPerfil();
+            this.mensajePassword.set('Tu contraseña se creó correctamente.');
+          },
+          error: (err: HttpErrorResponse) => {
+            if (err.status === 409) {
+              this.tienePassword.set(true);
+              const usuario = this.auth.usuario();
+              if (usuario) this.auth.actualizarUsuario({ ...usuario, tienePassword: true });
+              this.errorPassword.set('Tu cuenta ya tiene contraseña. Puedes cambiarla aquí.');
+            } else if (err.status === 400) {
+              this.errorPassword.set('La nueva contraseña debe tener entre 8 y 72 caracteres.');
+            } else if (err.status === 401) {
+              this.errorPassword.set('Tu sesión no es válida o ha expirado. Inicia sesión nuevamente.');
+            } else {
+              this.errorPassword.set('No se pudo crear la contraseña. Inténtalo de nuevo.');
+            }
           }
         });
   }
@@ -253,4 +334,3 @@ export class CuentaComponent implements OnInit {
         });
   }
 }
-

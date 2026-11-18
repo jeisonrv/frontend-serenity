@@ -20,7 +20,7 @@ describe('CuentaComponent', () => {
     recordatorios.consultar.and.returnValue(of({ activo: true }));
     recordatorios.actualizar.and.returnValue(of({ activo: true }));
     auth = jasmine.createSpyObj<AuthService>(
-      'AuthService', ['isLoggedIn', 'vincularGoogle', 'cambiarPassword']
+      'AuthService', ['isLoggedIn', 'vincularGoogle', 'cambiarPassword', 'crearPassword', 'refrescarPerfil', 'usuario', 'actualizarUsuario']
     );
     consent = jasmine.createSpyObj<ConsentService>('ConsentService', ['consultar']);
     consent.consultar.and.returnValue(of({
@@ -31,8 +31,17 @@ describe('CuentaComponent', () => {
       sensitiveDataConsentActive: false
     }));
     auth.isLoggedIn.and.returnValue(true);
+    auth.usuario.and.returnValue({
+      id: 12, username: 'jeison', email: 'jeison@example.com',
+      nivel: 1, xp: 0, googleVinculado: false
+    });
     auth.vincularGoogle.and.returnValue(of(void 0));
     auth.cambiarPassword.and.returnValue(of(void 0));
+    auth.crearPassword.and.returnValue(of(void 0));
+    auth.refrescarPerfil.and.returnValue(of({
+      id: 12, username: 'jeison', email: 'jeison@example.com',
+      nivel: 1, xp: 0, googleVinculado: false, tienePassword: false
+    }));
 
     TestBed.configureTestingModule({
       providers: [
@@ -84,10 +93,49 @@ describe('CuentaComponent', () => {
   });
 
   it('vincula Google correctamente', () => {
+    auth.refrescarPerfil.and.returnValue(of({
+      id: 12, username: 'jeison', email: 'jeison@example.com',
+      nivel: 1, xp: 0, googleVinculado: true, tienePassword: false
+    }));
     component.vincularConGoogle('credential');
     expect(auth.vincularGoogle).toHaveBeenCalledWith('credential');
+    expect(component.googleVinculado()).toBeTrue();
+    expect(auth.actualizarUsuario).toHaveBeenCalledWith(jasmine.objectContaining({ googleVinculado: true }));
     expect(component.mensaje()).toBe('Google quedó vinculado a tu cuenta.');
     expect(component.vinculando()).toBeFalse();
+  });
+
+  it('carga el estado de Google desde el usuario de la sesión', () => {
+    auth.usuario.and.returnValue({
+      id: 12, username: 'jeison', email: 'jeison@example.com',
+      nivel: 1, xp: 0, googleVinculado: true
+    });
+    auth.refrescarPerfil.and.returnValue(of({
+      id: 12, username: 'jeison', email: 'jeison@example.com',
+      nivel: 1, xp: 0, googleVinculado: true, tienePassword: false
+    }));
+    component.ngOnInit();
+    expect(component.googleVinculado()).toBeTrue();
+    expect(auth.refrescarPerfil).toHaveBeenCalled();
+  });
+
+  it('actualiza los estados de Google y contraseña desde el perfil', () => {
+    auth.refrescarPerfil.and.returnValue(of({
+      id: 12, username: 'jeison', email: 'jeison@example.com',
+      nivel: 1, xp: 0, googleVinculado: true, tienePassword: true
+    }));
+    component.ngOnInit();
+
+    expect(component.googleVinculado()).toBeTrue();
+    expect(component.tienePassword()).toBeTrue();
+  });
+
+  it('mantiene la sesión cargada si falla la actualización del perfil', () => {
+    auth.refrescarPerfil.and.returnValue(throwError(() => new Error('falló')));
+    component.ngOnInit();
+
+    expect(component.errorPerfil()).toContain('No se pudo actualizar');
+    expect(component.googleVinculado()).toBeFalse();
   });
 
   it('evita una vinculación si ya está procesando o no hay sesión', () => {
@@ -105,8 +153,61 @@ describe('CuentaComponent', () => {
       new HttpErrorResponse({ status: 409, error: { detail: 'Conflicto de identidad' } })
     ));
     component.vincularConGoogle('credential');
-    expect(component.error()).toContain('Conflicto de identidad');
+    expect(component.error()).toBe('Esta cuenta de Google ya está vinculada a otro usuario.');
     expect(component.vinculando()).toBeFalse();
+  });
+
+  it('valida la contraseña nueva antes de crearla', () => {
+    component.passwordParaCrear.set('corta');
+    component.confirmarPasswordParaCrear.set('corta');
+    component.crearPassword();
+    expect(component.errorPassword()).toContain('entre 8 y 72');
+    expect(auth.crearPassword).not.toHaveBeenCalled();
+
+    component.passwordParaCrear.set('NuevaClave123');
+    component.confirmarPasswordParaCrear.set('OtraClave123');
+    component.crearPassword();
+    expect(component.errorPassword()).toContain('no coinciden');
+    expect(auth.crearPassword).not.toHaveBeenCalled();
+  });
+
+  it('crea contraseña y muestra confirmación al recibir éxito', () => {
+    auth.refrescarPerfil.and.returnValue(of({
+      id: 12, username: 'jeison', email: 'jeison@example.com',
+      nivel: 1, xp: 0, googleVinculado: false, tienePassword: true
+    }));
+    component.passwordParaCrear.set('NuevaClave123');
+    component.confirmarPasswordParaCrear.set('NuevaClave123');
+    component.crearPassword();
+    expect(auth.crearPassword).toHaveBeenCalledWith('NuevaClave123');
+    expect(component.mensajePassword()).toBe('Tu contraseña se creó correctamente.');
+    expect(component.tienePassword()).toBeTrue();
+    expect(auth.actualizarUsuario).toHaveBeenCalledWith(jasmine.objectContaining({ tienePassword: true }));
+    expect(auth.refrescarPerfil).toHaveBeenCalled();
+    expect(component.passwordParaCrear()).toBe('');
+    expect(component.confirmarPasswordParaCrear()).toBe('');
+    expect(component.creandoPassword()).toBeFalse();
+  });
+
+  it('cambia al formulario normal de cambio si el backend responde 409', () => {
+    auth.crearPassword.and.returnValue(throwError(() =>
+      new HttpErrorResponse({ status: 409 })
+    ));
+    component.passwordParaCrear.set('NuevaClave123');
+    component.confirmarPasswordParaCrear.set('NuevaClave123');
+    component.crearPassword();
+    expect(component.tienePassword()).toBeTrue();
+    expect(component.errorPassword()).toContain('ya tiene contraseña');
+  });
+
+  it('muestra error de longitud si crear contraseña responde 400', () => {
+    auth.crearPassword.and.returnValue(throwError(() =>
+      new HttpErrorResponse({ status: 400 })
+    ));
+    component.passwordParaCrear.set('NuevaClave123');
+    component.confirmarPasswordParaCrear.set('NuevaClave123');
+    component.crearPassword();
+    expect(component.errorPassword()).toContain('entre 8 y 72');
   });
 
   it('valida campos vacíos, longitud, confirmación y contraseña repetida', () => {

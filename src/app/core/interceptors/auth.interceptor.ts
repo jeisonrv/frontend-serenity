@@ -35,7 +35,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     ) {
       consent.marcarAutorizacionRequerida();
     }
-    if (error instanceof HttpErrorResponse && error.status === 401) {
+    if (
+      error instanceof HttpErrorResponse &&
+      error.status === 401 &&
+      !req.url.endsWith('/usuarios/me')
+    ) {
       const mensaje = mensajeError(error, 'Tu sesión expiró. Inicia sesión nuevamente.');
       auth.logout();
       void router.navigate(['/login'], { state: { authError: mensaje } });

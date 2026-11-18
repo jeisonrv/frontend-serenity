@@ -30,7 +30,11 @@ describe('AuthService', () => {
     expect(request.request.method).toBe('POST');
     request.flush({ token: 'token-prueba', usuario });
     expect(localStorage.getItem('serenity_token')).toBe('token-prueba');
-    expect(service.usuario()).toEqual(usuario);
+    expect(service.usuario()).toEqual(jasmine.objectContaining({
+      ...usuario,
+      googleVinculado: false
+    }));
+    expect(service.usuario()?.googleVinculado).toBeFalse();
     expect(service.isLoggedIn()).toBeTrue();
     expect(service.autenticado()).toBeTrue();
   });
@@ -39,8 +43,9 @@ describe('AuthService', () => {
     service.iniciarConGoogle('credential').subscribe();
     const request = http.expectOne(environment.apiUrl + '/auth/google');
     expect(request.request.body).toEqual({ credential: 'credential' });
-    request.flush({ token: 'google-token', usuario });
+    request.flush({ token: 'google-token', usuario: { ...usuario, googleVinculado: true } });
     expect(service.token).toBe('google-token');
+    expect(service.usuario()?.googleVinculado).toBeTrue();
   });
 
   it('solicita vincular Google a la sesión actual', () => {
@@ -54,10 +59,12 @@ describe('AuthService', () => {
   it('registra un usuario', () => {
     const datos = { username: 'nuevo', email: 'nuevo@example.com', password: 'password' };
     const registro = { ...datos, acceptTerms: true, acceptSensitiveData: false };
-    service.registrar(registro).subscribe();
+    let registrado: { googleVinculado?: boolean } | undefined;
+    service.registrar(registro).subscribe((respuesta) => registrado = respuesta);
     const request = http.expectOne(environment.apiUrl + '/auth/registro');
     expect(request.request.body).toEqual(registro);
-    request.flush(usuario);
+    request.flush({ ...usuario, googleVinculado: true });
+    expect(registrado?.googleVinculado).toBeTrue();
   });
 
   it('cambia la contraseña con la contraseña actual y la nueva', () => {
@@ -68,6 +75,45 @@ describe('AuthService', () => {
       passwordNueva: 'nueva1234'
     });
     request.flush(null);
+  });
+
+  it('crea una contraseña para una cuenta sin contraseña', () => {
+    service.crearPassword('nueva1234').subscribe();
+    const request = http.expectOne(environment.apiUrl + '/auth/crear-password');
+    expect(request.request.method).toBe('POST');
+    expect(request.request.body).toEqual({ passwordNueva: 'nueva1234' });
+    request.flush(null, { status: 204, statusText: 'No Content' });
+  });
+
+  it('carga el perfil actual y actualiza la sesión local', () => {
+    localStorage.setItem('serenity_token', 'token');
+    service.actualizarUsuario(usuario);
+    service.refrescarPerfil().subscribe();
+    const request = http.expectOne(environment.apiUrl + '/usuarios/me');
+    expect(request.request.method).toBe('GET');
+    request.flush({ ...usuario, googleVinculado: true, tienePassword: false });
+
+    expect(service.usuario()).toEqual({
+      ...usuario,
+      googleVinculado: true,
+      tienePassword: false
+    });
+    expect(JSON.parse(localStorage.getItem('serenity_usuario') || '{}')).toEqual(service.usuario());
+    expect(service.token).toBe('token');
+  });
+
+  it('no modifica la sesión si falla la carga del perfil', () => {
+    localStorage.setItem('serenity_token', 'token');
+    service.actualizarUsuario(usuario);
+    let error: unknown;
+    service.refrescarPerfil().subscribe({ error: (e) => error = e });
+    const request = http.expectOne(environment.apiUrl + '/usuarios/me');
+    request.flush('falló', { status: 401, statusText: 'Unauthorized' });
+
+    expect(error).toEqual(jasmine.anything());
+    expect(service.token).toBe('token');
+    expect(service.usuario()).toEqual(usuario);
+    expect(JSON.parse(localStorage.getItem('serenity_usuario') || '{}')).toEqual(usuario);
   });
 
   it('solicita recuperación de contraseña', () => {

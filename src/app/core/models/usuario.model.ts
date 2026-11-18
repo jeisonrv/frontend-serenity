@@ -27,8 +27,9 @@ export interface UsuarioResponse {
   ultimaActividad?: string | null;
   fechaRegistro?: string | null;
   rol?: RolSerenity;
-  /** Campo consumido por la UI si otra fuente lo aporta; no viene en UsuarioResponse del backend. */
   monedas?: number;
+  googleVinculado?: boolean;
+  tienePassword?: boolean;
 }
 
 export interface RegistroRequest {
