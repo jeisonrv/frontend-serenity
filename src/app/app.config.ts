@@ -27,8 +27,8 @@ async function loadRuntimeConfig(logger: LoggerService): Promise<void> {
   let config: Partial<RuntimeConfig> | null = null;
 
   const configPaths = environment.production
-      ? ['/config.json']
-      : ['/config.json', '/assets/config.dev.json'];
+      ? ['/assets/config.json']
+      : ['/config.json', '/assets/config.dev.json', '/assets/config.json'];;
 
   for (const path of configPaths) {
     try {
