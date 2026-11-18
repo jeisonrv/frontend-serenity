@@ -41,8 +41,10 @@ jobs:
       - name: Verificar archivos de publicación
         run: |
           test -f dist/serenity-frontend/browser/index.html
+          test -f dist/serenity-frontend/browser/staticwebapp.config.json
           test -f dist/serenity-frontend/browser/assets/config.json
           echo "Archivos de Serenity listos para publicar."
+          ls -la dist/serenity-frontend/browser
 
       - name: Install OIDC Client from Core Package
         run: npm install --no-save --package-lock=false @actions/core@1.6.0 @actions/http-client
@@ -77,3 +79,4 @@ jobs:
         uses: Azure/static-web-apps-deploy@v1
         with:
           action: close
+
