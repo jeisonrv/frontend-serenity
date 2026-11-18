@@ -23,10 +23,10 @@ export class ChatRealtimeService {
     this.mensajes.set(mensajesIniciales);
     this.error.set(null);
 
-    // STOMP usa WebSocket nativo; convierte rutas relativas al esquema seguro de la página.
     const wsUrl = environment.wsUrl.startsWith('/')
       ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}${environment.wsUrl}`
       : environment.wsUrl;
+
     const client = new Client({
       brokerURL: wsUrl,
       connectHeaders: { Authorization: `Bearer ${this.auth.token ?? ''}` },
@@ -36,6 +36,11 @@ export class ChatRealtimeService {
         client.subscribe(`/topic/conversacion/${idConversacion}`, (msg: IMessage) => {
           try {
             const nuevo = JSON.parse(msg.body) as MensajeChat;
+            const placeholder = 'Gracias por compartirlo. Estoy aquí para acompañarte. ¿Qué te gustaría explorar?';
+            if (nuevo.contenido && nuevo.contenido.trim() === placeholder) {
+              this.logger.warn('Mensaje placeholder recibido y descartado.');
+              return;
+            }
             this.mensajes.update((actuales) => [...actuales, nuevo]);
           } catch {
             this.logger.error('No fue posible interpretar un mensaje recibido por WebSocket.');
@@ -60,7 +65,6 @@ export class ChatRealtimeService {
 
   enviarMensaje(idConversacion: number, contenido: string): void {
     if (!this.client || !this.conectado()) return;
-
     this.client.publish({
       destination: `/app/conversacion/${idConversacion}/enviar`,
       body: JSON.stringify({ contenido })
@@ -73,7 +77,6 @@ export class ChatRealtimeService {
     this.conectado.set(false);
     this.mensajes.set([]);
     this.error.set(null);
-
     if (clienteActual) {
       void clienteActual.deactivate();
     }
