@@ -1,5 +1,5 @@
 {
-  "apiUrl": "/api",
-  "wsUrl": "/ws",
+  "apiUrl": "https://serenity-backend.victoriousmoss-77577e5b.eastus2.azurecontainerapps.io/api",
+  "wsUrl": "wss://serenity-backend.victoriousmoss-77577e5b.eastus2.azurecontainerapps.io/ws",
   "googleClientId": ""
 }
