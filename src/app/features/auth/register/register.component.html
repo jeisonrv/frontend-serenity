@@ -1,38 +1,86 @@
 <div class="pantalla-auth">
-  <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
-    <h1>Crea tu cuenta</h1>
-    <p class="subtitulo">Gratuito, confidencial y sin diagnóstico clínico.</p>
-
-    <div class="field">
-      <label for="nombreUsuario">Nombre de usuario</label>
-      <input id="nombreUsuario" type="text" formControlName="nombreUsuario" autocomplete="username" />
-      <span class="error" *ngIf="form.get('nombreUsuario')?.touched && form.get('nombreUsuario')?.invalid">
-        Mínimo 3 caracteres.
-      </span>
+  <aside class="auth-escena" aria-label="Empieza tu camino de bienestar">
+    <a class="marca-escena" routerLink="/registro" aria-label="Serenity, crear cuenta">
+      <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
+      <span>Serenity</span>
+    </a>
+    <div class="escena-copy">
+      <p class="eyebrow">TU BIENESTAR, A TU RITMO</p>
+      <h2>Un mejor tú<br />empieza aquí.</h2>
+      <p>Construye una rutina amable, reconoce cómo te sientes y celebra los pequeños avances.</p>
     </div>
+    <img class="escena-ilustracion" src="assets/serenity-garden.svg" alt="Una planta crece en un jardín tranquilo" />
+    <p class="frase-calmada">“También mereces el mismo cuidado que das a los demás.” <span aria-hidden="true">♡</span></p>
+    <div class="escena-detalle detalle-uno" aria-hidden="true">✦</div>
+    <div class="escena-detalle detalle-dos" aria-hidden="true">✧</div>
+  </aside>
 
-    <div class="field">
-      <label for="correo">Correo</label>
-      <input id="correo" type="email" formControlName="correo" autocomplete="email" />
-      <span class="error" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
-        Ingresa un correo válido.
-      </span>
+  <div class="auth-panel">
+    <div class="marca-auth-mobile">
+      <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
+      <span>Serenity</span>
     </div>
+    <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
+      <div class="encabezado-formulario">
+        <p class="eyebrow">UN PASO AMABLE CONTIGO</p>
+        <h1>Crea tu cuenta</h1>
+        <p class="subtitulo">Un espacio digital para practicar el autocuidado emocional.</p>
+      </div>
 
-    <div class="field">
-      <label for="contrasena">Contraseña</label>
-      <input id="contrasena" type="password" formControlName="contrasena" autocomplete="new-password" />
-      <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
-        Mínimo 8 caracteres.
-      </span>
-    </div>
+      <div class="field">
+        <label for="nombreUsuario">Nombre de usuario</label>
+        <input id="nombreUsuario" type="text" formControlName="nombreUsuario" autocomplete="username" placeholder="Cómo te llamamos" />
+        <span class="error" *ngIf="form.get('nombreUsuario')?.touched && form.get('nombreUsuario')?.invalid">
+          El nombre de usuario debe tener entre 3 y 50 caracteres.
+        </span>
+      </div>
 
-    <p class="error" *ngIf="error()">{{ error() }}</p>
+      <div class="field">
+        <label for="correo">Correo electrónico</label>
+        <input id="correo" type="email" formControlName="correo" autocomplete="email" placeholder="tu@correo.com" />
+        <span class="error" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
+          Ingresa un correo válido.
+        </span>
+      </div>
 
-    <button class="btn btn-primary" type="submit" [disabled]="cargando()">
-      {{ cargando() ? 'Creando cuenta…' : 'Crear cuenta' }}
-    </button>
+      <div class="field">
+        <label for="contrasena">Contraseña</label>
+        <input id="contrasena" type="password" formControlName="contrasena" autocomplete="new-password" placeholder="Mínimo 6 caracteres" />
+        <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
+          La contraseña debe tener al menos 6 caracteres.
+        </span>
+      </div>
 
-    <p class="alterno">¿Ya tienes cuenta? <a routerLink="/login">Ingresa</a></p>
-  </form>
+      <section class="consentimientos" aria-labelledby="titulo-privacidad">
+        <h2 id="titulo-privacidad">Privacidad y consentimiento</h2>
+        <label class="aceptacion-legal" for="aceptaTerminos">
+          <input id="aceptaTerminos" type="checkbox" formControlName="aceptaTerminos" aria-describedby="error-terminos" />
+          <span>He leído y acepto los <a routerLink="/terminos" target="_blank" rel="noopener noreferrer">Términos y condiciones</a> y he sido informado sobre su <a routerLink="/terminos" fragment="politica-datos" target="_blank" rel="noopener noreferrer">Política de Tratamiento de Datos Personales</a>.</span>
+        </label>
+        <span id="error-terminos" class="error error-terminos" role="alert" *ngIf="form.get('aceptaTerminos')?.touched && form.get('aceptaTerminos')?.invalid">Debes aceptar los términos y condiciones para crear tu cuenta.</span>
+        <label class="aceptacion-legal" for="aceptaDatosSensibles">
+          <input id="aceptaDatosSensibles" type="checkbox" formControlName="aceptaDatosSensibles" />
+          <span>Autorizo explícitamente el tratamiento de mis registros emocionales y de bienestar para guardar mi historial y progreso, conforme a la <a routerLink="/terminos" fragment="politica-datos" target="_blank" rel="noopener noreferrer">Política de Tratamiento de Datos Personales</a>. Entiendo que se trata de información sensible y que su suministro es facultativo.</span>
+        </label>
+        <p class="nota-consentimiento">Si no la autorizas, podrás usar Serenity, pero las funciones que guardan tus registros emocionales (estado de ánimo, diario, progreso) estarán desactivadas. Puedes cambiarlo en Mi cuenta.</p>
+        <p class="nota-consentimiento">Si eres menor de edad, se requiere la autorización de tu representante legal.</p>
+      </section>
+      <p class="error error-general" role="alert" *ngIf="error()">{{ error() }}</p>
+
+      <button class="btn btn-primary boton-ingreso" type="submit" [disabled]="cargando() || googleCargando()">
+        <span>{{ cargando() ? 'Creando cuenta…' : 'Crear mi cuenta' }}</span>
+        <span aria-hidden="true" *ngIf="!cargando()">→</span>
+      </button>
+
+      <div class="separador-google"><span>o regístrate con</span></div>
+      <app-google-identity-button
+        [disabled]="cargando() || googleCargando()"
+        text="continue_with"
+        (credential)="iniciarConGoogle($event)"
+        (loadError)="error.set($event)" />
+
+      <p class="alterno">¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a></p>
+    </form>
+    <p class="nota-crisis">¿Necesitas apoyo ahora? <a routerLink="/ayuda">Consulta las líneas de ayuda</a>.</p>
+  </div>
 </div>

@@ -1,0 +1,14 @@
+node_modules
+dist
+.angular
+.git
+.gitignore
+.idea
+.vscode
+*.log
+.env
+.env.*
+/src/assets/config.dev.json
+Dockerfile
+docker-compose*.yml
+README.md

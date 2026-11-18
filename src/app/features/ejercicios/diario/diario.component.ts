@@ -5,6 +5,8 @@ import { RouterLink } from '@angular/router';
 import { finalize } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DiarioService } from '../../../core/services/diario.service';
+import { LoggerService } from '../../../core/services/logger.service';
+import { JardinInteractivoService } from '../../../core/services/jardin-interactivo.service';
 import { EntradaDiario } from '../../../core/models/entrada-diario.model';
 import { mensajeError } from '../../../core/utils/mensaje-error';
 
@@ -44,7 +46,9 @@ export class DiarioComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private diarioService: DiarioService
+    private diarioService: DiarioService,
+    private jardinInteractivo: JardinInteractivoService,
+    private logger: LoggerService
   ) {
     this.form = this.fb.group({
       contenido: ['', [Validators.required, Validators.minLength(5)]]
@@ -72,7 +76,7 @@ export class DiarioComponent implements OnInit {
         ));
       },
       error: (error: HttpErrorResponse) => {
-        console.error(error);
+        this.logger.error(error);
         this.errorEntradas.set(mensajeError(error, 'No pudimos cargar tus entradas. Inténtalo de nuevo.'));
       }
     });
@@ -150,7 +154,10 @@ export class DiarioComponent implements OnInit {
   }
 
   formatearFecha(fecha?: string): string {
-    return fecha ? new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }).format(new Date(fecha)) : 'Fecha no disponible';
+    if (!fecha) return 'Fecha no disponible';
+    return new Intl.DateTimeFormat('es-CO', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    }).format(new Date(fecha));
   }
 
   guardar(): void {
@@ -170,13 +177,13 @@ export class DiarioComponent implements OnInit {
         next: () => {
           this.guardando.set(false);
           this.guardado.set(true);
+          this.jardinInteractivo.registrarActividad('diario emocional');
           this.form.reset();
           this.cargarEntradas();
         },
         error: (error: HttpErrorResponse) => {
           this.guardando.set(false);
           this.errorEntradas.set(mensajeError(error, 'No pudimos guardar la entrada. Inténtalo de nuevo.'));
-          this.pestana.set('entradas');
         }
       });
   }

@@ -1,0 +1,33 @@
+.encabezado-panel, .titulo-seccion, .disponibilidad, .fila {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+}
+.encabezado-panel { position: relative; overflow: hidden; min-height: 210px; margin-bottom: 1.5rem; padding: clamp(1.3rem, 3vw, 2rem); border: 1px solid var(--color-line); border-radius: var(--radius-organic); background: linear-gradient(115deg, var(--color-surface) 15%, var(--color-primary-light)); box-shadow: var(--shadow-soft); }
+.encabezado-copy { position: relative; z-index: 1; }
+.imagen-panel { width: 210px; height: 145px; object-fit: cover; border-radius: 20px; box-shadow: var(--shadow-soft); }
+.encabezado-panel > button { align-self: flex-end; white-space: nowrap; }
+.eyebrow { margin: 0 0 .35rem; color: var(--color-primary); font-size: .75rem; font-weight: 700; letter-spacing: .08em; }
+.encabezado-panel p, .titulo-seccion p, .fila p, .fecha { margin: 0; color: var(--color-ink-soft); }
+.disponibilidad { margin-bottom: 2rem; }
+.disponibilidad h2, .titulo-seccion h2 { margin-bottom: .35rem; }
+.estado { font-weight: 600; color: var(--color-danger) !important; }
+.estado.activo { color: var(--color-success) !important; }
+.disponibilidad-copy { display: flex; align-items: center; gap: 1rem; }
+.icono-seccion { display: grid; place-items: center; width: 48px; height: 48px; flex: 0 0 48px; border-radius: 16px; background: var(--color-primary-light); color: var(--color-primary-dark); font-size: 1.7rem; }
+.fecha { font-size: .82rem; }
+.seccion { margin-top: 2rem; }
+.titulo-seccion { margin-bottom: .9rem; }
+.contador { min-width: 2rem; padding: .2rem .65rem; border-radius: 999px; background: var(--color-primary-light); color: var(--color-primary-dark); text-align: center; font-weight: 700; }
+.lista { display: grid; gap: .8rem; }
+.fila h3 { margin: 0 0 .25rem; }
+.fila p { font-size: .88rem; }
+.vacio { padding: 1rem 0; color: var(--color-ink-soft); }
+.error { margin: 1rem 0; }
+.confirmacion { margin: 1rem 0; color: var(--color-success); font-weight: 600; }
+.titulo-seccion .eyebrow { margin: 0 0 .25rem; }
+.fila { border-radius: 20px; }
+@media (max-width: 640px) {
+  .encabezado-panel, .disponibilidad, .fila { align-items: stretch; flex-direction: column; }
+  .imagen-panel { width: 100%; height: 170px; }
+  .encabezado-panel { gap: .7rem; }
+  .disponibilidad button, .fila a, .fila button { width: 100%; }
+}

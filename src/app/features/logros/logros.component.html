@@ -1,17 +1,28 @@
-<a routerLink="/inicio" class="volver">← Volver</a>
-<h1>Logros</h1>
-<p>Reconocimientos por tu constancia.</p>
+<a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
+<header class="page-hero page-hero-achievements">
+  <div>
+    <p class="eyebrow">RECONOCE TU ESFUERZO</p>
+    <h1>Pequeños logros, grandes pasos</h1>
+    <p class="lead">No se trata de hacerlo todo, sino de volver a intentarlo y reconocer cada avance que haces por ti.</p>
+    <div class="hero-tags"><span>✦ Constancia</span><span>♡ Bienestar</span></div>
+  </div>
+  <div class="achievement-art" aria-hidden="true"><span>✧</span><span>✿</span><span>★</span><span>♡</span><div>Serenity</div></div>
+</header>
 
 <section class="grid-logros" *ngIf="!cargando(); else cargandoTpl">
   <div class="card logro" *ngFor="let l of logros()" [class.bloqueado]="!l.desbloqueado">
-    <span class="icono">{{ l.desbloqueado ? '⬡' : '⬡' }}</span>
-    <div>
-      <h3>{{ l.nombre }}</h3>
-      <p>{{ l.descripcion }}</p>
-    </div>
+    <span class="icono" aria-hidden="true">{{ l.desbloqueado ? '✦' : '◇' }}</span>
+    <div><h3>{{ l.nombre }}</h3><p>{{ l.descripcion }}</p><span class="estado-logro">{{ l.desbloqueado ? 'Desbloqueado' : 'Por descubrir' }}</span></div>
   </div>
 </section>
 
-<ng-template #cargandoTpl>
-  <p class="cargando">Cargando logros…</p>
-</ng-template>
+<section class="misiones" *ngIf="!cargando()">
+  <div class="misiones-heading"><p class="eyebrow">INVITACIONES AMABLES</p><h2>Pequeños pasos para hoy</h2><p>No son tareas pendientes ni rachas que mantener. Elige una, cambia de idea o descansa.</p></div>
+  <article class="card mision" *ngFor="let m of misiones">
+    <span class="mision-icono" aria-hidden="true">{{ m.icono }}</span>
+    <div class="mision-copy"><h3>{{ m.titulo }}</h3><p>{{ m.detalle }}</p></div>
+    <a [routerLink]="m.ruta" class="mision-link">Explorar <span aria-hidden="true">→</span></a>
+  </article>
+</section>
+
+<ng-template #cargandoTpl><p class="cargando">Cargando tus logros…</p></ng-template>

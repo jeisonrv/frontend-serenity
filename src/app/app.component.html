@@ -1,4 +1,38 @@
 <app-navbar *ngIf="auth.usuario()"></app-navbar>
 <main class="contenido" [class.con-sesion]="auth.usuario()">
+  <div class="barra-global">
+    <div class="lema-global" *ngIf="auth.usuario()">
+      <span class="punto-latido" aria-hidden="true"></span>
+      Tu espacio de bienestar, a tu ritmo
+    </div>
+    <button
+      class="theme-toggle"
+      type="button"
+      (click)="theme.alternar()"
+      [attr.aria-pressed]="theme.oscuro()"
+      [attr.aria-label]="theme.oscuro() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+      [attr.title]="theme.oscuro() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'">
+      <span class="theme-icon" aria-hidden="true">{{ theme.oscuro() ? '☀' : '☾' }}</span>
+      <span class="theme-label">{{ theme.oscuro() ? 'Modo oscuro' : 'Modo claro' }}</span>
+      <span class="theme-track" aria-hidden="true"><span [class.activo]="theme.oscuro()"></span></span>
+    </button>
+  </div>
   <router-outlet></router-outlet>
+  <aside class="aviso-consentimiento" *ngIf="consent.sensitiveRequired()" role="alert">
+    <p>Para guardar este registro emocional necesitas autorizar el tratamiento de datos sensibles.</p>
+    <a class="btn btn-primary" routerLink="/cuenta" (click)="consent.limpiarAutorizacionRequerida()">Activar en Mi cuenta</a>
+    <button type="button" (click)="consent.limpiarAutorizacionRequerida()" aria-label="Cerrar aviso">×</button>
+  </aside>
+  <div class="modal-consentimiento" *ngIf="consent.revisionPendiente()" role="dialog" aria-modal="true" aria-labelledby="titulo-revision-consentimiento" (keydown)="controlarFocoDialogo($event)">
+    <section class="card dialog-consentimiento">
+      <p class="eyebrow">ACTUALIZACIÓN DE PRIVACIDAD</p><h2 id="titulo-revision-consentimiento">Revisa y confirma tus consentimientos</h2>
+      <p>Para continuar, revisa los términos vigentes y decide libremente si autorizas el tratamiento de tus datos sensibles.</p>
+      <label><input autofocus type="checkbox" [checked]="aceptarTerminos()" (change)="aceptarTerminos.set($any($event.target).checked)" /> He leído y acepto los <a routerLink="/terminos" target="_blank" rel="noopener noreferrer">Términos y condiciones</a> de Serenity y he sido informado sobre su <a routerLink="/terminos" fragment="politica-datos" target="_blank" rel="noopener noreferrer">Política de Tratamiento de Datos Personales</a>.</label>
+      <label><input type="checkbox" [checked]="aceptarSensibles()" (change)="aceptarSensibles.set($any($event.target).checked)" /> Autorizo explícitamente el tratamiento de mis registros emocionales y de bienestar para guardar mi historial y progreso, conforme a la Política de Tratamiento de Datos Personales. Entiendo que se trata de información sensible y que su suministro es facultativo.</label>
+      <p>Si no la autorizas, podrás usar Serenity, pero las funciones que guardan tus registros emocionales (estado de ánimo, diario, progreso) estarán desactivadas. Puedes cambiarlo en Mi cuenta.</p>
+      <p>Si eres menor de edad, se requiere autorización de tu representante legal.</p>
+      <p class="error" role="alert" *ngIf="errorConsentimiento()">{{ errorConsentimiento() }}</p>
+      <button class="btn btn-primary" type="button" [disabled]="guardandoConsentimiento()" (click)="guardarRevisionConsentimientos()">{{ guardandoConsentimiento() ? 'Guardando…' : 'Aceptar términos y continuar' }}</button>
+    </section>
+  </div>
 </main>

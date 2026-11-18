@@ -37,3 +37,85 @@ textarea { resize: vertical; font-family: var(--font-body); }
 .acciones-entrada { justify-content: flex-start; margin-top: 1rem; }
 .confirmar-borrado { margin-top: 1rem; padding: 1rem; border-radius: var(--radius-soft); background: var(--color-bg); }
 .confirmar-borrado p { margin-top: 0; }
+
+/* Corrección del contenedor de escritura del diario emocional */
+
+form {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+
+  width: 100%;
+  min-width: 0;
+  margin-bottom: 1.1rem;
+}
+
+.field textarea,
+.detalle-entrada textarea {
+  display: block;
+  box-sizing: border-box;
+
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 250px;
+
+  padding: 1rem 1.1rem;
+
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-soft);
+
+  background: var(--color-surface-alt);
+  color: var(--color-ink);
+
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.7;
+
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field textarea::placeholder,
+.detalle-entrada textarea::placeholder {
+  color: var(--color-ink-soft);
+  opacity: 0.9;
+}
+
+.field textarea:focus,
+.detalle-entrada textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(140, 194, 244, 0.18);
+}
+
+.field .error {
+  display: block;
+  width: 100%;
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.field textarea:disabled,
+.detalle-entrada textarea:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+@media (max-width: 760px) {
+  .field textarea,
+  .detalle-entrada textarea {
+    min-height: 210px;
+    padding: 0.85rem;
+    font-size: 0.95rem;
+  }
+}
+

@@ -3,34 +3,47 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { LoggerService } from '../../../core/services/logger.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { mensajeError } from '../../../core/utils/mensaje-error';
+import { mensajeGoogleError } from '../../../core/utils/mensaje-google-error';
+import { GoogleIdentityButtonComponent } from '../../../shared/google-identity-button/google-identity-button.component';
+import { ConsentService } from '../../../core/services/consent.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, GoogleIdentityButtonComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
   readonly cargando = signal(false);
+  readonly googleCargando = signal(false);
   readonly error = signal<string | null>(null);
+  readonly confirmacion = signal<string | null>(null);
 
   form!: FormGroup;
 
  constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private logger: LoggerService,
+    private consent: ConsentService
   ) {
     this.form = this.fb.group({
       correo: ['', [Validators.required, Validators.email]],
-      contrasena: ['', [Validators.required, Validators.minLength(8)]]
+      contrasena: ['', Validators.required]
     });
+    const mensajeSesion = this.router.getCurrentNavigation()?.extras.state?.['authError'];
+    if (typeof mensajeSesion === 'string') this.error.set(mensajeSesion);
+    const mensajeRegistro = this.router.getCurrentNavigation()?.extras.state?.['authSuccess'];
+    if (typeof mensajeRegistro === 'string') this.confirmacion.set(mensajeRegistro);
   }
 
   enviar(): void {
+    if (this.googleCargando() || this.cargando()) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -42,15 +55,50 @@ export class LoginComponent {
       email: this.form.value.correo!,
       password: this.form.value.contrasena!
     }).subscribe({
-      next: () => this.router.navigate(['/inicio']),
+      next: (response) => {
+        const destino = response.usuario.rol === 'OYENTE'
+          ? '/oyente'
+          : response.usuario.rol === 'MODERADOR'
+            ? '/moderacion'
+            : '/inicio';
+        void this.router.navigate([destino]);
+        this.consent.revisionPendiente.set(false);
+        setTimeout(() => this.revisarConsentimientos(), 0);
+      },
       error: (err: HttpErrorResponse) => {
-        console.error(err);
-        const credencialesIncorrectas = err.status === 401 || err.status === 403;
-        this.error.set(mensajeError(err, credencialesIncorrectas
-            ? 'El correo o la contrase\u00f1a son incorrectos. Verifica tus datos e int\u00e9ntalo de nuevo.'
-            : 'No se pudo iniciar sesi\u00f3n. Int\u00e9ntalo de nuevo m\u00e1s tarde.'));
+        this.logger.error(err);
+        this.error.set(mensajeError(err, 'Ocurrió un error al iniciar sesión.'));
         this.cargando.set(false);
       }
     });
+  }
+
+  iniciarConGoogle(credential: string): void {
+    if (this.googleCargando() || this.cargando()) return;
+    this.error.set(null);
+    this.googleCargando.set(true);
+    this.auth.iniciarConGoogle(credential).subscribe({
+      next: (response) => this.navegarSegunRol(response.usuario.rol),
+      error: (err: HttpErrorResponse) => {
+        this.error.set(mensajeGoogleError(err, 'acceso'));
+        this.googleCargando.set(false);
+      },
+      complete: () => this.googleCargando.set(false)
+    });
+  }
+
+  private navegarSegunRol(rol?: string): void {
+    const destino = rol === 'OYENTE' ? '/oyente' : rol === 'MODERADOR' ? '/moderacion' : '/inicio';
+    void this.router.navigate([destino]);
+    setTimeout(() => this.revisarConsentimientos(), 0);
+    this.googleCargando.set(false);
+  }
+
+  private revisarConsentimientos(): void {
+    this.consent.consultar().subscribe({ next: status => {
+      if (!status.termsAccepted || (status.currentTermsVersion && status.termsVersion !== status.currentTermsVersion)) {
+        this.consent.revisionPendiente.set(true);
+      }
+    }, error: () => undefined });
   }
 }

@@ -1,39 +1,42 @@
-<a routerLink="/inicio" class="volver">← Volver</a>
-<h1>Diario emocional</h1>
-<p>Escribe con libertad; nadie más lo lee salvo tú.</p>
+<a routerLink="/inicio" class="volver">← Volver a tu espacio</a>
+<header class="page-hero page-hero-journal">
+  <div>
+    <p class="eyebrow">TU ESPACIO, SIN JUICIOS</p>
+    <h1>Diario emocional</h1>
+    <p class="lead">Pon en palabras lo que llevas dentro. No hace falta escribir perfecto: solo empezar por donde estás.</p>
+    <div class="hero-tags"><span>♡ Solo para ti</span><span>✎ Reflexión personal</span></div>
+  </div>
+  <img
+          src="assets/serenity-diary.png"
+          alt="Persona escribiendo sus reflexiones en un diario personal"
+  />
+</header>
 
 <nav class="pestanas-diario" aria-label="Secciones del diario">
-  <button type="button" class="chip" [class.seleccionado]="pestana() === 'escribir'" (click)="seleccionarPestana('escribir')">Escribir</button>
+  <button type="button" class="chip" [class.seleccionado]="pestana() === 'escribir'" (click)="seleccionarPestana('escribir')">Escribir una entrada</button>
   <button type="button" class="chip" [class.seleccionado]="pestana() === 'entradas'" (click)="seleccionarPestana('entradas')">Mis entradas</button>
 </nav>
 
 <section class="card" *ngIf="pestana() === 'escribir'">
   <div class="prompts">
-    <button
-      *ngFor="let p of prompts"
-      class="chip"
-      type="button"
-      [class.seleccionado]="promptSeleccionado() === p"
-      (click)="elegirPrompt(p)"
-    >
-      {{ p }}
-    </button>
+    <button *ngFor="let p of prompts" class="chip" type="button"
+      [class.seleccionado]="promptSeleccionado() === p" (click)="elegirPrompt(p)">{{ p }}</button>
   </div>
 
   <form [formGroup]="form" (ngSubmit)="guardar()">
     <div class="field">
-      <textarea
+     <label for="contenido-diario">Texto de tu diario emocional</label>
+     <textarea
+       id="contenido-diario"
         rows="8"
-        formControlName="contenido"
-        [placeholder]="promptSeleccionado() === 'Libre' ? 'Escribe lo que quieras…' : promptSeleccionado()"
-      ></textarea>
+       formControlName="contenido"
+       [placeholder]="promptSeleccionado() === 'Libre' ? 'Escribe lo que quieras…' : promptSeleccionado()">
+</textarea>
       <span class="error" *ngIf="form.get('contenido')?.touched && form.get('contenido')?.invalid">
         Escribe al menos unas palabras.
       </span>
     </div>
-
     <p class="confirmacion" *ngIf="guardado()">Entrada guardada.</p>
-
     <button class="btn btn-primary" type="submit" [disabled]="guardando()">
       {{ guardando() ? 'Guardando…' : 'Guardar entrada' }}
     </button>
@@ -52,7 +55,7 @@
 
   <div class="lista-entradas" *ngIf="!cargandoEntradas() && entradas().length">
     <button class="card tarjeta-entrada" type="button" *ngFor="let entrada of entradas()" (click)="abrirEntrada(entrada)">
-      <span class="fecha-entrada">{{ formatearFecha(entrada.fechaCreacion ?? entrada.fechaRegistro) }}</span>
+      <span class="fecha-entrada">{{ formatearFecha(entrada.fechaRegistro) }}</span>
       <strong *ngIf="entrada.titulo">{{ entrada.titulo }}</strong>
       <span class="extracto-entrada">{{ entrada.contenido }}</span>
     </button>
@@ -62,10 +65,7 @@
   <section class="card detalle-entrada" *ngIf="errorDetalle()" role="alert">{{ errorDetalle() }}</section>
   <section class="card detalle-entrada" *ngIf="entradaSeleccionada() as entrada">
     <div class="cabecera-detalle">
-      <div>
-        <p class="fecha-entrada">{{ formatearFecha(entrada.fechaCreacion ?? entrada.fechaRegistro) }}</p>
-        <h2 *ngIf="entrada.titulo">{{ entrada.titulo }}</h2>
-      </div>
+      <div><p class="fecha-entrada">{{ formatearFecha(entrada.fechaRegistro) }}</p><h2 *ngIf="entrada.titulo">{{ entrada.titulo }}</h2></div>
       <button class="chip" type="button" (click)="cerrarDetalle()">Cerrar</button>
     </div>
 

@@ -1,0 +1,32 @@
+name: Validar frontend Serenity
+
+on:
+  push:
+    branches:
+      - pre-produccion
+  pull_request:
+    branches:
+      - pre-produccion
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Angular production build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Descargar código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias bloqueadas
+        run: npm ci
+
+      - name: Compilar para producción
+        run: npm run build -- --configuration production

@@ -1,30 +1,167 @@
 <div class="pantalla-auth">
-  <form class="card formulario" [formGroup]="form" (ngSubmit)="enviar()">
-    <h1>Serenity</h1>
-    <p class="subtitulo">Un espacio privado para tu bienestar emocional.</p>
+  <aside class="auth-escena" aria-label="Bienestar emocional">
+    <a class="marca-escena" routerLink="/login" aria-label="Serenity, inicio">
+      <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
+      <span>Serenity</span>
+    </a>
 
-    <div class="field">
-      <label for="correo">Correo</label>
-      <input id="correo" type="email" formControlName="correo" autocomplete="email" />
-      <span class="error" *ngIf="form.get('correo')?.touched && form.get('correo')?.invalid">
-        Ingresa un correo válido.
-      </span>
+    <div class="escena-copy">
+      <p class="eyebrow">UN ESPACIO SEGURO PARA TI</p>
+      <h2>Pequeños pasos,<br />grandes cambios.</h2>
+      <p>
+        Cuida tu mente hoy. Tu bienestar también merece tiempo,
+        calma y cariño.
+      </p>
     </div>
 
-    <div class="field">
-      <label for="contrasena">Contraseña</label>
-      <input id="contrasena" type="password" formControlName="contrasena" autocomplete="current-password" />
-      <span class="error" *ngIf="form.get('contrasena')?.touched && form.get('contrasena')?.invalid">
-        Mínimo 8 caracteres.
-      </span>
+    <img
+            class="escena-ilustracion"
+            src="assets/serenity-moment.png"
+            alt="Una persona descansa y respira rodeada de naturaleza"
+    />
+
+    <p class="frase-calmada">
+      “No tienes que resolverlo todo hoy. Empieza por ti.”
+      <span aria-hidden="true">♡</span>
+    </p>
+
+    <div class="escena-detalle detalle-uno" aria-hidden="true">✦</div>
+    <div class="escena-detalle detalle-dos" aria-hidden="true">✧</div>
+  </aside>
+
+  <div class="auth-panel">
+    <div class="marca-auth-mobile">
+      <img src="assets/serenity-logo.svg" alt="" aria-hidden="true" />
+      <span>Serenity</span>
     </div>
 
-    <p class="error" role="alert" *ngIf="error()">{{ error() }}</p>
+    <form
+            class="card formulario"
+            [formGroup]="form"
+            (ngSubmit)="enviar()"
+    >
+      <div class="encabezado-formulario">
+        <p class="eyebrow">QUÉ BUENO TENERTE DE VUELTA</p>
+        <h1>Hola de nuevo</h1>
+        <p class="subtitulo">
+          Inicia sesión y regálate un momento para ti.
+        </p>
+      </div>
 
-    <button class="btn btn-primary" type="submit" [disabled]="cargando()">
-      {{ cargando() ? 'Ingresando…' : 'Ingresar' }}
-    </button>
+      <!-- Correo electrónico -->
+      <div class="field">
+        <label for="correo">Correo electrónico</label>
 
-    <p class="alterno">¿No tienes cuenta? <a routerLink="/registro">Regístrate</a></p>
-  </form>
+        <input
+                id="correo"
+                type="email"
+                formControlName="correo"
+                autocomplete="email"
+                placeholder="tu@correo.com"
+        />
+
+        <span
+                class="error"
+                *ngIf="
+            form.get('correo')?.touched &&
+            form.get('correo')?.invalid
+          "
+        >
+          Ingresa un correo válido.
+        </span>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="field campo-contrasena">
+        <label for="contrasena">Contraseña</label>
+
+        <input
+                id="contrasena"
+                type="password"
+                formControlName="contrasena"
+                autocomplete="current-password"
+                placeholder="Tu contraseña"
+        />
+
+        <span
+                class="error"
+                *ngIf="
+            form.get('contrasena')?.touched &&
+            form.get('contrasena')?.invalid
+          "
+        >
+          Ingresa tu contraseña.
+        </span>
+      </div>
+
+      <!-- Recuperar contraseña -->
+      <p class="enlace-recuperar">
+        <a routerLink="/recuperar-password">
+          ¿Olvidaste tu contraseña?
+        </a>
+      </p>
+
+      <!-- Mensajes de respuesta -->
+      <p
+              class="mensaje-exito"
+              role="status"
+              *ngIf="confirmacion()"
+      >
+        {{ confirmacion() }}
+      </p>
+
+      <p
+              class="error error-general"
+              role="alert"
+              *ngIf="error()"
+      >
+        {{ error() }}
+      </p>
+
+      <!-- Botón de inicio de sesión -->
+      <button
+              class="btn btn-primary boton-ingreso"
+              type="submit"
+              [disabled]="cargando() || googleCargando()"
+      >
+        <span>
+          {{ cargando() ? 'Ingresando…' : 'Iniciar sesión' }}
+        </span>
+
+        <span aria-hidden="true" *ngIf="!cargando()">→</span>
+      </button>
+
+      <!-- Inicio de sesión con Google -->
+      <div class="separador-google">
+        <span>o continúa con</span>
+      </div>
+
+      <app-google-identity-button
+              [disabled]="cargando() || googleCargando()"
+              text="continue_with"
+              (credential)="iniciarConGoogle($event)"
+              (loadError)="error.set($event)"
+      />
+
+      <!-- Registro -->
+      <p class="alterno">
+        ¿Todavía no tienes cuenta?
+        <a routerLink="/registro">Regístrate</a>
+      </p>
+
+      <p class="nota-privacidad">
+        <span aria-hidden="true">♡</span>
+        Un espacio de autocuidado; tú marcas tu ritmo.
+      </p>
+    </form>
+
+    <!-- Información de ayuda -->
+    <p class="nota-crisis">
+      Serenity no reemplaza la atención profesional ni los servicios
+      de emergencia.
+      <a routerLink="/ayuda">Ver líneas de ayuda</a>
+      ·
+      <a routerLink="/terminos">Términos y condiciones</a>
+    </p>
+  </div>
 </div>

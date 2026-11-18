@@ -16,18 +16,50 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
-            "scripts": []
+            "assets": [
+              "src/assets"
+            ],
+            "styles": [
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+              "src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
+              "assets": [
+                {
+                  "glob": "**/*",
+                  "input": "src/assets",
+                  "output": "/assets",
+                  "ignore": ["config.dev.json"]
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
-                { "type": "initial", "maximumWarning": "500kb", "maximumError": "1mb" }
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                }
               ],
               "outputHashing": "all"
             },
             "development": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.development.ts"
+                }
+              ],
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
@@ -38,11 +70,39 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": { "buildTarget": "serenity-frontend:build:production" },
-            "development": { "buildTarget": "serenity-frontend:build:development" }
+            "production": {
+              "buildTarget": "serenity-frontend:build:production"
+            },
+            "development": {
+              "buildTarget": "serenity-frontend:build:development"
+            }
           },
           "defaultConfiguration": "development"
         }
+        ,
+         "test": {
+           "builder": "@angular-devkit/build-angular:karma",
+           "options": {
+            "polyfills": [
+             "zone.js",
+             "zone.js/testing"
+             ],
+    "tsConfig": "tsconfig.spec.json",
+    "karmaConfig": "karma.conf.js",
+    "inlineStyleLanguage": "scss",
+    "assets": [
+      "src/assets"
+    ],
+    "styles": [
+      "node_modules/bootstrap/dist/css/bootstrap.min.css",
+      "node_modules/bootstrap-icons/font/bootstrap-icons.css",
+      "src/styles.scss"
+    ],
+    "scripts": [
+      "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+    ]
+  }
+}
       }
     }
   },

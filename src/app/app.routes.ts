@@ -1,67 +1,154 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 export const routes: Routes = [
-  { path: '', pathMatch: 'full', redirectTo: 'inicio' },
-
+  {
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'inicio'
+  },
+  {
+    path: 'ayuda',
+    loadComponent: () =>
+        import('./features/ayuda/ayuda.component')
+            .then((m) => m.AyudaComponent)
+  },
+  {
+    path: 'terminos',
+    loadComponent: () =>
+        import('./features/terminos/terminos.component')
+            .then((m) => m.TerminosComponent)
+  },
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/login/login.component').then((m) => m.LoginComponent)
+    loadComponent: () =>
+        import('./features/auth/login/login.component')
+            .then((m) => m.LoginComponent)
+  },
+  {
+    path: 'recuperar-password',
+    loadComponent: () =>
+        import('./features/auth/recuperar-password/recuperar-password.component')
+            .then((m) => m.RecuperarPasswordComponent)
+  },
+  {
+    path: 'restablecer-password',
+    loadComponent: () =>
+        import('./features/auth/restablecer-password/restablecer-password.component')
+            .then((m) => m.RestablecerPasswordComponent)
   },
   {
     path: 'registro',
-    loadComponent: () => import('./features/auth/register/register.component').then((m) => m.RegisterComponent)
+    loadComponent: () =>
+        import('./features/auth/register/register.component')
+            .then((m) => m.RegisterComponent)
   },
-
+  {
+    path: 'cuenta',
+    canActivate: [authGuard],
+    loadComponent: () =>
+        import('./features/cuenta/cuenta.component')
+            .then((m) => m.CuentaComponent)
+  },
   {
     path: 'inicio',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent)
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] },
+    loadComponent: () =>
+        import('./features/dashboard/dashboard.component')
+            .then((m) => m.DashboardComponent)
   },
   {
     path: 'ejercicios/respiracion',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] },
     loadComponent: () =>
-      import('./features/ejercicios/respiracion/respiracion.component').then((m) => m.RespiracionComponent)
+        import('./features/ejercicios/respiracion/respiracion.component')
+            .then((m) => m.RespiracionComponent)
   },
   {
     path: 'ejercicios/meditacion',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] },
     loadComponent: () =>
-      import('./features/ejercicios/meditacion/meditacion.component').then((m) => m.MeditacionComponent)
+        import('./features/ejercicios/meditacion/meditacion.component')
+            .then((m) => m.MeditacionComponent)
   },
   {
     path: 'ejercicios/relajacion',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] },
     loadComponent: () =>
-      import('./features/ejercicios/relajacion/relajacion.component').then((m) => m.RelajacionComponent)
+        import('./features/ejercicios/relajacion/relajacion.component')
+            .then((m) => m.RelajacionComponent)
   },
   {
     path: 'ejercicios/diario',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/ejercicios/diario/diario.component').then((m) => m.DiarioComponent)
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] },
+    loadComponent: () =>
+        import('./features/ejercicios/diario/diario.component')
+            .then((m) => m.DiarioComponent)
   },
   {
     path: 'jardin',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/jardin/jardin.component').then((m) => m.JardinComponent)
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] },
+    loadComponent: () =>
+        import('./features/jardin/jardin.component')
+            .then((m) => m.JardinComponent)
   },
   {
     path: 'logros',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/logros/logros.component').then((m) => m.LogrosComponent)
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] },
+    loadComponent: () =>
+        import('./features/logros/logros.component')
+            .then((m) => m.LogrosComponent)
   },
   {
     path: 'estadisticas',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] },
     loadComponent: () =>
-      import('./features/estadisticas/estadisticas.component').then((m) => m.EstadisticasComponent)
+        import('./features/estadisticas/estadisticas.component')
+            .then((m) => m.EstadisticasComponent)
+  },
+  {
+    path: 'oyente',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['OYENTE'] },
+    loadComponent: () =>
+        import('./features/oyente/panel-oyente.component')
+            .then((m) => m.PanelOyenteComponent)
+  },
+  {
+    path: 'moderacion',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['MODERADOR'] },
+    loadComponent: () =>
+        import('./features/moderacion/panel-moderacion.component')
+            .then((m) => m.PanelModeracionComponent)
+  },
+  {
+    path: 'chat/:id',
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['OYENTE'] },
+    loadComponent: () =>
+        import('./features/chat/chat.component')
+            .then((m) => m.ChatComponent)
   },
   {
     path: 'chat',
-    canActivate: [authGuard],
-    loadComponent: () => import('./features/chat/chat.component').then((m) => m.ChatComponent)
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['USUARIO'] },
+    loadComponent: () =>
+        import('./features/chat/chat.component')
+            .then((m) => m.ChatComponent)
   },
-
-  { path: '**', redirectTo: 'inicio' }
+  {
+    path: '**',
+    redirectTo: 'inicio'
+  }
 ];

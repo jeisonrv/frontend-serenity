@@ -1,0 +1,196 @@
+
+<header class="encabezado-cuenta">
+  <p class="eyebrow">SERENITY · TU PERFIL</p>
+  <h1>Mi cuenta</h1>
+  <p>Administra el acceso a tu cuenta de Serenity.</p>
+</header>
+
+<section class="card privacidad-cuenta" aria-labelledby="titulo-privacidad-cuenta">
+  <h2 id="titulo-privacidad-cuenta">Privacidad y consentimientos</h2>
+  <p>Consulta y administra tus autorizaciones. <a routerLink="/terminos">Lee los Términos y la Política de Tratamiento de Datos Personales</a>.</p>
+  <p *ngIf="cargandoConsentimientos()" role="status">Consultando tus consentimientos…</p>
+  <ng-container *ngIf="consentimientos() as c">
+    <p><strong>Términos:</strong> {{ terminosPendientes(c) ? 'Pendientes' : 'Aceptados' }}<span *ngIf="c.termsVersion"> · Versión {{ c.termsVersion }}</span><span *ngIf="c.termsAcceptedAt"> · {{ c.termsAcceptedAt | date:'medium' }}</span></p>
+    <div *ngIf="terminosPendientes(c)" class="consentimiento-terminos">
+      <p>Para mantener tu cuenta activa, acepta los términos obligatorios y confirma que fuiste informado de la política.</p>
+      <label>
+        <input type="checkbox" [ngModel]="confirmaTerminos()" (ngModelChange)="confirmaTerminos.set($event)" [ngModelOptions]="{standalone: true}">
+        He leído y acepto los Términos y condiciones y confirmo que fui informado de la Política de Tratamiento de Datos Personales.
+      </label>
+      <button class="boton-password" type="button" (click)="aceptarTerminosVigentes()" [disabled]="guardandoConsentimiento() || !confirmaTerminos()">Aceptar términos y política</button>
+    </div>
+    <p><strong>Autorización de datos emocionales:</strong> {{ c.sensitiveDataConsentActive ? 'Activa' : 'Inactiva' }}<span *ngIf="c.sensitiveConsentVersion"> · Versión {{ c.sensitiveConsentVersion }}</span><span *ngIf="c.sensitiveConsentAt"> · {{ c.sensitiveConsentAt | date:'medium' }}</span></p>
+    <p>Esta autorización es opcional. Si la rechazas, las funciones que requieren guardar o consultar tus datos emocionales permanecerán bloqueadas.</p>
+    <button class="boton-password" type="button" (click)="cambiarAutorizacionSensibles(!c.sensitiveDataConsentActive)" [disabled]="guardandoConsentimiento() || (terminosPendientes(c) && !c.sensitiveDataConsentActive)">
+      {{ c.sensitiveDataConsentActive ? 'Revocar autorización' : 'Activar autorización de datos sensibles' }}
+    </button>
+  </ng-container>
+  <p class="error" role="alert" *ngIf="errorConsentimiento()">{{ errorConsentimiento() }}</p>
+  <p class="exito" role="status" *ngIf="mensajeConsentimiento()">{{ mensajeConsentimiento() }}</p>
+</section>
+<!-- Cambiar contraseña -->
+<section class="card cambiar-password" aria-labelledby="titulo-password">
+  <h2 id="titulo-password">Cambiar contraseña</h2>
+  <p>
+    Actualiza tu contraseña para mantener segura tu cuenta de Serenity.
+  </p>
+
+  <form (ngSubmit)="cambiarPassword()" #formPassword="ngForm">
+    <div class="campo-password">
+      <label for="passwordActual">Contraseña actual</label>
+      <input
+              id="passwordActual"
+              name="passwordActual"
+              type="password"
+              autocomplete="current-password"
+              [value]="passwordActual()"
+              (input)="passwordActual.set($any($event.target).value)"
+              required
+      />
+    </div>
+
+    <div class="campo-password">
+      <label for="passwordNueva">Nueva contraseña</label>
+      <input
+              id="passwordNueva"
+              name="passwordNueva"
+              type="password"
+              autocomplete="new-password"
+              [value]="passwordNueva()"
+              (input)="passwordNueva.set($any($event.target).value)"
+              minlength="8"
+              maxlength="72"
+              required
+      />
+      <small>Debe tener entre 8 y 72 caracteres.</small>
+    </div>
+
+    <div class="campo-password">
+      <label for="confirmarPassword">Confirmar nueva contraseña</label>
+      <input
+              id="confirmarPassword"
+              name="confirmarPassword"
+              type="password"
+              autocomplete="new-password"
+              [value]="confirmarPassword()"
+              (input)="confirmarPassword.set($any($event.target).value)"
+              minlength="8"
+              maxlength="72"
+              required
+      />
+    </div>
+
+    <p
+            class="error"
+            role="alert"
+            *ngIf="errorPassword()"
+    >
+      {{ errorPassword() }}
+    </p>
+
+    <p
+            class="exito"
+            role="status"
+            *ngIf="mensajePassword()"
+    >
+      {{ mensajePassword() }}
+    </p>
+
+    <button
+            class="boton-password"
+            type="submit"
+            [disabled]="cambiandoPassword() || !formPassword.valid"
+    >
+      {{
+      cambiandoPassword()
+      ? 'Actualizando contraseña…'
+      : 'Cambiar contraseña'
+      }}
+    </button>
+  </form>
+</section>
+
+<!-- Vinculación con Google -->
+<section class="card vinculacion-google" aria-labelledby="titulo-google">
+  <h2 id="titulo-google">Vincular con Google</h2>
+  <p>
+    Vincula una cuenta de Google para usarla junto con tu método
+    de acceso actual.
+  </p>
+
+  <p class="error" role="alert" *ngIf="error()">
+    {{ error() }}
+  </p>
+
+  <p class="exito" role="status" *ngIf="mensaje()">
+    {{ mensaje() }}
+  </p>
+
+  <app-google-identity-button
+          [disabled]="vinculando()"
+          text="continue_with"
+          (credential)="vincularConGoogle($event)"
+          (loadError)="error.set($event)"
+  />
+
+  <p class="estado" *ngIf="vinculando()" role="status">
+    Vinculando cuenta…
+  </p>
+</section>
+
+<!-- Recordatorios por correo -->
+<section
+        class="card recordatorios-email"
+        aria-labelledby="titulo-recordatorios"
+>
+  <h2 id="titulo-recordatorios">Notificaciones y recordatorios</h2>
+
+  <p>
+    Recibe recordatorios por correo electrónico para volver a Serenity,
+    realizar tus ejercicios y mantener tu rutina de bienestar.
+  </p>
+
+  <p *ngIf="cargandoRecordatorios()" role="status">
+    Cargando tus preferencias…
+  </p>
+
+  <div
+          class="opcion-recordatorios"
+          *ngIf="!cargandoRecordatorios()"
+  >
+    <div class="texto-recordatorios">
+      <h3>Recordatorios por correo</h3>
+      <p>
+        Puedes activar o desactivar estos mensajes cuando quieras.
+      </p>
+    </div>
+
+    <label class="interruptor-recordatorios">
+      <input
+              type="checkbox"
+              [checked]="recordatoriosActivos()"
+              [disabled]="guardandoRecordatorios()"
+              (change)="cambiarRecordatorios($event)"
+              aria-label="Activar recordatorios por correo"
+      />
+
+      <span class="interruptor-visual" aria-hidden="true"></span>
+    </label>
+  </div>
+
+  <p class="estado" *ngIf="guardandoRecordatorios()" role="status">
+    Guardando preferencia…
+  </p>
+
+  <p
+          class="exito"
+          *ngIf="mensaje() && !guardandoRecordatorios()"
+          role="status"
+  >
+    {{ mensaje() }}
+  </p>
+
+  <p class="error" *ngIf="errorRecordatorios()" role="alert">
+    {{ errorRecordatorios() }}
+  </p>
+</section>
