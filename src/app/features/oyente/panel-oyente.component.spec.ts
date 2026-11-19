@@ -2,11 +2,13 @@ import { of, throwError } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { OyenteService } from '../../core/services/oyente.service';
+import { ChatRealtimeService } from '../../core/services/chat-realtime.service';
 import { PanelOyenteComponent } from './panel-oyente.component';
 
 describe('PanelOyenteComponent', () => {
   let component: PanelOyenteComponent;
   let api: jasmine.SpyObj<OyenteService>;
+  let chatRealtime: jasmine.SpyObj<ChatRealtimeService>;
   let router: jasmine.SpyObj<Router>;
 
   beforeEach(() => {
@@ -19,9 +21,13 @@ describe('PanelOyenteComponent', () => {
     api.obtenerActivas.and.returnValue(of([]));
     api.cambiarDisponibilidad.and.returnValue(of({ disponible: true } as any));
     api.aceptar.and.returnValue(of({} as any));
+    chatRealtime = jasmine.createSpyObj<ChatRealtimeService>(
+      'ChatRealtimeService',
+      ['conectarActivas']
+    );
     router = jasmine.createSpyObj<Router>('Router', ['navigate']);
     router.navigate.and.returnValue(Promise.resolve(true));
-    component = new PanelOyenteComponent(api, router);
+    component = new PanelOyenteComponent(api, router, chatRealtime);
   });
 
   it('carga estado, cola y conversaciones activas al iniciar', () => {
@@ -29,6 +35,7 @@ describe('PanelOyenteComponent', () => {
     expect(api.obtenerEstado).toHaveBeenCalled();
     expect(api.obtenerCola).toHaveBeenCalled();
     expect(api.obtenerActivas).toHaveBeenCalled();
+    expect(chatRealtime.conectarActivas).toHaveBeenCalledWith([]);
     expect(component.cargandoEstado()).toBeFalse();
     expect(component.cargandoCola()).toBeFalse();
     expect(component.cargandoActivas()).toBeFalse();
@@ -44,6 +51,7 @@ describe('PanelOyenteComponent', () => {
     expect(component.estado()).toEqual(estado);
     expect(component.cola()).toEqual([charla]);
     expect(component.activas().length).toBe(1);
+    expect(chatRealtime.conectarActivas).toHaveBeenCalledWith([5]);
   });
 
   it('no cambia disponibilidad si no hay estado o ya se está guardando', () => {

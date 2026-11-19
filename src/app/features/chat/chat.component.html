@@ -41,13 +41,33 @@
   <p class="estado-conexion" role="status">{{ chatRealtime.conectado() ? 'Conectado' : 'Conectando con la conversación…' }}</p>
   <p class="error" role="alert" *ngIf="chatRealtime.error()">{{ chatRealtime.error() }}</p>
 
-  <div class="mensajes" aria-live="polite" aria-label="Mensajes de la conversación">
+  <div #listaMensajes class="mensajes" (scroll)="alDesplazarse()" aria-live="polite" aria-label="Mensajes de la conversación">
     <div class="mensaje" *ngFor="let m of chatRealtime.mensajes()" [class.propio]="m.remitente === (esOyente() ? 'oyente' : 'usuario')">{{ m.contenido }}</div>
   </div>
 
+  <button
+    *ngIf="mostrarNuevosMensajes()"
+    class="nuevos-mensajes"
+    type="button"
+    (click)="irAlUltimoMensaje()"
+  >Hay mensajes nuevos · Ir al último</button>
+
   <form class="entrada" (ngSubmit)="enviar()">
-    <input type="text" [ngModel]="borrador()" (ngModelChange)="borrador.set($event)" name="mensaje" placeholder="Escribe un mensaje…" />
-    <button class="btn btn-primary" type="submit" [disabled]="!chatRealtime.conectado()">Enviar</button>
+    <div class="campo-mensaje">
+      <input type="text" [ngModel]="borrador()" (ngModelChange)="borrador.set($event)" name="mensaje" placeholder="Escribe un mensaje…" autocomplete="off" />
+      <button
+        *ngIf="esOyente()"
+        class="boton-emoji"
+        type="button"
+        aria-label="Abrir selector de emojis"
+        [attr.aria-expanded]="mostrarEmojis()"
+        (click)="alternarEmojis()"
+      >☺</button>
+      <div class="selector-emojis" *ngIf="esOyente() && mostrarEmojis()" aria-label="Selector de emojis">
+        <button *ngFor="let emoji of emojis" type="button" [attr.aria-label]="'Agregar ' + emoji" (click)="agregarEmoji(emoji)">{{ emoji }}</button>
+      </div>
+    </div>
+    <button class="btn btn-primary" type="submit" [disabled]="!chatRealtime.conectado() || !borrador().trim()">Enviar</button>
   </form>
 
   <div class="modal-reporte" *ngIf="mostrarReporte()">

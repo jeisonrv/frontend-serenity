@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { finalize } from 'rxjs';
 import { OyenteService } from '../../core/services/oyente.service';
+import { ChatRealtimeService } from '../../core/services/chat-realtime.service';
 import { CharlaActiva, CharlaDisponible, Oyente } from '../../core/models/oyente.model';
 import { mensajeError } from '../../core/utils/mensaje-error';
 
@@ -26,7 +27,11 @@ export class PanelOyenteComponent implements OnInit {
   readonly guardandoDisponibilidad = signal(false);
   readonly aceptandoId = signal<number | null>(null);
 
-  constructor(private oyenteService: OyenteService, private router: Router) {}
+  constructor(
+    private oyenteService: OyenteService,
+    private router: Router,
+    private chatRealtime: ChatRealtimeService
+  ) {}
 
   ngOnInit(): void {
     this.actualizar();
@@ -108,7 +113,10 @@ export class PanelOyenteComponent implements OnInit {
     this.oyenteService.obtenerActivas()
       .pipe(finalize(() => this.cargandoActivas.set(false)))
       .subscribe({
-        next: (activas) => this.activas.set(activas),
+        next: (activas) => {
+          this.activas.set(activas);
+          this.chatRealtime.conectarActivas(activas.map((charla) => charla.idConversacion));
+        },
         error: (error: HttpErrorResponse) => this.error.set(mensajeError(error, 'No se pudieron cargar tus conversaciones asignadas.'))
       });
   }

@@ -51,7 +51,7 @@ export class AuthService {
 
   vincularGoogle(credential: string): Observable<void> {
     return this.http.post<void>(
-        `${environment.apiUrl}/auth/google/vincular`,
+        `${environment.apiUrl}/auth/vincular`,
         { credential }
     );
   }

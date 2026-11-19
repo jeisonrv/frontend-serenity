@@ -50,7 +50,7 @@ describe('AuthService', () => {
 
   it('solicita vincular Google a la sesión actual', () => {
     service.vincularGoogle('credential').subscribe();
-    const request = http.expectOne(environment.apiUrl + '/auth/google/vincular');
+    const request = http.expectOne(environment.apiUrl + '/auth/vincular');
     expect(request.request.method).toBe('POST');
     expect(request.request.body).toEqual({ credential: 'credential' });
     request.flush(null);

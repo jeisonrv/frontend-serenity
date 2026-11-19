@@ -64,4 +64,15 @@ describe('authInterceptor', () => {
     expect(auth.logout).not.toHaveBeenCalled();
     expect(router.navigate).not.toHaveBeenCalled();
   });
+
+  it('sends the Serenity bearer token with the Google link request', () => {
+    const url = 'https://backend.example/api/auth/vincular';
+    TestBed.inject(HttpClient).post(url, { credential: 'google-id-token' })
+      .subscribe();
+
+    const request = http.expectOne(url);
+    expect(request.request.headers.get('Authorization')).toBe('Bearer expired-token');
+    expect(request.request.body).toEqual({ credential: 'google-id-token' });
+    request.flush(null);
+  });
 });
