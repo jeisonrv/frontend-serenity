@@ -1,7 +1,7 @@
 import { AuthService } from './auth.service';
 import { ChatRealtimeService } from './chat-realtime.service';
 import { LoggerService } from './logger.service';
-import { Client } from '@stomp/stompjs';
+import { Client, IMessage } from '@stomp/stompjs';
 
 describe('ChatRealtimeService', () => {
   let service: ChatRealtimeService;
@@ -49,5 +49,80 @@ describe('ChatRealtimeService', () => {
     service.conectar(1);
     expect(service.mensajes()).toEqual([mensajeUno]);
     expect(Client.prototype.activate).toHaveBeenCalledTimes(1);
+  });
+
+  it('mantiene una conexión, evita suscripciones duplicadas y cancela solo la conversación finalizada', () => {
+    const unsubscribeUno = jasmine.createSpy('unsubscribeUno');
+    const unsubscribeDos = jasmine.createSpy('unsubscribeDos');
+    const subscribe = jasmine.createSpy('subscribe').and.callFake((topic: string) => ({
+      unsubscribe: topic.endsWith('/1') ? unsubscribeUno : unsubscribeDos
+    }));
+    const deactivate = jasmine.createSpy('deactivate');
+    (service as unknown as { client: Client }).client = {
+      connected: true,
+      subscribe,
+      deactivate
+    } as unknown as Client;
+
+    service.conectarActivas([1, 2]);
+    service.conectarActivas([1, 2]);
+    service.conectar(1);
+    service.conectar(2);
+
+    expect(subscribe).toHaveBeenCalledTimes(2);
+    expect(deactivate).not.toHaveBeenCalled();
+
+    service.finalizar(1);
+
+    expect(unsubscribeUno).toHaveBeenCalledTimes(1);
+    expect(unsubscribeDos).not.toHaveBeenCalled();
+    expect(deactivate).not.toHaveBeenCalled();
+
+    service.conectarActivas([]);
+    expect(deactivate).not.toHaveBeenCalled();
+  });
+
+  it('mantiene los mensajes recibidos asociados a su conversación', () => {
+    let recibirUno: ((message: IMessage) => void) | undefined;
+    let recibirDos: ((message: IMessage) => void) | undefined;
+    const subscribe = jasmine.createSpy('subscribe').and.callFake(
+      (topic: string, callback: (message: IMessage) => void) => {
+        if (topic.endsWith('/1')) recibirUno = callback;
+        if (topic.endsWith('/2')) recibirDos = callback;
+        return { unsubscribe: jasmine.createSpy('unsubscribe') };
+      }
+    );
+    (service as unknown as { client: Client }).client = {
+      connected: true,
+      subscribe,
+      deactivate: jasmine.createSpy('deactivate')
+    } as unknown as Client;
+    service.conectarActivas([1, 2]);
+    service.conectar(1);
+
+    recibirDos?.({
+      body: JSON.stringify({
+        idConversacion: 2, remitente: 'oyente', contenido: 'Solo dos',
+        fechaEnvio: '2026-01-01T10:00:00Z'
+      })
+    } as IMessage);
+    expect(service.mensajes()).toEqual([]);
+
+    recibirUno?.({
+      body: JSON.stringify({
+        idConversacion: 1, remitente: 'usuario', contenido: 'Solo uno',
+        fechaEnvio: '2026-01-01T10:01:00Z'
+      })
+    } as IMessage);
+    recibirUno?.({
+      body: JSON.stringify({
+        idConversacion: 1, remitente: 'usuario', contenido: 'Solo uno',
+        fechaEnvio: '2026-01-01T10:01:00Z'
+      })
+    } as IMessage);
+    expect(service.mensajes().map((mensaje) => mensaje.contenido)).toEqual(['Solo uno']);
+
+    service.conectar(2);
+    expect(service.mensajes().map((mensaje) => mensaje.contenido)).toEqual(['Solo dos']);
   });
 });

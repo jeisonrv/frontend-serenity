@@ -59,7 +59,18 @@ describe('ChatComponent', () => {
     expect(realtimeSpies.desconectar).not.toHaveBeenCalled();
   });
 
+  it('vuelve al panel del oyente sin finalizar ni desconectar la conversación', () => {
+    component.ngOnInit();
+    component.volverAConversaciones();
+
+    expect(router.navigate).toHaveBeenCalledWith(['/oyente']);
+    expect(chatService.finalizar).not.toHaveBeenCalled();
+    expect(realtimeSpies.finalizar).not.toHaveBeenCalled();
+    expect(realtimeSpies.desconectar).not.toHaveBeenCalled();
+  });
+
   it('agrega emojis al borrador sin reemplazar el texto existente', () => {
+    component.ngOnInit();
     component.borrador.set('Hola ');
     component.agregarEmoji('💙');
 
@@ -67,6 +78,7 @@ describe('ChatComponent', () => {
   });
 
   it('permite enviar un mensaje compuesto solo por emojis', () => {
+    component.ngOnInit();
     component.conversacion.set({ idConversacion: 7 });
     component.borrador.set('😊✨');
 
@@ -74,6 +86,67 @@ describe('ChatComponent', () => {
 
     expect(realtimeSpies.enviarMensaje).toHaveBeenCalledWith(7, '😊✨');
     expect(component.borrador()).toBe('');
+  });
+
+  it('no ofrece la acción de emojis ni cambia el borrador para el usuario', () => {
+    auth.usuario.and.returnValue({ rol: 'USUARIO' } as any);
+    component.ngOnInit();
+    component.borrador.set('texto');
+
+    component.alternarEmojis();
+    component.agregarEmoji('💙');
+
+    expect(component.esOyente()).toBeFalse();
+    expect(component.mostrarEmojis()).toBeFalse();
+    expect(component.borrador()).toBe('texto');
+  });
+
+  it('muestra indicador sin desplazar si se leen mensajes anteriores y desplaza si está al final', () => {
+    let scrollTop = 0;
+    let pendingFrame: FrameRequestCallback | undefined;
+    const scrollTo = jasmine.createSpy('scrollTo').and.callFake((options: ScrollToOptions) => {
+      scrollTop = Number(options.top);
+    });
+    const element = {
+      scrollHeight: 1000,
+      get scrollTop() { return scrollTop; },
+      set scrollTop(value: number) { scrollTop = value; },
+      clientHeight: 300,
+      scrollTo
+    } as unknown as HTMLDivElement;
+    (component as unknown as { listaMensajes?: ElementRef<HTMLDivElement> }).listaMensajes =
+      new ElementRef(element);
+
+    spyOn(window, 'requestAnimationFrame').and.callFake((callback: FrameRequestCallback) => {
+      pendingFrame = callback;
+      return 1;
+    });
+    component.ngOnInit();
+    component.ngAfterViewInit();
+    pendingFrame?.(0);
+    scrollTo.calls.reset();
+    scrollTop = 0;
+    component.alDesplazarse();
+    realtime.mensajes.set([{
+      idConversacion: 7, remitente: 'usuario', contenido: 'Nuevo',
+      fechaEnvio: '2026-01-02T10:00:00Z'
+    }]);
+    TestBed.flushEffects();
+    pendingFrame?.(0);
+
+    expect(component.mostrarNuevosMensajes()).toBeTrue();
+    expect(scrollTo).not.toHaveBeenCalled();
+
+    scrollTop = 650;
+    component.alDesplazarse();
+    realtime.mensajes.set([{
+      idConversacion: 7, remitente: 'usuario', contenido: 'Más reciente',
+      fechaEnvio: '2026-01-02T10:01:00Z'
+    }]);
+    TestBed.flushEffects();
+    pendingFrame?.(0);
+
+    expect(scrollTo).toHaveBeenCalledWith({ top: 1000, behavior: 'smooth' });
   });
 
   it('finaliza solo cuando se invoca la acción explícita de finalizar', () => {
@@ -91,6 +164,7 @@ describe('ChatComponent', () => {
     (component as unknown as { listaMensajes: ElementRef<HTMLDivElement> }).listaMensajes =
       new ElementRef(element);
 
+    component.ngOnInit();
     component.irAlUltimoMensaje();
 
     expect(scrollTo).toHaveBeenCalledWith({ top: 500, behavior: 'smooth' });

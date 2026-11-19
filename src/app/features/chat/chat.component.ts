@@ -48,6 +48,8 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   private desplazarAlFinal = true;
   private desplazarForzado = false;
   private vistaLista = false;
+  private scrollFrame: number | null = null;
+  private destruido = false;
 
   constructor(
     public chatService: ChatService,
@@ -130,19 +132,25 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.chatRealtime.enviarMensaje(conv.idConversacion, texto);
     this.borrador.set('');
-    this.mostrarEmojis.set(false);
-    this.desplazarseAlFinal(true);
+    if (this.esOyente()) {
+      this.mostrarEmojis.set(false);
+      this.desplazarAlFinal = true;
+      this.desplazarseAlFinal(true);
+    }
   }
 
   agregarEmoji(emoji: string): void {
+    if (!this.esOyente()) return;
     this.borrador.update((texto) => texto + emoji);
   }
 
   alternarEmojis(): void {
+    if (!this.esOyente()) return;
     this.mostrarEmojis.update((visible) => !visible);
   }
 
   alDesplazarse(): void {
+    if (!this.esOyente()) return;
     const elemento = this.listaMensajes?.nativeElement;
     if (!elemento) return;
     const cercaDelFinal = elemento.scrollHeight - elemento.scrollTop - elemento.clientHeight < 80;
@@ -151,6 +159,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   irAlUltimoMensaje(): void {
+    if (!this.esOyente()) return;
     this.desplazarAlFinal = true;
     this.mostrarNuevosMensajes.set(false);
     this.desplazarseAlFinal(true);
@@ -162,8 +171,10 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private programarDesplazamiento(): void {
-    if (!this.vistaLista) return;
-    requestAnimationFrame(() => {
+    if (!this.esOyente() || !this.vistaLista || this.scrollFrame !== null) return;
+    this.scrollFrame = requestAnimationFrame(() => {
+      this.scrollFrame = null;
+      if (this.destruido) return;
       if (this.desplazarAlFinal || this.desplazarForzado) {
         this.desplazarseAlFinal(true);
         this.desplazarForzado = false;
@@ -174,6 +185,7 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private desplazarseAlFinal(suave: boolean): void {
+    if (!this.esOyente()) return;
     const elemento = this.listaMensajes?.nativeElement;
     if (!elemento) return;
     elemento.scrollTo({ top: elemento.scrollHeight, behavior: suave ? 'smooth' : 'auto' });
@@ -224,6 +236,12 @@ export class ChatComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
+    this.destruido = true;
+    if (this.scrollFrame !== null) cancelAnimationFrame(this.scrollFrame);
     if (!this.esOyente()) this.chatRealtime.desconectar();
+  }
+
+  volverAConversaciones(): void {
+    if (this.esOyente()) void this.router.navigate(['/oyente']);
   }
 }

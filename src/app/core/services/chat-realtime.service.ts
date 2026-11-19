@@ -38,6 +38,8 @@ export class ChatRealtimeService {
 
   conectarActivas(idsConversaciones: number[]): void {
     const activas = new Set(idsConversaciones);
+    const actual = this.idConversacionActual();
+    if (actual !== null) activas.add(actual);
     this.conversacionesActivas = activas;
 
     for (const [id, suscripcion] of this.suscripciones) {
@@ -53,10 +55,6 @@ export class ChatRealtimeService {
     }
 
     if (!activas.size) {
-      const clienteActual = this.client;
-      this.client = undefined;
-      this.conectado.set(false);
-      if (clienteActual) void clienteActual.deactivate();
       return;
     }
     this.conectarSocket();
@@ -119,8 +117,16 @@ export class ChatRealtimeService {
         const mensaje = event instanceof ErrorEvent ? event.message.trim() : '';
         this.error.set(mensaje || 'No se pudo establecer la conexión en tiempo real.');
       },
-      onDisconnect: () => this.conectado.set(false),
-      onWebSocketClose: () => this.conectado.set(false)
+      onDisconnect: () => {
+        if (this.client !== client) return;
+        this.conectado.set(false);
+        this.suscripciones.clear();
+      },
+      onWebSocketClose: () => {
+        if (this.client !== client) return;
+        this.conectado.set(false);
+        this.suscripciones.clear();
+      }
     });
 
     this.client = client;

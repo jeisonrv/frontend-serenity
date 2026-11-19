@@ -38,20 +38,26 @@ h1 { margin-top: 0.6rem; }
 .mensaje.propio { align-self: flex-end; background: var(--color-primary-light); color: var(--color-primary-dark); }
 
 .entrada { display: flex; gap: 0.6rem; padding: 0.9rem 1.1rem; border-top: 1px solid var(--color-line); }
-.campo-mensaje {
+.entrada input {
+  flex: 1;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-soft);
+  padding: 0.55rem 0.8rem;
+}
+.entrada-oyente .campo-mensaje {
   position: relative;
   display: flex;
   flex: 1;
   min-width: 0;
 }
-.entrada .campo-mensaje input {
+.entrada-oyente .campo-mensaje input {
   flex: 1;
   min-width: 0;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-soft);
   padding: 0.55rem 2.8rem 0.55rem 0.8rem;
 }
-.boton-emoji {
+.entrada-oyente .boton-emoji {
   position: absolute;
   right: .35rem;
   top: 50%;
@@ -65,7 +71,7 @@ h1 { margin-top: 0.6rem; }
   font-size: 1.25rem;
   cursor: pointer;
 }
-.selector-emojis {
+.entrada-oyente .selector-emojis {
   position: absolute;
   z-index: 3;
   right: 0;
@@ -79,7 +85,7 @@ h1 { margin-top: 0.6rem; }
   background: var(--color-surface);
   box-shadow: var(--shadow-soft);
 }
-.selector-emojis button {
+.entrada-oyente .selector-emojis button {
   width: 2.4rem;
   height: 2.4rem;
   border: 0;
@@ -88,11 +94,11 @@ h1 { margin-top: 0.6rem; }
   font-size: 1.25rem;
   cursor: pointer;
 }
-.selector-emojis button:hover,
-.selector-emojis button:focus-visible {
+.entrada-oyente .selector-emojis button:hover,
+.entrada-oyente .selector-emojis button:focus-visible {
   background: var(--color-primary-light);
 }
-.nuevos-mensajes {
+.chat.oyente .nuevos-mensajes {
   align-self: center;
   margin: .25rem 0;
   padding: .35rem .75rem;
@@ -119,6 +125,6 @@ h1 { margin-top: 0.6rem; }
 .estado-conexion { margin: .55rem 1.1rem 0; color: var(--color-ink-soft); font-size: .78rem; }
 
 @media (max-width: 480px) {
-  .entrada { padding: .7rem; }
-  .selector-emojis { grid-template-columns: repeat(4, minmax(2.4rem, 1fr)); }
+  .entrada-oyente { padding: .7rem; }
+  .entrada-oyente .selector-emojis { grid-template-columns: repeat(4, minmax(2.4rem, 1fr)); }
 }

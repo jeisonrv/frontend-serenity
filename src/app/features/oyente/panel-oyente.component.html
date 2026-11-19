@@ -73,7 +73,7 @@
     <article class="card fila" *ngFor="let charla of activas()">
       <div>
         <h3>Conversación #{{ charla.idConversacion }}</h3>
-        <p>Inició {{ charla.fechaInicio | date:'short' }}</p>
+        <p>Inició {{ charla.fechaInicio | date:'short' }} · Estado: {{ charla.fechaFin ? 'Finalizada' : 'Activa' }}</p>
       </div>
       <a class="btn btn-primary" [routerLink]="['/chat', charla.idConversacion]">Abrir conversación</a>
     </article>
